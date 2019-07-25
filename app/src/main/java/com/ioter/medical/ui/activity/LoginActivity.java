@@ -81,13 +81,13 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
         initView();
     }
 
-    private void initView(){
+    public void initView(){
         //初始化二维码扫描头
         if (Build.VERSION.SDK_INT > 21) {
 
             //扫条码 需要相机对应用开启相机和存储权限；
-            if (ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this,
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(this,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 //先判断有没有权限 ，没有就在这里进行权限的申请
                 ActivityCompat.requestPermissions(LoginActivity.this,
@@ -100,8 +100,11 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
             if (ContextCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // 请求权限
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 2);
+                ActivityCompat
+                        .requestPermissions(
+                                this,
+                                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                                2);
             }
 
         } else {
@@ -110,7 +113,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
         new AppApplication.InitBarCodeTask().execute();
     }
 
-    protected void onDestroy() {
+   /* protected void onDestroy() {
         if (AppApplication.mReader != null) {
             AppApplication.mReader.free();
         }
@@ -119,7 +122,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
             AppApplication.barcode2DWithSoft.close();
         }
         super.onDestroy();
-    }
+    }*/
 
     @Override
     public void loginResult(LoginBean baseBean) {

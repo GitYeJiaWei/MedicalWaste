@@ -56,7 +56,7 @@
     <string name="lease_money">合计：</string>
     <string name="lease_commit">出库提交</string>
     <string name="lease_print">打印</string>
-    <string name="return_next">下一步</string>
+    <string name="return_next">注 销 退 出</string>
     <string name="return_num">退还卡编号：</string>
     <string name="return_name">退还人姓名：</string>
     <string name="return_money">破损总扣费：</string>

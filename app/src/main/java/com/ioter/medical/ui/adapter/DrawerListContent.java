@@ -23,7 +23,7 @@ public class DrawerListContent {
     static {
         addItem(new DrawerItem("1", "操作人员", R.mipmap.size));
         addItem(new DrawerItem("2", "VIP", R.mipmap.size));
-        addItem(new DrawerItem("3", "退出登陆", R.mipmap.size));
+        addItem(new DrawerItem("3", "退出登录", R.mipmap.size));
         }
 
     /**

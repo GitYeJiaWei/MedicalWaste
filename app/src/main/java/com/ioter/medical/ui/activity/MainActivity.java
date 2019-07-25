@@ -368,6 +368,13 @@ public class MainActivity extends BaseActivity implements HomeFragment.CallBackV
                 //断开打印连接
                 PrintService.pl.disconnect();
             }
+            if (AppApplication.mReader != null) {
+                AppApplication.mReader.free();
+            }
+            if (AppApplication.barcode2DWithSoft != null) {
+                AppApplication.barcode2DWithSoft.stopScan();
+                AppApplication.barcode2DWithSoft.close();
+            }
             ActivityCollecter.finishAll();
         }
     }

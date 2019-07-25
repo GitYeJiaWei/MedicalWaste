@@ -40,6 +40,7 @@
             android:theme="@style/AppTheme.Notitle.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
                 <!--
                     <category android:name="android.intent.category.HOME" />
@@ -68,48 +69,61 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
-        <activity android:name=".ui.activity.MedicalCollectActivity"
+        <activity
+            android:name=".ui.activity.MedicalCollectActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
-        <activity android:name=".ui.activity.MedicalRegisterActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.activity.MedicalRegisterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
-        <activity android:name=".ui.activity.MedicalEnterActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.activity.MedicalEnterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
-        <activity android:name=".ui.activity.EnterRegisterActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.activity.EnterRegisterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
-        <activity android:name=".ui.activity.MedicalOutActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.activity.MedicalOutActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
-        <activity android:name=".ui.activity.OutRegisterActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.activity.OutRegisterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
-        <activity android:name=".ui.activity.OutMessageActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.activity.OutMessageActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.activity.UserActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
-        <activity android:name=".ui.activity.PowerActivity"
+        <activity
+            android:name=".ui.activity.PowerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.activity.InformActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.activity.EnterMessageActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>

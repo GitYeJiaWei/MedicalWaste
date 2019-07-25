@@ -18,10 +18,12 @@ import com.ioter.medical.bean.BaseEpc;
 import com.ioter.medical.common.ActivityCollecter;
 import com.ioter.medical.common.ScreenUtils;
 import com.ioter.medical.common.util.NetUtils;
+import com.ioter.medical.common.util.SoundManage;
 import com.ioter.medical.di.component.AppComponent;
 import com.ioter.medical.presenter.BasePresenter;
 import com.ioter.medical.ui.BaseView;
 import com.ioter.medical.ui.receiver.NetworkChangeEvent;
+import com.zebra.adc.decoder.Barcode2DWithSoft;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -49,10 +51,8 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
     //蜂鸣器
     protected ToneGenerator toneGenerator = new ToneGenerator(AudioManager.STREAM_SYSTEM, ToneGenerator.MAX_VOLUME);
 
-
     @Inject
     public T mPresenter;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
@@ -98,6 +98,33 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
 
         EventBus.getDefault().unregister(this);
         ActivityCollecter.removeActivity(this);
+    }
+
+    //扫条码
+    public void ScanBarcode() {
+        if (AppApplication.barcode2DWithSoft != null) {
+            AppApplication.barcode2DWithSoft.scan();
+            AppApplication.barcode2DWithSoft.setScanCallback(ScanBack);
+        }
+    }
+
+    public Barcode2DWithSoft.ScanCallback
+            ScanBack = new Barcode2DWithSoft.ScanCallback() {
+        @Override
+        public void onScanComplete(int i, int length, byte[] bytes) {
+            if (length < 1) {
+            } else {
+                final String barCode = new String(bytes, 0, length);
+                if (barCode != null && barCode.length() > 0) {
+                    SoundManage.PlaySound(BaseActivity.this, SoundManage.SoundType.SUCCESS);
+                    showBarCode(barCode);
+                }
+            }
+        }
+    };
+
+    public void showBarCode(String barcode){
+
     }
 
     private Handler handler = new Handler()
