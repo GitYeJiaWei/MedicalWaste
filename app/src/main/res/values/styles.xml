@@ -1,0 +1,86 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.Notitle.FullScreen" parent="AppTheme.Notitle">
+        <item name="android:windowFullscreen">true</item>
+
+    </style>
+
+    <style name="tab_menu_text">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/tab_menu_back</item>
+        <item name="android:textColor">@drawable/tab_menu_text</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="AppTheme.Notitle" parent="AppTheme">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+    </style>
+
+    <!--Style for the normal font to be used across the application -->
+    <style name="style_normal_font">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">?android:attr/textAppearance</item>
+    </style>
+
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light">
+        <!-- customize the color palette -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/black</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+
+    <style name="CustomProgressDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+
+    <style name="BaseDialogStyle" parent="android:Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <!-- 杈规 -->
+        <item name="android:windowIsFloating">false</item>
+        <!-- 鏄惁娴幇鍦╝ctivity涔嬩笂 -->
+        <!-- <item name="android:windowIsTranslucent">true</item> -->
+        <!-- 鍗婇€忔槑 -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- 鏃犳爣棰?-->
+        <item name="android:background">#00000000</item>
+        <item name="android:gravity">center</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- 鑳屾櫙閫忔槑 -->
+        <!-- <item name="android:backgroundDimEnabled">true</item> -->
+        <!-- 妯＄硦 -->
+    </style>
+
+</resources>
+
+
+
+
+
+
+
+

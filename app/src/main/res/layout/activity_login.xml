@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_login"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:background="#330099"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingBottom="15dp"
+        android:paddingTop="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:text="智慧医疗废物"
+                android:textColor="@color/white"
+                android:textSize="26dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:text="管理系统"
+                android:textColor="@color/white"
+                android:textSize="26dp" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/rfid"
+            android:layout_marginTop="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/login" />
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="38dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@color/white"
+            >
+
+
+            <EditText
+                android:id="@+id/txt_mobi"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawableLeft="@mipmap/icon_zhanghu"
+                android:drawablePadding="8dp"
+                android:gravity="left|center"
+                android:hint="请输入账号"
+                android:textColorHint="#e0e0e0"
+                android:singleLine="true"
+                android:textCursorDrawable="@null"
+                android:background="@null"
+                android:textSize="18sp"
+                android:text="admin"/>
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@color/white"
+            >
+
+            <EditText
+                android:id="@+id/txt_password"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawableLeft="@mipmap/icon_mima"
+                android:drawablePadding="8dp"
+                android:gravity="left|center"
+                android:hint="请输入密码"
+                android:textColorHint="#e0e0e0"
+                android:singleLine="true"
+                android:inputType="textPassword"
+                android:textCursorDrawable="@null"
+                android:background="@null"
+                android:text="123"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="记住密码"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="15dp"
+                android:layout_alignParentRight="true"
+                />
+        </RelativeLayout>
+
+
+
+        <com.ioter.medical.ui.widget.LoadingButton
+            android:id="@+id/btn_login"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/bg_btn"
+            app:loadingText="正 在 登 录"
+            app:progressColor="@color/colorAccent"
+            app:text="@string/login"
+            app:textColor="@color/black" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="30dp"
+            android:text="注册账号"
+            android:textColor="@color/white"
+            android:visibility="gone" />
+    </LinearLayout>
+
+
+</LinearLayout>

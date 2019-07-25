@@ -1,0 +1,88 @@
+<resources>
+    <string name="app_name">医废</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="error_unkown">未知错误</string>
+    <string name="error_http">网络连接错误</string>
+    <string name="error_system">服务器出错</string>
+    <string name="error_account_freeze">账户被冻结，请联系管理员</string>
+    <string name="error_api_no_perission">调用了无权限的API接口</string>
+    <string name="error_login">用户名或者密码错误</string>
+    <string name="error_http_400">bad request</string>
+    <string name="error_http_404">服务器资源找不到</string>
+    <string name="error_http_500">服务器错误</string>
+    <string name="error_socket_timeout">网络超时</string>
+    <string name="error_socket_unreachable">网络不可用</string>
+    <string name="error_network_unreachable">网络连接不可用，请检查网络设置!</string>
+    <string name="rfid_mgs_error_config">设备配置错误</string>
+    <string name="yid_msg_scan_fail">Scan failure</string>
+
+    <string name="default_loading">loading</string>
+    <string name="login">登  录</string>
+
+    <!-- Options available in the Navigation Drawer of the application -->
+    <string-array name="options_array">
+        <item>主页</item>
+        <item>医废统计</item>
+        <item>医废查询</item>
+        <item>医废收集</item>
+        <item>医废入库</item>
+        <item>设置</item>
+        <item>退出</item>
+    </string-array>
+
+    <string name="drawer_image_desc">Icon for the Navigation drawer item</string>
+    <string name="drawer_item_text">Drawer Item</string>
+    <string name="settting_inform">通讯设置</string>
+    <string name="settting_item">其它设置</string>
+    <string name="settting_user">账号设置</string>
+    <string name="setting_ble">蓝牙设置</string>
+    <string name="settting_help">功率设置</string>
+    <string name="settting_inform_ip">IP地址：</string>
+    <string name="settting_inform_port">端口号：</string>
+    <string name="save">保存</string>
+    <string name="setting_user_name">用户名：</string>
+    <string name="setting_user_pass">原密码：</string>
+    <string name="setting_user_pass1">新密码：</string>
+    <string name="setting_user_pass2">密码确认：</string>
+    <string name="lease_num">租赁卡编号：</string>
+    <string name="lease_name">租赁人姓名：</string>
+    <string name="frag_scan">开始收集</string>
+    <string name="frag_back">开始入库</string>
+    <string name="lease_next">开始出库</string>
+    <string name="lease_scan">扫描租赁卡</string>
+    <string name="lease_back">扫描退还卡</string>
+    <string name="lease_money">合计：</string>
+    <string name="lease_commit">出库提交</string>
+    <string name="lease_print">打印</string>
+    <string name="return_next">下一步</string>
+    <string name="return_num">退还卡编号：</string>
+    <string name="return_name">退还人姓名：</string>
+    <string name="return_money">破损总扣费：</string>
+    <string name="return_commit">入库提交</string>
+    <string name="pick_commit">报废提交</string>
+    <string name="find_scan">查询</string>
+    <string name="pick_scan">扫描货物</string>
+
+    <string name="str_unconnected">未连接</string>
+    <string name="str_printer_state">STATE</string>
+    <string name="str_printer_printing">Printing</string>
+    <string name="str_printer_lowpower">Low power</string>
+    <string name="str_printer_nopaper">No paper</string>
+    <string name="str_printer_bufferfull">Buffer full</string>
+    <string name="str_printer_buffernull">Buffer null</string>
+    <string name="str_printer_hightemperature">High temperature</string>
+    <string name="str_disconnected">未连接 </string>
+    <string name="str_connecting">正在连接 </string>
+    <string name="str_connected">连接完成 </string>
+    <string name="str_scan">扫描设备</string>
+    <string name="str_device">设备</string>
+    <string name="str_scaning">正在扫描</string>
+    <string name="str_exit">确定退出并关闭设备?</string>
+    <string name="str_scanover">连接失败!</string>
+    <string name="mode_bt">BT Printer</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
