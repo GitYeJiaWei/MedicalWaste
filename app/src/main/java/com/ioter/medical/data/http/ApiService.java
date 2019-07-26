@@ -1,6 +1,7 @@
 package com.ioter.medical.data.http;
 
 import com.ioter.medical.bean.BaseBean;
+import com.ioter.medical.bean.FeeRule;
 import com.ioter.medical.bean.LoginBean;
 
 import java.util.Map;
@@ -8,7 +9,9 @@ import java.util.Map;
 import io.reactivex.Observable;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.QueryMap;
 
 public interface ApiService
 {
@@ -25,4 +28,7 @@ public interface ApiService
     @FormUrlEncoded
     @POST("/api/User/ChangePassword")
     Observable<BaseBean<String>> setting(@FieldMap Map<String,String> params);
+
+    @GET("/api/Home/Index")
+    Observable<BaseBean<FeeRule>> rulelist();
 }

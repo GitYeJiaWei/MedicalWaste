@@ -7,12 +7,16 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.SimpleAdapter;
 
+import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
 import com.ioter.medical.bean.BaseBean;
+import com.ioter.medical.bean.FeeRule;
+import com.ioter.medical.common.util.ACache;
 import com.ioter.medical.di.component.AppComponent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -28,9 +32,9 @@ public class HomeFragment extends BaseFragment {
     GridView gridview;
     @BindView(R.id.gridview1)
     GridView gridview1;
-    private BaseBean<String> baseBean;
+    private BaseBean<FeeRule> baseBean;
     private List<Map<String, Object>> dataList;
-    private List<Map<String, Object>> dataList1;
+    private List<Map<String, String>> dataList1;
     private SimpleAdapter adapter;
     private SimpleAdapter adapter1;
     CallBackValue callBackValue;
@@ -67,48 +71,47 @@ public class HomeFragment extends BaseFragment {
     }
 
     private void initData() {
-        dataList = new ArrayList<Map<String, Object>>();
-        //baseBean = (BaseBean<String>) ACache.get(AppApplication.getApplication()).getAsObject("feeRule");
-        if (baseBean == null) {
-            for (int i = 0; i < 2; i++) {
-                String id = i + 1 + "";
+        dataList = new ArrayList<>();
+        baseBean = (BaseBean<FeeRule>) ACache.get(AppApplication.getApplication()).getAsObject("feeRule");
+        if (baseBean != null) {
+            for (int i = 0; i < baseBean.getData().getButtons().size(); i++) {
+                String id = baseBean.getData().getButtons().get(i);
                 Map<String, Object> map = new HashMap<String, Object>();
-                if (id.equals("1")) {
+                if (id.equals("医废收集")) {
                     map.put("img", R.mipmap.main01);
                     map.put("text", "医废收集");
-                } else if (id.equals("2")) {
+                } else if (id.equals("医废入库")) {
                     map.put("img", R.mipmap.main05);
                     map.put("text", "医废入库");
+                }else if (id.equals("医废查询")) {
+                    map.put("img", R.mipmap.main05);
+                    map.put("text", "医废查询");
+                }else if (id.equals("设置")) {
+                    map.put("img", R.mipmap.main05);
+                    map.put("text", "设置");
+                }else if (id.equals("医废出库")) {
+                    map.put("img", R.mipmap.main05);
+                    map.put("text", "医废出库");
                 }
                 dataList.add(map);
             }
         }
-        for (int i = 0; i < 2; i++) {
-            Map<String, Object> map = new HashMap<String, Object>();
-            if (i == 0) {
-                map.put("img", R.mipmap.main08);
-                map.put("text", "医废查询");
-            }else {
-                map.put("img", R.mipmap.main10);
-                map.put("text", "设置");
-            }
-            dataList.add(map);
-        }
     }
 
     private void initData1() {
-        dataList1 = new ArrayList<Map<String, Object>>();
-        for (int i = 0; i < 6; i++) {
-            Map<String, Object> map = new HashMap<String, Object>();
-            if (i == 0) {
-                map.put("img", "垃圾总量");
-                map.put("text", "458.6g");
-            } else {
-                map.put("img", "感染性垃圾");
-                map.put("text", "121.5g");
+        dataList1 = new ArrayList<>();
+        if (baseBean!=null){
+            HashMap<String,Object> map1 = (HashMap<String, Object>) baseBean.getData().getWasteStatistics();
+            Iterator it = map1.keySet().iterator();
+            while (it.hasNext()){
+                String key = (String) it.next();
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("img", key);
+                map.put("text", map1.get(key)+"");
+                dataList1.add(map);
             }
-            dataList1.add(map);
         }
+
     }
 
     @Override

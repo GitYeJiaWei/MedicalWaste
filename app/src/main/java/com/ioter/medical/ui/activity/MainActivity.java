@@ -3,6 +3,7 @@ package com.ioter.medical.ui.activity;
 import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
 import com.ioter.medical.bean.BaseBean;
+import com.ioter.medical.bean.FeeRule;
 import com.ioter.medical.common.ActivityCollecter;
 import com.ioter.medical.common.download.LoadingService;
 import com.ioter.medical.common.download.Utils;
@@ -46,6 +47,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ioter.medical.di.component.DaggerRuleListComponent;
+import com.ioter.medical.di.module.RuleListModule;
+import com.ioter.medical.presenter.RuleListPresenter;
+import com.ioter.medical.presenter.contract.RuleListContract;
 import com.ioter.medical.ui.adapter.DrawerListAdapter;
 import com.ioter.medical.ui.adapter.DrawerListContent;
 import com.ioter.medical.ui.adapter.MyFragmentPagerAdapter;
@@ -64,7 +69,7 @@ import java.util.List;
 /**
  * 主页
  */
-public class MainActivity extends BaseActivity implements HomeFragment.CallBackValue {
+public class MainActivity extends BaseActivity<RuleListPresenter> implements RuleListContract.FeeRuleView, HomeFragment.CallBackValue {
     public static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
     private String[] mOptionTitles;
     private int[] mBitMaps;
@@ -99,8 +104,8 @@ public class MainActivity extends BaseActivity implements HomeFragment.CallBackV
 
     @Override
     public void setupAcitivtyComponent(AppComponent appComponent) {
-        /*DaggerRuleListComponent.builder().appComponent(appComponent).ruleListModule(new RuleListModule(this))
-                .build().inject(this);*/
+        DaggerRuleListComponent.builder().appComponent(appComponent).ruleListModule(new RuleListModule(this))
+                .build().inject(this);
     }
 
     @Override
@@ -111,7 +116,7 @@ public class MainActivity extends BaseActivity implements HomeFragment.CallBackV
         filter.addAction("android.intent.action.loading");
         registerReceiver(myReceive, filter);//注册广播
 
-        //mPresenter.feeRule(1);
+        mPresenter.feeRule();
         initview();
         selectItem(0);
         String key1 = ACache.get(AppApplication.getApplication()).getAsString("key1");
@@ -119,7 +124,6 @@ public class MainActivity extends BaseActivity implements HomeFragment.CallBackV
             key1 = "10";
         }
         AppApplication.mReader.setPower(Integer.valueOf(key1));
-        feeRuleResult();
     }
 
     //网络检测
@@ -182,7 +186,6 @@ public class MainActivity extends BaseActivity implements HomeFragment.CallBackV
         fragments.add(myFragment4);
 
         //配置底部图片和数据
-
         mOptionTitles = getResources().getStringArray(R.array.options_array);
         titleList = new ArrayList<>();
         titleList.add(mOptionTitles[0]);
@@ -202,6 +205,7 @@ public class MainActivity extends BaseActivity implements HomeFragment.CallBackV
 
         vpager = findViewById(R.id.vpager);
         vpager.setAdapter(mAdapter);
+        //mAdapter.notifyDataSetChanged();
         vpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -227,14 +231,16 @@ public class MainActivity extends BaseActivity implements HomeFragment.CallBackV
         });
     }
 
-    public void feeRuleResult() {
-        String list = "1";
-        if (list==null) {
-            fragments.remove(myFragment2);
-            titleList.remove(mOptionTitles[1]);
-            picList.remove(1);
+    @Override
+    public void feeRuleResult(BaseBean<FeeRule> baseBean1) {
+        if (baseBean1==null){
+            ToastUtil.toast("获取数据失败");
+            finish();
         }
-        mAdapter.notifyDataSetChanged();
+        if (baseBean1.getCode() == 0 && baseBean1.getData() != null) {
+            ACache.get(AppApplication.getApplication()).put("feeRule", baseBean1);
+            mAdapter.notifyDataSetChanged();
+        }
 
         //再layout中填入vpager
         tablayout = findViewById(R.id.tablayout);
@@ -255,6 +261,12 @@ public class MainActivity extends BaseActivity implements HomeFragment.CallBackV
         }
         //getVersionInfoFromServer();
     }
+
+    @Override
+    public void showError(String msg) {
+        ToastUtil.toast("操作失败,请退出重新登录");
+    }
+
 
     @Override
     public void SendMessageValue(String strValue) {
