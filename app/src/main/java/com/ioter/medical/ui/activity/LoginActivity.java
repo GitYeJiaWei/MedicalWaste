@@ -37,9 +37,6 @@ import butterknife.OnClick;
  * 4.DataBinding MVVM的东东，用起来比较方便，可以让bean与View绑定，抛弃setText()!
  */
 public class LoginActivity extends BaseActivity<LoginPresenter> implements LoginContract.LoginView {
-
-    @BindView(R.id.rfid)
-    ImageView rfid;
     @BindView(R.id.txt_mobi)
     EditText txtMobi;
     @BindView(R.id.txt_password)

@@ -20,9 +20,9 @@ public class SettingModel implements SettingContract.ISettingModel{
     @Override
     public Observable<BaseBean<String>> setting(String password, String newpassword, String twoPassword) {
         Map<String,String> map = new HashMap<>();
-        map.put("oldPwd",password);
-        map.put("newPwd",newpassword);
-        map.put("confirmPwd",twoPassword);
+        map.put("OldPassword",password);
+        map.put("ConfirmPassword",newpassword);
+        map.put("NewPassword",twoPassword);
         return mApiService.setting(map);
     }
 }

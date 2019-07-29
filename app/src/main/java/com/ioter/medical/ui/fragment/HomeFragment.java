@@ -78,16 +78,16 @@ public class HomeFragment extends BaseFragment {
                 String id = baseBean.getData().getButtons().get(i);
                 Map<String, Object> map = new HashMap<String, Object>();
                 if (id.equals("医废收集")) {
-                    map.put("img", R.mipmap.main01);
+                    map.put("img", R.mipmap.pic15);
                     map.put("text", "医废收集");
                 } else if (id.equals("医废入库")) {
-                    map.put("img", R.mipmap.main05);
+                    map.put("img", R.mipmap.pic16);
                     map.put("text", "医废入库");
                 }else if (id.equals("医废查询")) {
-                    map.put("img", R.mipmap.main05);
+                    map.put("img", R.mipmap.pic17);
                     map.put("text", "医废查询");
                 }else if (id.equals("设置")) {
-                    map.put("img", R.mipmap.main05);
+                    map.put("img", R.mipmap.pic18);
                     map.put("text", "设置");
                 }else if (id.equals("医废出库")) {
                     map.put("img", R.mipmap.main05);
@@ -111,7 +111,6 @@ public class HomeFragment extends BaseFragment {
                 dataList1.add(map);
             }
         }
-
     }
 
     @Override
@@ -139,11 +138,16 @@ public class HomeFragment extends BaseFragment {
 
         adapter1 = new SimpleAdapter(getContext(), dataList1, R.layout.gridview1_item, from1, to1);
         gridview1.setAdapter(adapter1);
+        gridview1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
     }
 
     @Override
     public void setBarCode(String barCode) {
-
     }
 
     //定义一个回调接口

@@ -1,5 +1,6 @@
 package com.ioter.medical.ui.adapter;
 
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -50,6 +51,16 @@ public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
         Fragment fragment = null;
         fragment = (Fragment) super.instantiateItem(vg,position);
         return fragment;
+    }
+
+    /**
+     * Viewpager报错Fragment no longer exists for key f0: index 0
+     * 重写下面方法，返回空
+     * @return
+     */
+    @Override
+    public Parcelable saveState() {
+        return null;
     }
 
     //destroyItem():移除一个给定位置的页面。适配器有责任从容器中删除这个视图。

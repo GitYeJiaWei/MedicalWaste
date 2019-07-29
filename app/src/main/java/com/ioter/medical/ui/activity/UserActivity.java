@@ -18,6 +18,8 @@ import com.ioter.medical.presenter.contract.SettingContract;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static com.ioter.medical.ui.activity.LoginActivity.PASS_WORD;
+
 public class UserActivity extends BaseActivity<SettingPresenter> implements SettingContract.SettingView {
 
     @BindView(R.id.edt_user)
@@ -46,9 +48,9 @@ public class UserActivity extends BaseActivity<SettingPresenter> implements Sett
     public void init() {
         setTitle("账号设置");
         edtUser.setText(ACache.get(AppApplication.getApplication()).getAsString(LoginActivity.USER_NAME));
-        edtPass.setText(ACache.get(AppApplication.getApplication()).getAsString(LoginActivity.PASS_WORD));
-        edtPass1.setText(ACache.get(AppApplication.getApplication()).getAsString(LoginActivity.PASS_WORD));
-        edtPass2.setText(ACache.get(AppApplication.getApplication()).getAsString(LoginActivity.PASS_WORD));
+        edtPass.setText(ACache.get(AppApplication.getApplication()).getAsString(PASS_WORD));
+        edtPass1.setText(ACache.get(AppApplication.getApplication()).getAsString(PASS_WORD));
+        edtPass2.setText(ACache.get(AppApplication.getApplication()).getAsString(PASS_WORD));
     }
 
 
@@ -68,6 +70,8 @@ public class UserActivity extends BaseActivity<SettingPresenter> implements Sett
         }
         if (baseBean.getCode()==0){
             ToastUtil.toast("密码修改成功");
+            ACache.get(AppApplication.getApplication()).put(PASS_WORD, edtPass1.getText().toString());
+            finish();
         }else {
             ToastUtil.toast(baseBean.getMessage());
         }

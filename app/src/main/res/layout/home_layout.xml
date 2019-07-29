@@ -2,57 +2,71 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/log" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:orientation="vertical"
-        >
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/back_text"
-            android:textColor="@color/black"
-            android:padding="5dp"
-            android:text="基本概况"/>
-
-        <GridView
-            android:id="@+id/gridview1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:columnWidth="80dp"
-            android:stretchMode="spacingWidthUniform"
-            android:numColumns="3"
-            />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:orientation="vertical"
-        >
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/back_text"
-            android:padding="5dp"
-            android:textColor="@color/black"
-            android:text="医废管理"/>
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <GridView
             android:id="@+id/gridview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:columnWidth="80dp"
-            android:stretchMode="spacingWidthUniform"
-            android:numColumns="3"
-            />
+            android:numColumns="4"
+            android:stretchMode="spacingWidthUniform" />
 
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_height="3dp"
+        android:background="@color/back_base"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="10dp"
+                android:layout_height="match_parent"
+                android:background="@color/md_blue_500"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="基本概况"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
+        <GridView
+            android:id="@+id/gridview1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnWidth="100dp"
+            android:numColumns="3"
+            android:stretchMode="spacingWidthUniform" />
+
+    </LinearLayout>
+
+
 
 </LinearLayout>

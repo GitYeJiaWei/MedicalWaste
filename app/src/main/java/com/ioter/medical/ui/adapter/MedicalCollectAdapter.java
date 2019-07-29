@@ -74,10 +74,10 @@ public class MedicalCollectAdapter extends BaseAdapter {
             convertView = layoutInflater.inflate(R.layout.list_item_return, null);
             //获取控件对象
             listItemView = new MedicalCollectAdapter.ListItemView();
-            listItemView.size = (TextView) convertView.findViewById(R.id.tv_size);
             listItemView.num = (TextView) convertView.findViewById(R.id.tv_num);
-            listItemView.overNum = (TextView) convertView.findViewById(R.id.tv_overNum);
-            listItemView.overTime = (TextView) convertView.findViewById(R.id.tv_overTime);
+            listItemView.time = (TextView) convertView.findViewById(R.id.tv_time);
+            listItemView.room = (TextView) convertView.findViewById(R.id.tv_room);
+            listItemView.user = (TextView) convertView.findViewById(R.id.tv_user);
             //设置控件集到convertView
             convertView.setTag(listItemView);
         } else {
@@ -85,10 +85,10 @@ public class MedicalCollectAdapter extends BaseAdapter {
         }
 
         final EPC m1 = (EPC) this.getItem(position);
-        listItemView.size.setText(m1.getEpc());
-        listItemView.num.setText(m1.getNum() + "");
-        listItemView.overNum.setText(m1.getOverNum() + "");
-        listItemView.overTime.setText(m1.getOverTime() + "");
+        listItemView.num.setText(m1.getEpc());
+        listItemView.time.setText(m1.getNum() + "");
+        listItemView.room.setText(m1.getOverNum() + "");
+        listItemView.user.setText(m1.getOverTime() + "");
 
         return convertView;
     }
@@ -98,6 +98,6 @@ public class MedicalCollectAdapter extends BaseAdapter {
      * 自定义控件集合
      */
     public final class ListItemView {
-        TextView size, num, overTime, overNum;
+        TextView num, time, room, user;
     }
 }

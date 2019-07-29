@@ -29,6 +29,20 @@ public interface ApiService
     @POST("/api/User/ChangePassword")
     Observable<BaseBean<String>> setting(@FieldMap Map<String,String> params);
 
+    //主页统计数据
     @GET("/api/Home/Index")
     Observable<BaseBean<FeeRule>> rulelist();
+
+    //收集的医废列表
+    @GET("/api/Waste/List")
+    Observable<BaseBean<Object>> wastelist(@QueryMap Map<String,Integer> params);
+
+    //医废登记
+    @FormUrlEncoded
+    @POST("api/Waste/Save")
+    Observable<BaseBean<Object>> wastesave(@FieldMap Map<String,Object> params);
+
+    //获取用户信息（二维码扫描）
+    @GET("api/User/GetUser")
+    Observable<BaseBean<Object>> getuser(@QueryMap Map<String,String> params);
 }
