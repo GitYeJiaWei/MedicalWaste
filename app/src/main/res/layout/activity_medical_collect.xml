@@ -130,77 +130,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="0dp"
+        <GridView
+            android:id="@+id/gridview"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:verticalSpacing="10dp"
+            android:columnWidth="100dp"
+            android:numColumns="3"
+            android:stretchMode="spacingWidthUniform" />
 
-            <RadioGroup
-                android:id="@+id/radio1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <RadioButton
-                    android:checked="true"
-                    android:id="@+id/garbage_infected"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="感染性垃圾"
-                    android:textColor="@color/dark_grey"/>
-
-                <RadioButton
-                    android:id="@+id/garbage_medical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/dark_grey"
-                    android:text="药物性垃圾" />
-
-                <RadioButton
-                    android:id="@+id/garbage_damaging"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/dark_grey"
-                    android:text="损伤性垃圾" />
-
-            </RadioGroup>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <RadioGroup
-                android:id="@+id/radio2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <RadioButton
-                    android:id="@+id/garbage_chemical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/dark_grey"
-                    android:text="化学性垃圾" />
-
-                <RadioButton
-                    android:id="@+id/garbage_pathological"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/dark_grey"
-                    android:text="病理性垃圾" />
-
-            </RadioGroup>
-        </LinearLayout>
     </LinearLayout>
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
         <Button

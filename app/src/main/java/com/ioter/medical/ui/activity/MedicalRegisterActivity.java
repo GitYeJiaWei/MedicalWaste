@@ -1,9 +1,15 @@
 package com.ioter.medical.ui.activity;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.RadioGroup;
+import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.ioter.medical.AppApplication;
@@ -11,17 +17,17 @@ import com.ioter.medical.R;
 import com.ioter.medical.bean.BaseBean;
 import com.ioter.medical.common.http.BaseUrlInterceptor;
 import com.ioter.medical.common.util.ACache;
-import com.ioter.medical.common.util.SoundManage;
 import com.ioter.medical.common.util.ToastUtil;
 import com.ioter.medical.data.http.ApiService;
 import com.ioter.medical.di.component.AppComponent;
 import com.ioter.medical.presenter.MedRegisterPresenter;
 import com.ioter.medical.presenter.contract.MedRegisterContract;
-import com.zebra.adc.decoder.Barcode2DWithSoft;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -47,14 +53,15 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
     TextView tvRoom;
     @BindView(R.id.tv_weight)
     TextView tvWeight;
-    @BindView(R.id.radio1)
-    RadioGroup radio1;
-    @BindView(R.id.radio2)
-    RadioGroup radio2;
     @BindView(R.id.btn_commit)
     Button btnCommit;
     @BindView(R.id.btn_cancle)
     Button btnCancle;
+    @BindView(R.id.gridview)
+    GridView gridview;
+    private List<Map<String, String>> dataList;
+    private String WasteTypeId = null;
+    private String HandOverUserId = "1";
 
     @Override
     public int setLayout() {
@@ -68,47 +75,76 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
     @Override
     public void init() {
         setTitle("医废登记");
-        radio1.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (group.getCheckedRadioButtonId()){
-                    case R.id.garbage_infected:
-                        radio2.clearCheck();
-                        radio1.check(R.id.garbage_infected);
-                        break;
-                    case R.id.garbage_medical:
-                        radio2.clearCheck();
-                        radio1.check(R.id.garbage_medical);
-                        break;
-                    case R.id.garbage_damaging:
-                        radio2.clearCheck();
-                        radio1.check(R.id.garbage_damaging);
-                        break;
-                }
-            }
-        });
 
-        radio2.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (group.getCheckedRadioButtonId()){
-                    case R.id.garbage_chemical:
-                        radio1.clearCheck();
-                        radio2.check(R.id.garbage_chemical);
-                        break;
-                    case R.id.garbage_pathological:
-                        radio1.clearCheck();
-                        radio2.check(R.id.garbage_pathological);
-                        break;
-                }
-            }
-        });
+        //医废类型查询
+        initWasteTypes();
 
         tvName.setText(ACache.get(AppApplication.getApplication()).getAsString(LoginActivity.USER_NAME));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date(System.currentTimeMillis());
         String str_time = simpleDateFormat.format(date);
         tvTime.setText(str_time);
+    }
+
+    private void initWasteTypes() {
+        dataList = new ArrayList<>();
+
+        ApiService apIservice = toretrofit().create(ApiService.class);
+        Observable<BaseBean<Object>> qqDataCall = apIservice.wastetypes();
+        qqDataCall.subscribeOn(Schedulers.io())//请求数据的事件发生在io线程
+                .observeOn(AndroidSchedulers.mainThread())//请求完成后在主线程更新UI
+                .subscribe(new Observer<BaseBean<Object>>() {
+                               @Override
+                               public void onSubscribe(Disposable d) {
+
+                               }
+
+                               @Override
+                               public void onNext(BaseBean<Object> baseBean) {
+                                   if (baseBean == null) {
+                                       ToastUtil.toast("请求失败");
+                                       finish();
+                                   }
+                                   if (baseBean.getCode() == 0) {
+                                       ToastUtil.toast("医废类型查询");
+                                       if (baseBean.getData() != null) {
+                                           dataList = (List<Map<String, String>>) baseBean.getData();
+                                           String[] from = {"Id", "Name"};
+                                           int[] to = {R.id.id, R.id.text};
+
+                                           SimpleAdapter adapter = new SimpleAdapter(getApplication(), dataList, R.layout.gridview2_item, from, to);
+                                           gridview.setAdapter(adapter);
+                                           gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                               @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+                                               @Override
+                                               public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+                                                                       long arg3) {
+                                                   WasteTypeId = dataList.get(arg2).get("Id").toString();
+                                                   for (int i = 0; i < dataList.size(); i++) {
+                                                       if (i == arg2) {
+                                                           LinearLayout linearLayout = (LinearLayout) ((LinearLayout) gridview.getChildAt(i)).getChildAt(0);
+                                                           linearLayout.setBackground(getDrawable(R.drawable.button_back));
+                                                       } else {
+                                                           LinearLayout linearLayout = (LinearLayout) ((LinearLayout) gridview.getChildAt(i)).getChildAt(0);
+                                                           linearLayout.setBackground(getDrawable(R.drawable.back_text));
+                                                       }
+                                                   }
+                                               }
+                                           });
+                                       }
+                                   }
+                               }
+
+                               @Override
+                               public void onError(Throwable e) {
+                                   ToastUtil.toast("扫描失败");
+                               }
+
+                               @Override
+                               public void onComplete() {
+                               }//订阅
+                           }
+                );
     }
 
     @Override
@@ -121,14 +157,7 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
         return super.onKeyDown(keyCode, event);
     }
 
-    @Override
-    public void showBarCode(String barcode) {
-        super.showBarCode(barcode);
-        tvUser.setText(barcode);
-
-        Map<String, String> map = new HashMap<>();
-        map.put("id", barcode);
-
+    public static Retrofit toretrofit() {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         //添加拦截器，自动追加参数
         builder.addInterceptor(new BaseUrlInterceptor());
@@ -142,8 +171,18 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(builder.build())
                 .build();
+        return retrofit;
+    }
 
-        ApiService apIservice = retrofit.create(ApiService.class);
+    @Override
+    public void showBarCode(String barcode) {
+        super.showBarCode(barcode);
+        tvUser.setText(barcode);
+
+        Map<String, String> map = new HashMap<>();
+        map.put("id", barcode);
+
+        ApiService apIservice = toretrofit().create(ApiService.class);
         Observable<BaseBean<Object>> qqDataCall = apIservice.getuser(map);
         qqDataCall.subscribeOn(Schedulers.io())//请求数据的事件发生在io线程
                 .observeOn(AndroidSchedulers.mainThread())//请求完成后在主线程更新UI
@@ -159,10 +198,10 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
                                        ToastUtil.toast("扫描失败");
                                        return;
                                    }
-                                  if (baseBean.getCode()==0){
-                                      ToastUtil.toast("扫描成功");
-                                  }
-
+                                   if (baseBean.getCode() == 0) {
+                                       //tvUser.setText(baseBean.getData().toString());
+                                       ToastUtil.toast("扫描成功");
+                                   }
                                }
 
                                @Override
@@ -174,7 +213,6 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
                                public void onComplete() {
                                }//订阅
                            }
-
                 );
     }
 
@@ -182,8 +220,19 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_commit:
-                HashMap<String,Object> map = new HashMap<>();
-                map.put("","");
+                if(TextUtils.isEmpty(WasteTypeId)){
+                    ToastUtil.toast("请选择废物类型");
+                    return;
+                }
+                if (TextUtils.isEmpty(HandOverUserId)){
+                    ToastUtil.toast("请扫描交接人二维码");
+                    return;
+                }
+
+                HashMap<String, Object> map = new HashMap<>();
+                map.put("HandOverUserId", "1");
+                map.put("Weight", 15.23);
+                map.put("WasteTypeId", WasteTypeId);
                 mPresenter.medRegister(map);
                 break;
             case R.id.btn_cancle:
@@ -194,7 +243,7 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
 
     @Override
     public void medRegisterResult(BaseBean<Object> baseBean) {
-        if (baseBean != null){
+        if (baseBean != null) {
 
         }
     }

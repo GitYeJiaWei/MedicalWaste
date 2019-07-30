@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.SimpleAdapter;
 
 import com.ioter.medical.AppApplication;
@@ -107,7 +108,7 @@ public class HomeFragment extends BaseFragment {
                 String key = (String) it.next();
                 Map<String, String> map = new HashMap<String, String>();
                 map.put("img", key);
-                map.put("text", map1.get(key)+"");
+                map.put("text", map1.get(key)+" kg");
                 dataList1.add(map);
             }
         }
@@ -141,7 +142,15 @@ public class HomeFragment extends BaseFragment {
         gridview1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                for (int i = 0; i < dataList1.size(); i++) {
+                    if (i==position){
+                        LinearLayout linearLayout = (LinearLayout) ((LinearLayout)gridview1.getChildAt(i)).getChildAt(0);
+                        linearLayout.setBackground(getResources().getDrawable(R.drawable.button_back));
+                    }else {
+                        LinearLayout linearLayout = (LinearLayout) ((LinearLayout)gridview1.getChildAt(i)).getChildAt(0);
+                        linearLayout.setBackground(getResources().getDrawable(R.drawable.button_back1));
+                    }
+                }
             }
         });
     }

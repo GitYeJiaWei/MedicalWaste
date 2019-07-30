@@ -35,6 +35,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -193,8 +194,8 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
         titleList.add(mOptionTitles[2]);
         titleList.add(mOptionTitles[5]);
 
-        mBitMaps = new int[]{R.mipmap.home, R.mipmap.zulin,
-                R.mipmap.back, R.mipmap.set};
+        mBitMaps = new int[]{R.drawable.map_first, R.drawable.map_second,
+                R.drawable.map_third, R.drawable.map_forth};
         picList = new ArrayList<>();
         picList.add(mBitMaps[0]);
         picList.add(mBitMaps[1]);
@@ -229,6 +230,8 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
             public void onPageScrollStateChanged(int state) {
             }
         });
+
+
     }
 
     @Override
@@ -242,23 +245,43 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
             mAdapter.notifyDataSetChanged();
         }
 
-        //再layout中填入vpager
+        //在tablayout中填入vpager
         tablayout = findViewById(R.id.tablayout);
         tablayout.setupWithViewPager(vpager);
         //获取当前tab数量
         int tabCount = tablayout.getTabCount();
-        //遍历循环tab数量
+        //遍历循环tab数量,加载自定义的布局
         for (int i = 0; i < tabCount; i++) {
             //获取每个tab
             TabLayout.Tab tab = tablayout.getTabAt(i);
             View view = View.inflate(this, R.layout.tab_view, null);
-            ImageView iv = view.findViewById(R.id.iv);
+            final ImageView iv = view.findViewById(R.id.iv);
             TextView tv = view.findViewById(R.id.tv);
             tv.setText(titleList.get(i));
-            iv.setImageResource(picList.get(i));
+            iv.setBackgroundResource(picList.get(i));
+            if (i==0)
+                iv.setFocusable(true);
             //给tab设置view
             tab.setCustomView(view);
+
         }
+
+         tablayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                tab.getCustomView().findViewById(R.id.iv).setFocusable(true);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                tab.getCustomView().findViewById(R.id.iv).setFocusable(false);
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
         //getVersionInfoFromServer();
     }
 

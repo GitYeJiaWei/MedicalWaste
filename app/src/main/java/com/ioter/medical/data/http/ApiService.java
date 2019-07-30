@@ -37,7 +37,7 @@ public interface ApiService
     @GET("/api/Waste/List")
     Observable<BaseBean<Object>> wastelist(@QueryMap Map<String,Integer> params);
 
-    //医废登记
+    //收集医废
     @FormUrlEncoded
     @POST("api/Waste/Save")
     Observable<BaseBean<Object>> wastesave(@FieldMap Map<String,Object> params);
@@ -45,4 +45,8 @@ public interface ApiService
     //获取用户信息（二维码扫描）
     @GET("api/User/GetUser")
     Observable<BaseBean<Object>> getuser(@QueryMap Map<String,String> params);
+
+    //医废类型查询
+    @GET("api/Waste/WasteTypes")
+    Observable<BaseBean<Object>> wastetypes();
 }

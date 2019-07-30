@@ -61,6 +61,8 @@
             android:id="@+id/gridview1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:horizontalSpacing="5dp"
+            android:verticalSpacing="10dp"
             android:columnWidth="100dp"
             android:numColumns="3"
             android:stretchMode="spacingWidthUniform" />
