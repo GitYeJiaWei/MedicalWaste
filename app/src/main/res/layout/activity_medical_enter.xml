@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".ui.activity.MedicalCollectActivity">
 
     <LinearLayout
+        android:id="@+id/top"
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        android:layout_marginTop="1dp"
+        android:layout_marginTop="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:background="@color/md_blue_500"
@@ -68,22 +68,25 @@
 
     </LinearLayout>
 
-    <ListView
+    <com.ioter.medical.ui.widget.AutoListView
         android:id="@+id/list_lease"
+        android:layout_below="@+id/top"
+        android:layout_above="@+id/btn_lease"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_width="match_parent"
         android:layout_marginBottom="15dp"
         android:layout_height="350dp">
 
-    </ListView>
+    </com.ioter.medical.ui.widget.AutoListView>
 
     <Button
         android:id="@+id/btn_lease"
+        android:layout_alignParentBottom="true"
         android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/button_back"
         android:textColor="@color/white"
         android:text="@string/frag_back"/>
-</LinearLayout>
+</RelativeLayout>

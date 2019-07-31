@@ -109,7 +109,7 @@
             android:layout_marginLeft="10dp"
             android:background="@drawable/back_text"
             android:gravity="center"
-            android:text="" />
+            android:text="22.5" />
     </LinearLayout>
 
     <View

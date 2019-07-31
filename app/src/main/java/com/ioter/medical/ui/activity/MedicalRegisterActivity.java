@@ -20,9 +20,12 @@ import com.ioter.medical.common.util.ACache;
 import com.ioter.medical.common.util.ToastUtil;
 import com.ioter.medical.data.http.ApiService;
 import com.ioter.medical.di.component.AppComponent;
+import com.ioter.medical.di.component.DaggerMedRegisterComponent;
+import com.ioter.medical.di.module.MedRegisterModule;
 import com.ioter.medical.presenter.MedRegisterPresenter;
 import com.ioter.medical.presenter.contract.MedRegisterContract;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -61,7 +64,7 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
     GridView gridview;
     private List<Map<String, String>> dataList;
     private String WasteTypeId = null;
-    private String HandOverUserId = "1";
+    private String HandOverUserId = null;
 
     @Override
     public int setLayout() {
@@ -70,6 +73,8 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
 
     @Override
     public void setupAcitivtyComponent(AppComponent appComponent) {
+        DaggerMedRegisterComponent.builder().appComponent(appComponent).medRegisterModule(new MedRegisterModule(this))
+                .build().inject(this);
     }
 
     @Override
@@ -132,6 +137,8 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
                                                }
                                            });
                                        }
+                                   }else {
+                                       ToastUtil.toast(baseBean.getMessage());
                                    }
                                }
 
@@ -179,7 +186,7 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
         super.showBarCode(barcode);
         tvUser.setText(barcode);
 
-        Map<String, String> map = new HashMap<>();
+        final Map<String, String> map = new HashMap<>();
         map.put("id", barcode);
 
         ApiService apIservice = toretrofit().create(ApiService.class);
@@ -199,8 +206,13 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
                                        return;
                                    }
                                    if (baseBean.getCode() == 0) {
-                                       //tvUser.setText(baseBean.getData().toString());
+                                       Map<String,String> map1 = (Map<String, String>) baseBean.getData();
+                                       tvUser.setText(map1.get("Name"));
+                                       tvRoom.setText(map1.get("Department"));
+                                       HandOverUserId = map1.get("Id");
                                        ToastUtil.toast("扫描成功");
+                                   }else {
+                                       ToastUtil.toast(baseBean.getMessage());
                                    }
                                }
 
@@ -229,11 +241,11 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
                     return;
                 }
 
-                HashMap<String, Object> map = new HashMap<>();
-                map.put("HandOverUserId", "1");
-                map.put("Weight", 15.23);
-                map.put("WasteTypeId", WasteTypeId);
-                mPresenter.medRegister(map);
+                String weight = tvWeight.getText().toString();
+                //称重数据
+                BigDecimal bigDecimal = new BigDecimal(weight);
+
+                mPresenter.medRegister(HandOverUserId,bigDecimal,WasteTypeId);
                 break;
             case R.id.btn_cancle:
                 finish();
@@ -243,13 +255,16 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
 
     @Override
     public void medRegisterResult(BaseBean<Object> baseBean) {
-        if (baseBean != null) {
-
+        if (baseBean == null) {
+            ToastUtil.toast("提交失败");
+           return;
+        }
+        if (baseBean.getCode() == 0){
+            ToastUtil.toast("提交成功");
+            finish();
+        }else {
+            ToastUtil.toast(baseBean.getMessage());
         }
     }
 
-    @Override
-    public void showError(String msg) {
-        super.showError(msg);
-    }
 }

@@ -33,9 +33,10 @@ public interface ApiService
     @GET("/api/Home/Index")
     Observable<BaseBean<FeeRule>> rulelist();
 
-    //收集的医废列表
-    @GET("/api/Waste/List")
-    Observable<BaseBean<Object>> wastelist(@QueryMap Map<String,Integer> params);
+    //收集的医废查询
+    @FormUrlEncoded
+    @POST("/api/Waste/List")
+    Observable<BaseBean<Object>> wastelist(@FieldMap Map<String,Object> params);
 
     //收集医废
     @FormUrlEncoded
@@ -49,4 +50,9 @@ public interface ApiService
     //医废类型查询
     @GET("api/Waste/WasteTypes")
     Observable<BaseBean<Object>> wastetypes();
+
+    //医废入库单查询
+    @FormUrlEncoded
+    @POST("api/StockIn/List")
+    Observable<BaseBean<Object>> stockin(@FieldMap Map<String,Object> params);
 }

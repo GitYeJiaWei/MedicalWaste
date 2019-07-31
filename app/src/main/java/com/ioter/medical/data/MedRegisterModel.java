@@ -4,6 +4,7 @@ import com.ioter.medical.bean.BaseBean;
 import com.ioter.medical.data.http.ApiService;
 import com.ioter.medical.presenter.contract.MedRegisterContract;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +18,11 @@ public class MedRegisterModel implements MedRegisterContract.IMedRegisterModel{
     }
 
     @Override
-    public Observable<BaseBean<Object>> medRegister(HashMap<String,Object> map) {
+    public Observable<BaseBean<Object>> medRegister(String HandOverUserId, BigDecimal Weight, String WasteTypeId) {
+        Map<String,Object> map = new HashMap<>();
+        map.put("HandOverUserId",HandOverUserId);
+        map.put("Weight",Weight);
+        map.put("WasteTypeId",WasteTypeId);
         return mApiService.wastesave(map);
     }
 }

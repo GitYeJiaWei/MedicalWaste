@@ -4,6 +4,7 @@ import com.ioter.medical.bean.BaseBean;
 import com.ioter.medical.data.http.ApiService;
 import com.ioter.medical.presenter.contract.MedCollectContract;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,10 +18,7 @@ public class MedCollectModel implements MedCollectContract.IMedCollectModel{
     }
 
     @Override
-    public Observable<BaseBean<Object>> medCollect(int page, int rows) {
-        Map<String,Integer> map = new HashMap<>();
-        map.put("page",page);
-        map.put("rows",rows);
+    public Observable<BaseBean<Object>> medCollect(Map<String,Object> map) {
         return mApiService.wastelist(map);
     }
 }

@@ -24,6 +24,13 @@
         <item name="android:textSize">12sp</item>
     </style>
 
+    <style name="customProgressBar" parent="@android:style/Widget.ProgressBar.Small">
+        <item name="android:indeterminateDrawable">@drawable/custom_progress_bar</item>
+        <item name="android:layout_width">22dip</item>
+        <item name="android:layout_height">22dip</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+
     <style name="AppTheme.Notitle" parent="AppTheme">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>

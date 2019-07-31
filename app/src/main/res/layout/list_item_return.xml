@@ -4,6 +4,12 @@
     android:layout_height="35dp"
     android:orientation="horizontal">
 
+    <View
+        android:layout_width="0.5dp"
+        android:layout_height="match_parent"
+        android:background="@color/back_base"
+        />
+
     <TextView
         android:id="@+id/tv_num"
         android:layout_width="0dp"
@@ -16,7 +22,7 @@
     <View
         android:layout_width="0.5dp"
         android:layout_height="match_parent"
-        android:background="@color/black"
+        android:background="@color/back_base"
         />
 
     <TextView
@@ -30,7 +36,7 @@
     <View
         android:layout_width="0.5dp"
         android:layout_height="match_parent"
-        android:background="@color/black"
+        android:background="@color/back_base"
         />
 
     <TextView
@@ -44,7 +50,7 @@
     <View
         android:layout_width="0.5dp"
         android:layout_height="match_parent"
-        android:background="@color/black"
+        android:background="@color/back_base"
         />
 
     <TextView
@@ -54,5 +60,11 @@
         android:layout_weight="1"
         android:gravity="center"
         android:text="移交人员"/>
+
+    <View
+        android:layout_width="0.5dp"
+        android:layout_height="match_parent"
+        android:background="@color/back_base"
+        />
 
 </LinearLayout>

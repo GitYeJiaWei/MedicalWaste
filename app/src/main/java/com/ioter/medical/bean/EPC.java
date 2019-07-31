@@ -1,87 +1,58 @@
 package com.ioter.medical.bean;
 
 public class EPC extends BaseEntity{
-    String epc;
-    String data1;
-    String data2;
-    String data3;
-    String data4;
-    int num;
-    int overNum;
-    int overTime;
-    double money;
+    String Id;
+    String WasteType;
+    String CollectionTime;
+    String DepartmentName;
+    String HandOverUserName;
+    int Status;
 
-    public String getData3() {
-        return data3;
+    public String getId() {
+        return Id;
     }
 
-    public void setData3(String data3) {
-        this.data3 = data3;
+    public void setId(String id) {
+        Id = id;
     }
 
-    public String getData4() {
-        return data4;
+    public String getWasteType() {
+        return WasteType;
     }
 
-    public void setData4(String data4) {
-        this.data4 = data4;
+    public void setWasteType(String wasteType) {
+        WasteType = wasteType;
     }
 
-    public double getMoney() {
-        return money;
+    public String getCollectionTime() {
+        return CollectionTime;
     }
 
-    public void setMoney(double money) {
-        this.money = money;
+    public void setCollectionTime(String collectionTime) {
+        CollectionTime = collectionTime;
     }
 
-    public int getOverNum() {
-        return overNum;
+    public String getDepartmentName() {
+        return DepartmentName;
     }
 
-    public void setOverNum(int overNum) {
-        this.overNum = overNum;
+    public void setDepartmentName(String departmentName) {
+        DepartmentName = departmentName;
     }
 
-    public int getOverTime() {
-        return overTime;
+    public String getHandOverUserName() {
+        return HandOverUserName;
     }
 
-    public void setOverTime(int overTime) {
-        this.overTime = overTime;
+    public void setHandOverUserName(String handOverUserName) {
+        HandOverUserName = handOverUserName;
     }
 
-
-
-    public int getNum() {
-        return num;
+    public int getStatus() {
+        return Status;
     }
 
-    public void setNum(int num) {
-        this.num = num;
-    }
-
-    public String getData1() {
-        return data1;
-    }
-
-    public void setData1(String data1) {
-        this.data1 = data1;
-    }
-
-    public String getData2() {
-        return data2;
-    }
-
-    public void setData2(String data2) {
-        this.data2 = data2;
-    }
-
-    public String getEpc() {
-        return epc;
-    }
-
-    public void setEpc(String epc) {
-        this.epc = epc;
+    public void setStatus(int status) {
+        Status = status;
     }
 }

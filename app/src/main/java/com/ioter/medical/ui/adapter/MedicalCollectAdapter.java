@@ -36,7 +36,6 @@ public class MedicalCollectAdapter extends BaseAdapter {
             mymodelList.addAll(datalist);
             notifyDataSetChanged();
         }
-
     }
 
     /**
@@ -85,10 +84,10 @@ public class MedicalCollectAdapter extends BaseAdapter {
         }
 
         final EPC m1 = (EPC) this.getItem(position);
-        listItemView.num.setText(m1.getEpc());
-        listItemView.time.setText(m1.getNum() + "");
-        listItemView.room.setText(m1.getOverNum() + "");
-        listItemView.user.setText(m1.getOverTime() + "");
+        listItemView.num.setText(m1.getId());
+        listItemView.time.setText(m1.getCollectionTime());
+        listItemView.room.setText(m1.getDepartmentName());
+        listItemView.user.setText(m1.getHandOverUserName());
 
         return convertView;
     }
