@@ -3,7 +3,10 @@ package com.ioter.medical.data.http;
 import com.ioter.medical.bean.BaseBean;
 import com.ioter.medical.bean.FeeRule;
 import com.ioter.medical.bean.LoginBean;
+import com.ioter.medical.bean.StockIn;
+import com.ioter.medical.bean.WasteViewsBean;
 
+import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
@@ -54,5 +57,14 @@ public interface ApiService
     //医废入库单查询
     @FormUrlEncoded
     @POST("api/StockIn/List")
-    Observable<BaseBean<Object>> stockin(@FieldMap Map<String,Object> params);
+    Observable<BaseBean<List<StockIn>>> stockin(@FieldMap Map<String,Object> params);
+
+    //医废入库登记
+    @FormUrlEncoded
+    @POST("api/StockIn/Save")
+    Observable<BaseBean<Object>> stocksave(@FieldMap Map<String,Object> params);
+
+    //医废详情（扫废物二维码）
+    @GET("api/Waste/Detail")
+    Observable<BaseBean<WasteViewsBean>> wastedetail(@QueryMap Map<String,String> params);
 }

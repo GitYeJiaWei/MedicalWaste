@@ -18,5 +18,8 @@ public class EnterMessageActivity extends BaseActivity {
     @Override
     public void init() {
         setTitle("入库详情");
+        String id = getIntent().getStringExtra("id");
+
+
     }
 }

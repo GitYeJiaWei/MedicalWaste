@@ -7,6 +7,15 @@ public class EPC extends BaseEntity{
     String DepartmentName;
     String HandOverUserName;
     int Status;
+    private double Weight;
+
+    public double getWeight() {
+        return Weight;
+    }
+
+    public void setWeight(double weight) {
+        Weight = weight;
+    }
 
     public String getId() {
         return Id;

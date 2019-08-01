@@ -66,8 +66,8 @@
     <string name="return_money">破损总扣费：</string>
     <string name="return_commit">入库提交</string>
     <string name="pick_commit">报废提交</string>
-    <string name="find_scan">查询</string>
-    <string name="pick_scan">扫描货物</string>
+    <string name="find_scan">按条件查询</string>
+    <string name="pick_scan">扫码查询</string>
 
     <string name="str_unconnected">未连接</string>
     <string name="str_printer_state">STATE</string>

@@ -1,6 +1,7 @@
 package com.ioter.medical.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,27 +9,27 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.ioter.medical.R;
-import com.ioter.medical.bean.EPC;
+import com.ioter.medical.bean.StockIn;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MedicalCollectAdapter extends BaseAdapter {
+public class MedicalEnterAdapter extends BaseAdapter {
     //定义需要包装的JSONArray对象
-    public List<EPC> mymodelList = new ArrayList<>();
+    public List<StockIn> mymodelList = new ArrayList<>();
     private Context context = null;
     private String size;
     //视图容器
     private LayoutInflater layoutInflater;
 
-    public MedicalCollectAdapter(Context _context, String size) {
+    public MedicalEnterAdapter(Context _context, String size) {
         this.context = _context;
         //创建视图容器并设置上下文
         this.layoutInflater = LayoutInflater.from(_context);
         this.size = size;
     }
 
-    public void updateDatas(List<EPC> datalist) {
+    public void updateDatas(List<StockIn> datalist) {
         if (datalist == null) {
             return;
         } else {
@@ -67,12 +68,12 @@ public class MedicalCollectAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        MedicalCollectAdapter.ListItemView listItemView = null;
+        MedicalEnterAdapter.ListItemView listItemView = null;
         if (convertView == null) {
             //获取list_item布局文件的视图
             convertView = layoutInflater.inflate(R.layout.list_item_return, null);
             //获取控件对象
-            listItemView = new MedicalCollectAdapter.ListItemView();
+            listItemView = new MedicalEnterAdapter.ListItemView();
             listItemView.num = (TextView) convertView.findViewById(R.id.tv_num);
             listItemView.time = (TextView) convertView.findViewById(R.id.tv_time);
             listItemView.room = (TextView) convertView.findViewById(R.id.tv_room);
@@ -80,22 +81,15 @@ public class MedicalCollectAdapter extends BaseAdapter {
             //设置控件集到convertView
             convertView.setTag(listItemView);
         } else {
-            listItemView = (MedicalCollectAdapter.ListItemView) convertView.getTag();
+            listItemView = (MedicalEnterAdapter.ListItemView) convertView.getTag();
         }
 
-        final EPC m1 = (EPC) this.getItem(position);
-        if (size.equals("enterRegister")){
-            listItemView.num.setText(m1.getId());
-            listItemView.time.setText(m1.getDepartmentName());
-            listItemView.room.setText(m1.getWasteType());
-            listItemView.user.setText(m1.getWeight()+"");
-        }
-        if (size.equals("collect")){
-            listItemView.num.setText(m1.getId());
-            listItemView.time.setText(m1.getCollectionTime());
-            listItemView.room.setText(m1.getDepartmentName());
-            listItemView.user.setText(m1.getHandOverUserName());
-        }
+        final StockIn m1 = (StockIn) this.getItem(position);
+        listItemView.num.setText(m1.getId());
+        listItemView.time.setText(m1.getDeliverCount());
+        listItemView.room.setText(m1.getDeliverWeight()+"");
+        listItemView.user.setText(m1.getDeliverTime());
+
         return convertView;
     }
 

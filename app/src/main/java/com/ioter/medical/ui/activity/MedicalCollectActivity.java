@@ -38,7 +38,7 @@ public class MedicalCollectActivity extends BaseActivity<MedCollectPresenter> im
     //下一页初始化为1
     int nextpage = 1;
     //每一页加载多少数据
-    private int number = 2;
+    private int number = 10;
     private String TAG = "ListTag";
 
     @Override
@@ -87,9 +87,26 @@ public class MedicalCollectActivity extends BaseActivity<MedCollectPresenter> im
         });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1){
+            if (resultCode == RESULT_OK){
+                nextpage = 1;
+                epclist.clear();
+
+                Map<String, Object> map = new HashMap<>();
+                map.put("Page", nextpage);
+                map.put("Rows", number);
+                mPresenter.medCollect(map);
+            }
+        }
+    }
+
     @OnClick(R.id.btn_lease)
     public void onViewClicked() {
-        startActivity(new Intent(this, MedicalRegisterActivity.class));
+        Intent intent = new Intent(this, MedicalRegisterActivity.class);
+        startActivityForResult(intent,1);
     }
 
     @Override

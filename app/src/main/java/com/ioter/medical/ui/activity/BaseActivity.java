@@ -13,12 +13,17 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.ioter.medical.AppApplication;
 import com.ioter.medical.bean.BaseEpc;
+import com.ioter.medical.bean.Code;
 import com.ioter.medical.common.ActivityCollecter;
 import com.ioter.medical.common.ScreenUtils;
+import com.ioter.medical.common.http.BaseUrlInterceptor;
 import com.ioter.medical.common.util.NetUtils;
 import com.ioter.medical.common.util.SoundManage;
+import com.ioter.medical.common.util.ToastUtil;
+import com.ioter.medical.data.http.ApiService;
 import com.ioter.medical.di.component.AppComponent;
 import com.ioter.medical.presenter.BasePresenter;
 import com.ioter.medical.ui.BaseView;
@@ -29,10 +34,16 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.Map;
+
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import okhttp3.OkHttpClient;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public abstract class BaseActivity<T extends BasePresenter> extends AppCompatActivity implements BaseView
@@ -117,7 +128,11 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
                 final String barCode = new String(bytes, 0, length);
                 if (barCode != null && barCode.length() > 0) {
                     SoundManage.PlaySound(BaseActivity.this, SoundManage.SoundType.SUCCESS);
-                    showBarCode(barCode);
+                    if (barCode.contains("iotId") || barCode.contains("iotEPC")){
+                        showBarCode(barCode);
+                    }else {
+                        ToastUtil.toast("二维码不符合");
+                    }
                 }
             }
         }
@@ -125,6 +140,23 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
 
     public void showBarCode(String barcode){
 
+    }
+
+    public static Retrofit toretrofit() {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        //添加拦截器，自动追加参数
+        builder.addInterceptor(new BaseUrlInterceptor());
+
+        Retrofit retrofit = new Retrofit.Builder()
+                //设置基础的URL
+                .baseUrl(ApiService.BASE_URL)
+                //设置内容格式,这种对应的数据返回值是Gson类型，需要导包
+                .addConverterFactory(GsonConverterFactory.create())
+                //设置支持RxJava，应用observable观察者，需要导包
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(builder.build())
+                .build();
+        return retrofit;
     }
 
     private Handler handler = new Handler()

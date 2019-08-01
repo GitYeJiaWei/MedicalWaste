@@ -72,4 +72,13 @@
         android:background="@drawable/button_back"
         android:textColor="@color/white"
         android:text="@string/find_scan"/>
+
+    <Button
+        android:id="@+id/btn_scan"
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_back"
+        android:textColor="@color/white"
+        android:text="@string/pick_scan"/>
 </LinearLayout>

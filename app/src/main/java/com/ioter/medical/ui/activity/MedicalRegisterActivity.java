@@ -1,5 +1,8 @@
 package com.ioter.medical.ui.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
@@ -15,6 +18,7 @@ import android.widget.TextView;
 import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
 import com.ioter.medical.bean.BaseBean;
+import com.ioter.medical.bean.Code;
 import com.ioter.medical.common.http.BaseUrlInterceptor;
 import com.ioter.medical.common.util.ACache;
 import com.ioter.medical.common.util.ToastUtil;
@@ -84,7 +88,7 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
         //医废类型查询
         initWasteTypes();
 
-        tvName.setText(ACache.get(AppApplication.getApplication()).getAsString(LoginActivity.USER_NAME));
+        tvName.setText(ACache.get(AppApplication.getApplication()).getAsString(LoginActivity.REAL_NAME));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date(System.currentTimeMillis());
         String str_time = simpleDateFormat.format(date);
@@ -101,7 +105,6 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
                 .subscribe(new Observer<BaseBean<Object>>() {
                                @Override
                                public void onSubscribe(Disposable d) {
-
                                }
 
                                @Override
@@ -144,7 +147,7 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
 
                                @Override
                                public void onError(Throwable e) {
-                                   ToastUtil.toast("扫描失败");
+                                   ToastUtil.toast("请求失败");
                                }
 
                                @Override
@@ -164,30 +167,24 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
         return super.onKeyDown(keyCode, event);
     }
 
-    public static Retrofit toretrofit() {
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        //添加拦截器，自动追加参数
-        builder.addInterceptor(new BaseUrlInterceptor());
-
-        Retrofit retrofit = new Retrofit.Builder()
-                //设置基础的URL
-                .baseUrl(ApiService.BASE_URL)
-                //设置内容格式,这种对应的数据返回值是Gson类型，需要导包
-                .addConverterFactory(GsonConverterFactory.create())
-                //设置支持RxJava，应用observable观察者，需要导包
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .client(builder.build())
-                .build();
-        return retrofit;
-    }
-
     @Override
     public void showBarCode(String barcode) {
         super.showBarCode(barcode);
-        tvUser.setText(barcode);
+        String bar = null;
+        if (barcode.contains("iotId")){
+            Code code = AppApplication.getGson().fromJson(barcode, Code.class);
+            bar = code.getIotId();
+        }else {
+            ToastUtil.toast("垃圾袋二维码");
+            return;
+        }
 
+        if (bar == null){
+            ToastUtil.toast("扫描失败，请重新扫描");
+            return;
+        }
         final Map<String, String> map = new HashMap<>();
-        map.put("id", barcode);
+        map.put("id", bar);
 
         ApiService apIservice = toretrofit().create(ApiService.class);
         Observable<BaseBean<Object>> qqDataCall = apIservice.getuser(map);
@@ -253,6 +250,34 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
         }
     }
 
+    private void createDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("提交成功：");
+        builder.setMessage("是否继续提交");
+        builder.setIcon(R.mipmap.ic_launcher_round);
+        //点击对话框以外的区域是否让对话框消失
+        builder.setCancelable(true);
+        //设置正面按钮
+        builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        //设置反面按钮
+        builder.setNegativeButton("否", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                setResult(RESULT_OK);
+                finish();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        //显示对话框
+        dialog.show();
+    }
+
     @Override
     public void medRegisterResult(BaseBean<Object> baseBean) {
         if (baseBean == null) {
@@ -260,8 +285,7 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
            return;
         }
         if (baseBean.getCode() == 0){
-            ToastUtil.toast("提交成功");
-            finish();
+            createDialog();
         }else {
             ToastUtil.toast(baseBean.getMessage());
         }
