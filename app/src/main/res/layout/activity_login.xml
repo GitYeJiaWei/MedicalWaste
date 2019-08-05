@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
-                android:text="艾欧特医疗废物"
+                android:text="艾欧特医疗废物管理系统"
                 android:textColor="@color/white"
                 android:textSize="26dp" />
 
@@ -50,16 +50,16 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
-                android:text="管理系统"
+                android:text="欢迎使用"
                 android:textColor="@color/white"
-                android:textSize="26dp" />
+                android:textSize="16dp" />
 
         </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:background="@color/white"

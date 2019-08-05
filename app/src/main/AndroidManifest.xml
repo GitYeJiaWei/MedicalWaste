@@ -123,7 +123,8 @@
             android:name=".ui.activity.EnterMessageActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
+        <activity android:name=".ui.activity.EnterCheckActivity"></activity>
     </application>
 
 </manifest>

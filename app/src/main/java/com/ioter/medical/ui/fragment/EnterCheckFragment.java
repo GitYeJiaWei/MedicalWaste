@@ -1,11 +1,15 @@
-package com.ioter.medical.ui.activity;
+package com.ioter.medical.ui.fragment;
 
 import android.content.Intent;
+import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.TextureView;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
+import android.widget.TextView;
 
+import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
 import com.ioter.medical.bean.BaseBean;
 import com.ioter.medical.bean.StockIn;
@@ -15,6 +19,7 @@ import com.ioter.medical.di.component.DaggerMedEnterComponent;
 import com.ioter.medical.di.module.MedEnterModule;
 import com.ioter.medical.presenter.MedEnterPresenter;
 import com.ioter.medical.presenter.contract.MedEnterContract;
+import com.ioter.medical.ui.activity.EnterMessageActivity;
 import com.ioter.medical.ui.adapter.MedicalEnterAdapter;
 import com.ioter.medical.ui.widget.AutoListView;
 
@@ -23,13 +28,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.BindView;
-import butterknife.OnClick;
+public class EnterCheckFragment extends BaseFragment<MedEnterPresenter> implements MedEnterContract.MedEnterView {
 
-public class MedicalEnterActivity extends BaseActivity<MedEnterPresenter> implements MedEnterContract.MedEnterView {
-
-    @BindView(R.id.btn_lease)
-    Button btnLease;
     private AutoListView listLease;
     private MedicalEnterAdapter medicalEnterAdapter;
     private ArrayList<StockIn> epclist = new ArrayList<>();
@@ -37,11 +37,16 @@ public class MedicalEnterActivity extends BaseActivity<MedEnterPresenter> implem
     int nextpage = 1;
     //每一页加载多少数据
     private int number = 10;
+    private int Status = 2;
     private String TAG = "ListTag";
+
+    public static EnterCheckFragment newInstance() {
+        return new EnterCheckFragment();
+    }
 
     @Override
     public int setLayout() {
-        return R.layout.activity_medical_enter;
+        return R.layout.fragment_enter_check;
     }
 
     @Override
@@ -51,18 +56,18 @@ public class MedicalEnterActivity extends BaseActivity<MedEnterPresenter> implem
     }
 
     @Override
-    public void init() {
-        setTitle("医废入库");
-        listLease = findViewById(R.id.list_lease);
+    public void init(View view) {
+        listLease = view.findViewById(R.id.list_lease);
         listLease.setPageSize(number);
 
         Log.d(TAG, "nextpage: "+nextpage);
         Map<String, Object> map = new HashMap<>();
+        map.put("Status",Status);
         map.put("Page", nextpage);
         map.put("Rows", number);
         mPresenter.medEnter(map);
 
-        medicalEnterAdapter = new MedicalEnterAdapter(this, "enter");
+        medicalEnterAdapter = new MedicalEnterAdapter(AppApplication.getApplication(), "enterCheck");
         listLease.setAdapter(medicalEnterAdapter);
 
         listLease.setOnLoadListener(new AutoListView.OnLoadListener() {
@@ -72,6 +77,7 @@ public class MedicalEnterActivity extends BaseActivity<MedEnterPresenter> implem
 
                 Log.d(TAG, "nextpage: "+nextpage);
                 Map<String, Object> map = new HashMap<>();
+                map.put("Status",Status);
                 map.put("Page", nextpage);
                 map.put("Rows", number);
                 mPresenter.medEnter(map);
@@ -85,34 +91,16 @@ public class MedicalEnterActivity extends BaseActivity<MedEnterPresenter> implem
         listLease.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(MedicalEnterActivity.this,EnterMessageActivity.class);
+                Intent intent = new Intent(AppApplication.getApplication(),EnterMessageActivity.class);
                 intent.putExtra("id",epclist.get(position).getId());
-                intent.putExtra("state","MedicalEnter");
+                intent.putExtra("state","EnterCheck");
                 startActivity(intent);
             }
         });
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==1){
-            if (resultCode ==RESULT_OK){
-                nextpage = 1;
-                epclist.clear();
-
-                Map<String, Object> map = new HashMap<>();
-                map.put("Page", nextpage);
-                map.put("Rows", number);
-                mPresenter.medEnter(map);
-            }
-        }
-    }
-
-    @OnClick(R.id.btn_lease)
-    public void onViewClicked() {
-        Intent intent = new Intent(this,EnterRegisterActivity.class);
-        startActivityForResult(intent,1);
+    public void setBarCode(String barCode) {
     }
 
     @Override
@@ -135,5 +123,4 @@ public class MedicalEnterActivity extends BaseActivity<MedEnterPresenter> implem
             }
         }
     }
-
 }

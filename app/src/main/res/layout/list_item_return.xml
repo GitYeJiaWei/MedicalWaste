@@ -16,6 +16,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
+        android:textColor="@color/dark_grey"
         android:text="单号"
         />
 
@@ -30,6 +31,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:textColor="@color/dark_grey"
         android:gravity="center"
         android:text="收集时间"/>
 
@@ -43,6 +45,7 @@
         android:id="@+id/tv_room"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:textColor="@color/dark_grey"
         android:layout_weight="1"
         android:gravity="center"
         android:text="所属科室"/>
@@ -57,6 +60,7 @@
         android:id="@+id/tv_user"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:textColor="@color/dark_grey"
         android:layout_weight="1"
         android:gravity="center"
         android:text="移交人员"/>

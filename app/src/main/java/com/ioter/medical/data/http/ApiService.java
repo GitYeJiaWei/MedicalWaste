@@ -1,6 +1,7 @@
 package com.ioter.medical.data.http;
 
 import com.ioter.medical.bean.BaseBean;
+import com.ioter.medical.bean.Detail;
 import com.ioter.medical.bean.FeeRule;
 import com.ioter.medical.bean.LoginBean;
 import com.ioter.medical.bean.StockIn;
@@ -67,4 +68,12 @@ public interface ApiService
     //医废详情（扫废物二维码）
     @GET("api/Waste/Detail")
     Observable<BaseBean<WasteViewsBean>> wastedetail(@QueryMap Map<String,String> params);
+
+    //医废入库详情
+    @GET("api/StockIn/Detail")
+    Observable<BaseBean<Detail>> stockindetail(@QueryMap Map<String,Object> params);
+
+    @FormUrlEncoded
+    @POST("api/StockIn/Confirm")
+    Observable<BaseBean<Object>> stockinconfirm(@FieldMap Map<String,String> params);
 }

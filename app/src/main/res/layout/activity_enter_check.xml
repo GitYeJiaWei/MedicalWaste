@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.activity.EnterCheckActivity">
+
+    <!--app:tabIndicatorColor="@color/green" //改变指示器下标颜色-->
+    <!--app:tabSelectedTextColor="@color/red"//选中色-->
+    <!--tabTextColor="@color/blue"//未选中色-->
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tablayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabIndicatorColor="@color/md_blue_500"
+        app:tabTextColor="@color/back_base"
+        app:tabSelectedTextColor="@color/black"
+        />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>

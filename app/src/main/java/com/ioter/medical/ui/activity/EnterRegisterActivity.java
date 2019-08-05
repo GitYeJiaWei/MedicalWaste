@@ -26,11 +26,14 @@ import com.ioter.medical.presenter.EnterRegisterPresenter;
 import com.ioter.medical.presenter.contract.EnterRegisterContract;
 import com.ioter.medical.ui.adapter.MedicalCollectAdapter;
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -68,7 +71,7 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
     private HashMap<String,String> map = new HashMap<>();
     private MedicalCollectAdapter medicalCollectAdapter;
     private ArrayList<EPC> epclist = new ArrayList<>();
-    private String[] b = null;
+    private ArrayList<String> WasteIds = new ArrayList<>();
 
     @Override
     public int setLayout() {
@@ -221,10 +224,9 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
                                        medicalCollectAdapter.updateDatas(epclist);
 
                                        double a =0;
-                                       b = new String[epclist.size()];
                                        for (int i = 0; i < epclist.size(); i++) {
                                            a+=epclist.get(i).getWeight();
-                                           b[i] = epclist.get(i).getId();
+                                           WasteIds.add(epclist.get(i).getId());
                                        }
                                        tvWeight.setText(a+"");
                                        tvTotalWeight.setText(a+"");
@@ -270,7 +272,7 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
                 map.put("ReceiverId", HandOverUserId);
                 map.put("DushbinEpc", DushbinEpc);
                 map.put("ReceivedWeight", bigDecimal);
-                map.put("WasteIds",b);
+                map.put("WasteIds", AppApplication.getGson().toJson(WasteIds));
                 mPresenter.EnterRegister(map);
                 break;
             case R.id.btn_cancle:

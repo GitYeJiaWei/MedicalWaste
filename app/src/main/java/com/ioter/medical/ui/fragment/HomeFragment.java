@@ -84,15 +84,18 @@ public class HomeFragment extends BaseFragment {
                 } else if (id.equals("医废入库")) {
                     map.put("img", R.mipmap.pic16);
                     map.put("text", "医废入库");
-                }else if (id.equals("医废查询")) {
+                } else if (id.equals("医废查询")) {
                     map.put("img", R.mipmap.pic17);
                     map.put("text", "医废查询");
-                }else if (id.equals("设置")) {
+                } else if (id.equals("设置")) {
                     map.put("img", R.mipmap.pic18);
                     map.put("text", "设置");
-                }else if (id.equals("医废出库")) {
-                    map.put("img", R.mipmap.main05);
+                } else if (id.equals("医废出库")) {
+                    map.put("img", R.mipmap.pic20);
                     map.put("text", "医废出库");
+                } else if (id.equals("入库确认")){
+                    map.put("img", R.mipmap.pic19);
+                    map.put("text", "入库确认");
                 }
                 dataList.add(map);
             }
@@ -101,14 +104,12 @@ public class HomeFragment extends BaseFragment {
 
     private void initData1() {
         dataList1 = new ArrayList<>();
-        if (baseBean!=null){
-            HashMap<String,Object> map1 = (HashMap<String, Object>) baseBean.getData().getWasteStatistics();
-            Iterator it = map1.keySet().iterator();
-            while (it.hasNext()){
-                String key = (String) it.next();
+        if (baseBean != null) {
+            List<HashMap<String, Object>> mapList = (List<HashMap<String, Object>>) baseBean.getData().getWasteStatistics();
+            for (int i = 0; i < mapList.size(); i++) {
                 Map<String, String> map = new HashMap<String, String>();
-                map.put("img", key);
-                map.put("text", map1.get(key)+" kg");
+                map.put("img", mapList.get(i).get("WasteType") + "");
+                map.put("text", mapList.get(i).get("Count") + " kg");
                 dataList1.add(map);
             }
         }
@@ -143,11 +144,11 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 for (int i = 0; i < dataList1.size(); i++) {
-                    if (i==position){
-                        LinearLayout linearLayout = (LinearLayout) ((LinearLayout)gridview1.getChildAt(i)).getChildAt(0);
+                    if (i == position) {
+                        LinearLayout linearLayout = (LinearLayout) ((LinearLayout) gridview1.getChildAt(i)).getChildAt(0);
                         linearLayout.setBackground(getResources().getDrawable(R.drawable.button_back));
-                    }else {
-                        LinearLayout linearLayout = (LinearLayout) ((LinearLayout)gridview1.getChildAt(i)).getChildAt(0);
+                    } else {
+                        LinearLayout linearLayout = (LinearLayout) ((LinearLayout) gridview1.getChildAt(i)).getChildAt(0);
                         linearLayout.setBackground(getResources().getDrawable(R.drawable.button_back1));
                     }
                 }

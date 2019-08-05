@@ -85,10 +85,18 @@ public class MedicalEnterAdapter extends BaseAdapter {
         }
 
         final StockIn m1 = (StockIn) this.getItem(position);
-        listItemView.num.setText(m1.getId());
-        listItemView.time.setText(m1.getDeliverCount());
-        listItemView.room.setText(m1.getDeliverWeight()+"");
-        listItemView.user.setText(m1.getDeliverTime());
+        if (size.equals("enterCheck")){
+            listItemView.num.setText(m1.getId());
+            listItemView.time.setText(m1.getDeliverWeight()+"");
+            listItemView.room.setText(m1.getDelivererName()+"");
+            listItemView.user.setText(m1.getDeliverTime());
+        }else {
+            listItemView.num.setText(m1.getId());
+            listItemView.time.setText(m1.getDeliverCount()+"");
+            listItemView.room.setText(m1.getDeliverWeight()+"");
+            listItemView.user.setText(m1.getDeliverTime());
+        }
+
 
         return convertView;
     }

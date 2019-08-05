@@ -301,6 +301,8 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
             vpager.setCurrentItem(3);
         } else if (strValue.equals("医废查询")){
             vpager.setCurrentItem(2);
+        } else if (strValue.equals("入库确认")){
+            startActivity(new Intent(this,EnterCheckActivity.class));
         }
     }
 

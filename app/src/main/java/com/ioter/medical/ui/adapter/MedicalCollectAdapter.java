@@ -84,7 +84,7 @@ public class MedicalCollectAdapter extends BaseAdapter {
         }
 
         final EPC m1 = (EPC) this.getItem(position);
-        if (size.equals("enterRegister")){
+        if (size.equals("enterRegister") ||size.equals("enterMessage")){
             listItemView.num.setText(m1.getId());
             listItemView.time.setText(m1.getDepartmentName());
             listItemView.room.setText(m1.getWasteType());
