@@ -1,17 +1,5 @@
 package com.ioter.medical.ui.activity;
 
-import com.ioter.medical.AppApplication;
-import com.ioter.medical.R;
-import com.ioter.medical.bean.BaseBean;
-import com.ioter.medical.bean.FeeRule;
-import com.ioter.medical.common.ActivityCollecter;
-import com.ioter.medical.common.download.LoadingService;
-import com.ioter.medical.common.download.Utils;
-import com.ioter.medical.common.util.ACache;
-import com.ioter.medical.common.util.NetUtils;
-import com.ioter.medical.common.util.ToastUtil;
-import com.ioter.medical.di.component.AppComponent;
-
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -35,7 +23,6 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -48,6 +35,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ioter.medical.AppApplication;
+import com.ioter.medical.R;
+import com.ioter.medical.bean.BaseBean;
+import com.ioter.medical.bean.FeeRule;
+import com.ioter.medical.common.ActivityCollecter;
+import com.ioter.medical.common.download.LoadingService;
+import com.ioter.medical.common.download.Utils;
+import com.ioter.medical.common.util.ACache;
+import com.ioter.medical.common.util.NetUtils;
+import com.ioter.medical.common.util.ToastUtil;
+import com.ioter.medical.di.component.AppComponent;
 import com.ioter.medical.di.component.DaggerRuleListComponent;
 import com.ioter.medical.di.module.RuleListModule;
 import com.ioter.medical.presenter.RuleListPresenter;
@@ -230,8 +228,6 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
             public void onPageScrollStateChanged(int state) {
             }
         });
-
-
     }
 
     @Override
@@ -242,6 +238,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
         }
         if (baseBean1.getCode() == 0 && baseBean1.getData() != null) {
             ACache.get(AppApplication.getApplication()).put("feeRule", baseBean1);
+
             mAdapter.notifyDataSetChanged();
         }
 
@@ -293,16 +290,18 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
 
     @Override
     public void SendMessageValue(String strValue) {
-        if (strValue.equals("医废收集")) {
+        if (strValue.equals("MedicalCollectActivity")) {
             startActivity(new Intent(this,MedicalCollectActivity.class));
-        } else if (strValue.equals("医废入库")) {
+        } else if (strValue.equals("MedicalEnterActivity")) {
             startActivity(new Intent(this,MedicalEnterActivity.class));
-        } else if (strValue.equals("设置")) {
+        } else if (strValue.equals("SettingFragment")) {
             vpager.setCurrentItem(3);
-        } else if (strValue.equals("医废查询")){
+        } else if (strValue.equals("CheckFragment")){
             vpager.setCurrentItem(2);
-        } else if (strValue.equals("入库确认")){
+        } else if (strValue.equals("EnterCheckActivity")){
             startActivity(new Intent(this,EnterCheckActivity.class));
+        } else if (strValue.equals("MedicalOutActivity")){
+            startActivity(new Intent(this,MedicalOutActivity.class));
         }
     }
 

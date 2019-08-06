@@ -83,21 +83,13 @@
 
         <TextView
             android:id="@+id/tv_room"
-            android:layout_width="150dp"
+            android:layout_width="200dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
             android:background="@drawable/text_stroke"
             android:gravity="center"
             android:text="请扫描周转桶标签" />
 
-        <Button
-            android:id="@+id/btn_scan"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:layout_margin="10dp"
-            android:background="@drawable/button_back"
-            android:text="扫描"
-            android:textColor="@color/white" />
     </LinearLayout>
 
     <LinearLayout

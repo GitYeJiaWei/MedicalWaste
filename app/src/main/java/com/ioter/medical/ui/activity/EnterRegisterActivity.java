@@ -65,8 +65,6 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
     Button btnCommit;
     @BindView(R.id.btn_cancle)
     Button btnCancle;
-    @BindView(R.id.btn_scan)
-    Button btnScan;
     private String HandOverUserId = null;
     private HashMap<String,String> map = new HashMap<>();
     private MedicalCollectAdapter medicalCollectAdapter;
@@ -111,28 +109,40 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == 139 || keyCode == 280) {
+        if (keyCode == 280) {
             if (event.getRepeatCount() == 0) {
                 ScanBarcode();
+            }
+        }
+        if (keyCode == 139){
+            if (event.getRepeatCount() == 0) {
+                readTag("扫描");
             }
         }
         return super.onKeyDown(keyCode, event);
     }
 
-    private void readTag() {
-        if (btnScan.getText().toString().equals("扫描")) {
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == 280){
+            if (event.getRepeatCount() == 0) {
+                readTag("停止");
+            }
+        }
+        return super.onKeyUp(keyCode, event);
+    }
+
+    private void readTag(String state) {
+        if (state.equals("扫描")) {
             if (AppApplication.mReader.startInventoryTag((byte) 0, (byte) 0)) {
-                btnScan.setText("停止");
                 loopFlag = true;
                 new TagThread(10).start();
             } else {
-                btnScan.setText("扫描");
                 AppApplication.mReader.stopInventory();
                 loopFlag = false;
                 ToastUtil.toast("扫描失败");
             }
         } else {
-            btnScan.setText("扫描");
             AppApplication.mReader.stopInventory();
             loopFlag = false;
         }
@@ -248,12 +258,9 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
                 );
     }
 
-    @OnClick({R.id.btn_commit, R.id.btn_cancle,R.id.btn_scan})
+    @OnClick({R.id.btn_commit, R.id.btn_cancle})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.btn_scan:
-                readTag();
-                break;
             case R.id.btn_commit:
                 if (TextUtils.isEmpty(HandOverUserId)) {
                     ToastUtil.toast("请扫描交接人二维码");
@@ -265,6 +272,10 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
                     return;
                 }
                 String DushbinEpc = tvRoom.getText().toString();
+                if (TextUtils.isEmpty(DushbinEpc)){
+                    ToastUtil.toast("周转桶标签不能为空");
+                    return;
+                }
                 //称重数据
                 BigDecimal bigDecimal = new BigDecimal(weight);
 
@@ -296,10 +307,4 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
-    }
 }

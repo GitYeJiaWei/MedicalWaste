@@ -2,12 +2,19 @@ package com.ioter.medical.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
 import com.ioter.medical.bean.BaseBean;
@@ -36,7 +43,7 @@ public class HomeFragment extends BaseFragment {
     private BaseBean<FeeRule> baseBean;
     private List<Map<String, Object>> dataList;
     private List<Map<String, String>> dataList1;
-    private SimpleAdapter adapter;
+    private MyAdapter adapter;
     private SimpleAdapter adapter1;
     CallBackValue callBackValue;
 
@@ -71,40 +78,71 @@ public class HomeFragment extends BaseFragment {
         callBackValue = (CallBackValue) getActivity();
     }
 
+    private static class MyAdapter extends BaseAdapter {
+        private LayoutInflater layoutInflater;
+        private List<Map<String, Object>> dataList;
+        public MyAdapter(Context context,List<Map<String, Object>> dataList){
+            this.dataList = dataList;
+            layoutInflater = LayoutInflater.from(context);
+        }
+        @Override
+        public int getCount() {
+            return dataList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return dataList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View v = layoutInflater.inflate(R.layout.gridview_item,null);
+            ImageView iv = (ImageView) v.findViewById(R.id.img);
+            TextView tv = (TextView) v.findViewById(R.id.text);
+            Glide.with(AppApplication.getApplication()).load("http://192.168.66.3:8118/"+dataList.get(position).get("ImgUrl").toString())
+                    .placeholder(R.mipmap.ic_launcher)
+                    .error(R.mipmap.ic_launcher)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)//关闭Glide的硬盘缓存机制
+                    .into(iv);
+            tv.setText(dataList.get(position).get("Name").toString());
+            return v;
+        }
+    }
+
     private void initData() {
         dataList = new ArrayList<>();
         baseBean = (BaseBean<FeeRule>) ACache.get(AppApplication.getApplication()).getAsObject("feeRule");
-        if (baseBean != null) {
-            for (int i = 0; i < baseBean.getData().getButtons().size(); i++) {
-                String id = baseBean.getData().getButtons().get(i);
+        if (baseBean != null && baseBean.getData().getMenus()!=null) {
+            List<HashMap<String, Object>> mapList1 = (List<HashMap<String, Object>>) baseBean.getData().getMenus();
+            for (int i = 0; i < mapList1.size(); i++) {
                 Map<String, Object> map = new HashMap<String, Object>();
-                if (id.equals("医废收集")) {
-                    map.put("img", R.mipmap.pic15);
-                    map.put("text", "医废收集");
-                } else if (id.equals("医废入库")) {
-                    map.put("img", R.mipmap.pic16);
-                    map.put("text", "医废入库");
-                } else if (id.equals("医废查询")) {
-                    map.put("img", R.mipmap.pic17);
-                    map.put("text", "医废查询");
-                } else if (id.equals("设置")) {
-                    map.put("img", R.mipmap.pic18);
-                    map.put("text", "设置");
-                } else if (id.equals("医废出库")) {
-                    map.put("img", R.mipmap.pic20);
-                    map.put("text", "医废出库");
-                } else if (id.equals("入库确认")){
-                    map.put("img", R.mipmap.pic19);
-                    map.put("text", "入库确认");
-                }
+                map.put("ImgUrl", mapList1.get(i).get("ImgUrl"));
+                map.put("Name", mapList1.get(i).get("Name"));
+                map.put("ActivityName",mapList1.get(i).get("ActivityName"));
                 dataList.add(map);
             }
+            adapter = new MyAdapter(getContext(), dataList);
+            gridview.setAdapter(adapter);
+            gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+                                        long arg3) {
+                    String strValue = dataList.get(arg2).get("ActivityName").toString();
+                    callBackValue.SendMessageValue(strValue);
+                }
+            });
         }
     }
 
     private void initData1() {
         dataList1 = new ArrayList<>();
-        if (baseBean != null) {
+        if (baseBean != null && baseBean.getData().getWasteStatistics()!=null) {
             List<HashMap<String, Object>> mapList = (List<HashMap<String, Object>>) baseBean.getData().getWasteStatistics();
             for (int i = 0; i < mapList.size(); i++) {
                 Map<String, String> map = new HashMap<String, String>();
@@ -119,19 +157,7 @@ public class HomeFragment extends BaseFragment {
     public void init(View view) {
         //设置医废管理
         initData();
-        String[] from = {"img", "text"};
-        int[] to = {R.id.img, R.id.text};
 
-        adapter = new SimpleAdapter(getContext(), dataList, R.layout.gridview_item, from, to);
-        gridview.setAdapter(adapter);
-        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-                                    long arg3) {
-                String strValue = dataList.get(arg2).get("text").toString();
-                callBackValue.SendMessageValue(strValue);
-            }
-        });
 
         //设置基本概况
         initData1();

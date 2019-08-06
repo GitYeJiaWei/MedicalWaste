@@ -1,31 +1,28 @@
 package com.ioter.medical.bean;
 
-import java.util.List;
 
 public class FeeRule extends BaseEntity {
-        /**
-         * WasteStatistics : {}
-         * Buttons : []
-         */
+    /**
+     * WasteStatistics : {}
+     * Menus : []
+     */
 
-        private Object WasteStatistics;
-        private List<String> Buttons;
+    private Object WasteStatistics;
+    private Object Menus;
 
-        public Object getWasteStatistics() {
-            return WasteStatistics;
-        }
+    public Object getWasteStatistics() {
+        return WasteStatistics;
+    }
 
-        public void setWasteStatistics(Object WasteStatistics) {
-            this.WasteStatistics = WasteStatistics;
-        }
+    public void setWasteStatistics(Object WasteStatistics) {
+        this.WasteStatistics = WasteStatistics;
+    }
 
-        public List<String> getButtons() {
-            return Buttons;
-        }
+    public Object getMenus() {
+        return Menus;
+    }
 
-        public void setButtons(List<String> Buttons) {
-            this.Buttons = Buttons;
-        }
-
-
+    public void setMenus(Object menus) {
+        Menus = menus;
+    }
 }
