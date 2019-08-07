@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.ioter.medical.R;
 import com.ioter.medical.di.component.AppComponent;
@@ -26,13 +27,13 @@ import butterknife.Unbinder;
  */
 public class SettingFragment extends BaseFragment {
     @BindView(R.id.lin_inform)
-    LinearLayout linInform;
+    RelativeLayout linInform;
     @BindView(R.id.lin_user)
-    LinearLayout linUser;
+    RelativeLayout linUser;
     @BindView(R.id.lin_message)
-    LinearLayout linMessage;
+    RelativeLayout linMessage;
     @BindView(R.id.lin_ble)
-    LinearLayout linBle;
+    RelativeLayout linBle;
     @BindView(R.id.btn_lease)
     Button btnLease;
 

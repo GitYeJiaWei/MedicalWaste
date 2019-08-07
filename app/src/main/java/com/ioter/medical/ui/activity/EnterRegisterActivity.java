@@ -124,7 +124,7 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (keyCode == 280){
+        if (keyCode == 139){
             if (event.getRepeatCount() == 0) {
                 readTag("停止");
             }

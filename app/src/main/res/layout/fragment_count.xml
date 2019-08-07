@@ -16,20 +16,29 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
             android:gravity="center"
-            android:text="感染性垃圾（3）"/>
+            android:text="感染性垃圾"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
+            android:layout_toLeftOf="@+id/img_get"
             android:gravity="center"
-            android:text=">"/>
+            android:layout_marginRight="5dp"
+            android:text="3"/>
+
+        <ImageView
+            android:id="@+id/img_get"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:src="@mipmap/open"
+            />
     </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:layout_marginTop="10dp"
         android:background="@color/md_grey_500"
         />
 
@@ -44,20 +53,29 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
             android:gravity="center"
-            android:text="感染性垃圾（3）"/>
+            android:text="感染性垃圾"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
+            android:layout_toLeftOf="@+id/img_get1"
             android:gravity="center"
-            android:text=">"/>
+            android:layout_marginRight="5dp"
+            android:text="3"/>
+
+        <ImageView
+            android:id="@+id/img_get1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:src="@mipmap/open"
+            />
     </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:layout_marginTop="10dp"
         android:background="@color/md_grey_500"
         />
 
@@ -72,20 +90,29 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
             android:gravity="center"
-            android:text="感染性垃圾（3）"/>
+            android:text="感染性垃圾"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
+            android:layout_toLeftOf="@+id/img_get4"
             android:gravity="center"
-            android:text=">"/>
+            android:layout_marginRight="5dp"
+            android:text="3"/>
+
+        <ImageView
+            android:id="@+id/img_get4"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:src="@mipmap/open"
+            />
     </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:layout_marginTop="10dp"
         android:background="@color/md_grey_500"
         />
 
@@ -100,20 +127,29 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
             android:gravity="center"
-            android:text="感染性垃圾（3）"/>
+            android:text="感染性垃圾"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
+            android:layout_toLeftOf="@+id/img_get3"
             android:gravity="center"
-            android:text=">"/>
+            android:layout_marginRight="5dp"
+            android:text="3"/>
+
+        <ImageView
+            android:id="@+id/img_get3"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:src="@mipmap/open"
+            />
     </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:layout_marginTop="10dp"
         android:background="@color/md_grey_500"
         />
 
@@ -130,20 +166,29 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
             android:gravity="center"
-            android:text="感染性垃圾（3）"/>
+            android:text="感染性垃圾"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
+            android:layout_toLeftOf="@+id/img_get2"
             android:gravity="center"
-            android:text=">"/>
+            android:layout_marginRight="5dp"
+            android:text="3"/>
+
+        <ImageView
+            android:id="@+id/img_get2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:src="@mipmap/open"
+            />
     </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:layout_marginTop="10dp"
         android:background="@color/md_grey_500"
         />
 

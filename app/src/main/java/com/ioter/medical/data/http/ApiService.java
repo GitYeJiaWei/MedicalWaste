@@ -4,6 +4,7 @@ import com.ioter.medical.bean.BaseBean;
 import com.ioter.medical.bean.Detail;
 import com.ioter.medical.bean.FeeRule;
 import com.ioter.medical.bean.LoginBean;
+import com.ioter.medical.bean.OutDetail;
 import com.ioter.medical.bean.StockIn;
 import com.ioter.medical.bean.StockOut;
 import com.ioter.medical.bean.WasteViewsBean;
@@ -88,6 +89,11 @@ public interface ApiService
     @POST("api/StockOut/Save")
     Observable<BaseBean<Object>> stockout(@FieldMap Map<String,Object> params);
 
+    //获取周转桶信息
     @GET("api/StockOut/GetDustbinInfo")
     Observable<BaseBean<Object>> getdustbininfo(@QueryMap Map<String,String> params);
+
+    //医废出库详情
+    @GET("api/StockOut/Detail")
+    Observable<BaseBean<OutDetail>> stockoutdetail(@QueryMap Map<String,String> params);
 }

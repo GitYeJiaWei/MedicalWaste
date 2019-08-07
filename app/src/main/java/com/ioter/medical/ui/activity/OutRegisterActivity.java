@@ -1,5 +1,6 @@
 package com.ioter.medical.ui.activity;
 
+import android.content.Intent;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -23,6 +24,7 @@ import com.ioter.medical.di.module.OutRegisterModule;
 import com.ioter.medical.presenter.OutRegisterPresenter;
 import com.ioter.medical.presenter.contract.OutRegisterContract;
 import com.ioter.medical.ui.adapter.MedicalCollectAdapter;
+import com.ioter.medical.ui.adapter.OutRegisterAdapter;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -60,7 +62,7 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
     Button btnCancle;
     private String HandOverUserId = null;
     private HashMap<String, String> map = new HashMap<>();
-    private MedicalCollectAdapter medicalCollectAdapter;
+    private OutRegisterAdapter outRegisterAdapter;
     private ArrayList<EPC> epclist = new ArrayList<>();
     private ArrayList<String> DustbinEpcs = new ArrayList<>();
 
@@ -85,8 +87,8 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
         String str_time = simpleDateFormat.format(date);
         tvTime.setText(str_time);
 
-        medicalCollectAdapter = new MedicalCollectAdapter(this, "outRegister");
-        listLease.setAdapter(medicalCollectAdapter);
+        outRegisterAdapter = new OutRegisterAdapter(this, "outRegister");
+        listLease.setAdapter(outRegisterAdapter);
     }
 
     //获取EPC群读数据
@@ -113,17 +115,15 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
                                        return;
                                    }
                                    if (baseBean.getCode() == 0 && baseBean.getData() != null) {
-                                       Map<String, String> stringMap = (Map<String, String>) baseBean.getData();
+                                       Map<String, Object> stringMap = (Map<String, Object>) baseBean.getData();
 
                                        EPC epc = new EPC();
-                                       epc.setId(stringMap.get("Epc"));
-                                       epc.setDepartmentName(stringMap.get("Epc"));
-                                       epc.setWasteType(stringMap.get("Epc"));
-                                       epc.setWeight(12.5);
+                                       epc.setId(stringMap.get("Epc")+"");
+                                       epc.setWasteType(stringMap.get("WasteType")+"");
+                                       epc.setWeight((double)stringMap.get("Weight"));
                                        epclist.add(epc);
 
-
-                                       medicalCollectAdapter.updateDatas(epclist);
+                                       outRegisterAdapter.updateDatas(epclist);
 
                                        double a = 0;
                                        for (int i = 0; i < epclist.size(); i++) {
@@ -140,7 +140,7 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
 
                                @Override
                                public void onError(Throwable e) {
-                                   ToastUtil.toast("扫描失败");
+                                   ToastUtil.toast(e.getMessage());
                                }
 
                                @Override
@@ -247,7 +247,17 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
 
     @Override
     public void OutRegisterResult(BaseBean<Object> baseBean) {
-
+        if (baseBean == null) {
+            ToastUtil.toast("提交失败");
+            return;
+        }
+        if (baseBean.getCode() == 0){
+            ToastUtil.toast("提交成功");
+            setResult(RESULT_OK);
+            finish();
+        }else {
+            ToastUtil.toast(baseBean.getMessage());
+        }
     }
 
     @OnClick({R.id.btn_commit, R.id.btn_cancle})
@@ -268,7 +278,6 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
                 BigDecimal bigDecimal = new BigDecimal(weight);
 
                 Map<String, Object> map = new HashMap<>();
-                map.put("DelivererId", "");
                 map.put("ReceiverId", HandOverUserId);
                 map.put("ReceiveTotalWeight", bigDecimal);
                 map.put("DustbinEpcs", AppApplication.getGson().toJson(DustbinEpcs));

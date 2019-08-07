@@ -110,11 +110,11 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
                                @Override
                                public void onNext(BaseBean<Object> baseBean) {
                                    if (baseBean == null) {
-                                       ToastUtil.toast("请求失败");
+                                       ToastUtil.toast("医废类型请求失败");
                                        finish();
                                    }
                                    if (baseBean.getCode() == 0) {
-                                       ToastUtil.toast("医废类型查询");
+                                       //ToastUtil.toast("医废类型查询");
                                        if (baseBean.getData() != null) {
                                            dataList = (List<Map<String, String>>) baseBean.getData();
                                            String[] from = {"Id", "Name"};
@@ -147,7 +147,7 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
 
                                @Override
                                public void onError(Throwable e) {
-                                   ToastUtil.toast("请求失败");
+                                   ToastUtil.toast("医废类型请求失败");
                                }
 
                                @Override
