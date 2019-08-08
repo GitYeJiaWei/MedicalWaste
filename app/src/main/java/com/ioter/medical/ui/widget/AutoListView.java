@@ -68,7 +68,7 @@ public class AutoListView extends ListView {
 		more = (TextView) footer.findViewById(R.id.more);
 		loading = (ProgressBar) footer.findViewById(R.id.loading);
 
-		this.addFooterView(footer);
+		this.addFooterView(footer,null,false);
 		this.setOnScrollListener(new OnScrollListener() {
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {

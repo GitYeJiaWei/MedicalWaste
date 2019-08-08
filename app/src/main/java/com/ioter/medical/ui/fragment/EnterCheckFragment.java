@@ -100,8 +100,9 @@ public class EnterCheckFragment extends BaseFragment<MedEnterPresenter> implemen
     }
 
     @Override
-    public void setBarCode(String barCode) {
+    public void showBarCode(String barCode) {
     }
+
 
     @Override
     public void medEnterResult(BaseBean<List<StockIn>> baseBean) {

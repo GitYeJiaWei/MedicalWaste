@@ -46,6 +46,8 @@ public class CountFragment extends BaseFragment {
     }
 
     @Override
-    public void setBarCode(String barCode) {
+    public void showBarCode(String barCode) {
+
     }
+
 }

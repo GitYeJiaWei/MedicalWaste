@@ -395,6 +395,16 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
         return super.onKeyUp(keyCode, event);
     }
 
+    @Override
+    public void showBarCode(String barCodeText)
+    {
+        Fragment fragment = (BaseFragment) mAdapter.instantiateItem(vpager, vpager.getCurrentItem());
+        if (fragment != null)
+        {
+            ((BaseFragment) fragment).showBarCode(barCodeText);
+        }
+    }
+
     public void exit() {
         if ((System.currentTimeMillis() - mExitTime) > 2000) {
             Toast.makeText(MainActivity.this, "再按一次退出程序", Toast.LENGTH_SHORT).show();

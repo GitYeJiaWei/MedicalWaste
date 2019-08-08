@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:layout_margin="5dp"
     tools:context=".ui.activity.PowerActivity">
 
     <LinearLayout
@@ -43,10 +44,12 @@
 
     <Button
         android:id="@+id/btn_sure"
-        android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/md_blue_500"
+        android:layout_marginTop="100dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/btn_select"
         android:textColor="@color/white"
         android:text="@string/save"/>
 

@@ -214,6 +214,8 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_width="match_parent"
+            android:divider="@null"
+            android:dividerHeight="0dp"
             android:layout_marginBottom="15dp"
             android:layout_height="150dp">
 
@@ -232,7 +234,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:background="@drawable/button_back"
+            android:background="@drawable/btn_select"
             android:text="入库"
             android:textColor="@color/white" />
 
@@ -242,18 +244,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:background="@drawable/button_back"
+            android:background="@drawable/btn_select"
             android:text="取消"
             android:textColor="@color/white" />
     </LinearLayout>
-
-    <Button
-        android:id="@+id/btn_next"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_weight="1"
-        android:background="@drawable/button_back"
-        android:text="下一步"
-        android:textColor="@color/white" />
 </LinearLayout>

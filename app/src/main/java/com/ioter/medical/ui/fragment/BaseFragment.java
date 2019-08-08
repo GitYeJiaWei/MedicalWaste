@@ -125,7 +125,7 @@ public abstract class BaseFragment<T extends BasePresenter> extends BackPressedF
 
     public abstract void init(View view);
 
-    public abstract void setBarCode(String barCode);
+    public abstract void showBarCode(String barCode);
 
 
     @Override

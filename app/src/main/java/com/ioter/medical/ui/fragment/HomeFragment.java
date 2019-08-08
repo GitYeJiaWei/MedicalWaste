@@ -183,8 +183,10 @@ public class HomeFragment extends BaseFragment {
     }
 
     @Override
-    public void setBarCode(String barCode) {
+    public void showBarCode(String barCode) {
+
     }
+
 
     //定义一个回调接口
     public interface CallBackValue {

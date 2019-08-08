@@ -182,7 +182,7 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
                                        ToastUtil.toast("扫描失败");
                                        return;
                                    }
-                                   if (baseBean.getCode() == 0) {
+                                   if (baseBean.getCode() == 0 && baseBean.getData()!=null) {
                                        Map<String, String> map1 = (Map<String, String>) baseBean.getData();
                                        tvUser.setText(map1.get("Name"));
                                        HandOverUserId = map1.get("Id");
@@ -223,7 +223,7 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
                                        ToastUtil.toast("扫描失败");
                                        return;
                                    }
-                                   if (baseBean.getCode() == 0) {
+                                   if (baseBean.getCode() == 0 && baseBean.getData()!=null) {
                                        EPC epc = new EPC();
                                        epc.setId(baseBean.getData().getId());
                                        epc.setDepartmentName(baseBean.getData().getDepartmentName());
@@ -248,7 +248,7 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
 
                                @Override
                                public void onError(Throwable e) {
-                                   ToastUtil.toast("扫描失败");
+                                   ToastUtil.toast(e.getMessage());
                                }
 
                                @Override

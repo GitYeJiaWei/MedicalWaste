@@ -102,7 +102,8 @@ public class EnterSureFragment extends BaseFragment<MedEnterPresenter> implement
     }
 
     @Override
-    public void setBarCode(String barCode) {
+    public void showBarCode(String barCode) {
+
     }
 
     @Override

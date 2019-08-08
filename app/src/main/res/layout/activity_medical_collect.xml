@@ -156,7 +156,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:background="@drawable/button_back"
+            android:background="@drawable/btn_select"
             android:text="提交"
             android:textColor="@color/white" />
 
@@ -166,7 +166,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:background="@drawable/button_back"
+            android:background="@drawable/btn_select"
             android:text="取消"
             android:textColor="@color/white" />
     </LinearLayout>

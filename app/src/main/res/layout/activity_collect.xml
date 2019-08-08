@@ -75,6 +75,8 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_width="match_parent"
+        android:divider="@null"
+        android:dividerHeight="0dp"
         android:layout_marginBottom="15dp"
         android:layout_height="match_parent">
 
@@ -86,7 +88,7 @@
         android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/button_back"
+        android:background="@drawable/btn_select"
         android:textColor="@color/white"
         android:text="@string/frag_scan"/>
 </RelativeLayout>

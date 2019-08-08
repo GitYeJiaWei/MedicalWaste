@@ -3,7 +3,9 @@ package com.ioter.medical.ui.fragment;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +19,13 @@ import android.widget.TextView;
 import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
 import com.ioter.medical.bean.BaseBean;
+import com.ioter.medical.bean.Code;
+import com.ioter.medical.bean.Code1;
 import com.ioter.medical.common.util.ToastUtil;
 import com.ioter.medical.data.http.ApiService;
 import com.ioter.medical.di.component.AppComponent;
+import com.ioter.medical.ui.activity.CheckMessageActivity;
+import com.ioter.medical.ui.activity.MainActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -117,9 +123,12 @@ public class CheckFragment extends BaseFragment {
          * 动态添显示下来菜单的选项，可以动态添加元素
          */
         List<String> list = new ArrayList<>();
+        list.add("全部类型垃圾");
         for (int i = 0; i < dataList.size(); i++) {
             list.add(dataList.get(i).get("Name"));
         }
+
+
         /*
          * 第二个参数是显示的布局
          * 第三个参数是在布局显示的位置id
@@ -127,6 +136,11 @@ public class CheckFragment extends BaseFragment {
          */
         ArrayAdapter adapter2 = new ArrayAdapter(AppApplication.getApplication(), R.layout.item, R.id.text_item, list);
         spKuqu.setAdapter(adapter2);
+
+        if (TextUtils.isEmpty(selected)) {
+            selected = list.get(0);
+            spKuqu.setSelection(0, true);
+        }
 
         spKuqu.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -147,12 +161,22 @@ public class CheckFragment extends BaseFragment {
         mYear = calendar.get(Calendar.YEAR);
         mMonth = calendar.get(Calendar.MONTH);
         mDay = calendar.get(Calendar.DAY_OF_MONTH);
-        SetDateTimeToTextView(tvStartTime);
-        SetDateTimeToTextView(tvEndTime);
+       /* SetDateTimeToTextView(tvStartTime);
+        SetDateTimeToTextView(tvEndTime);*/
     }
 
     @Override
-    public void setBarCode(String barCode) {
+    public void showBarCode(String barcode) {
+        if (barcode.contains("iotId")) {
+            ToastUtil.toast("请扫描医废二维码");
+        }
+        if (barcode.contains("iotEPC")) {
+            Code1 code1 = AppApplication.getGson().fromJson(barcode, Code1.class);
+            String bar = code1.getIotEPC();
+            Intent intent = new Intent(AppApplication.getApplication(), CheckMessageActivity.class);
+            intent.putExtra("id",bar);
+            startActivity(intent);
+        }
     }
 
     private DatePickerDialog.OnDateSetListener mdateListener = new DatePickerDialog.OnDateSetListener() {
@@ -185,10 +209,22 @@ public class CheckFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_lease:
-
+                String WasteTypeId = null;
+                if (!selected.equals("全部类型垃圾")){
+                    for (int i = 0; i < dataList.size(); i++) {
+                        if (dataList.get(i).get("Name").equals(selected)){
+                            WasteTypeId = dataList.get(i).get("Id");
+                        }
+                    }
+                }
+                Intent intent = new Intent(AppApplication.getApplication(), CheckMessageActivity.class);
+                intent.putExtra("WasteTypeId",WasteTypeId);
+                intent.putExtra("Begin",tvStartTime.getText().toString());
+                intent.putExtra("End",tvEndTime.getText().toString());
+                startActivity(intent);
                 break;
             case R.id.btn_scan:
-
+                ((MainActivity)mActivity).ScanBarcode();
                 break;
             case R.id.tv_startTime:
                 mStatus = 0;

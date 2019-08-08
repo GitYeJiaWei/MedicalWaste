@@ -48,7 +48,7 @@
             android:gravity="center"
             android:layout_height="match_parent"
             android:ems="10"
-            android:text="2017-11-04" />
+            android:text="" />
 
         <View
             android:layout_width="10dp"
@@ -65,7 +65,7 @@
             android:background="@drawable/text_stroke"
             android:gravity="center"
             android:ems="10"
-            android:text="2017-11-04" />
+            android:text="" />
     </LinearLayout>
 
     <View
@@ -82,7 +82,7 @@
         android:layout_marginRight="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/button_back"
+        android:background="@drawable/btn_select"
         android:textColor="@color/white"
         android:text="@string/find_scan"/>
 
@@ -91,7 +91,7 @@
         android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/button_back"
+        android:background="@drawable/btn_select"
         android:textColor="@color/white"
         android:text="@string/pick_scan"/>
 </LinearLayout>

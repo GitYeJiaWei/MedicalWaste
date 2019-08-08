@@ -197,7 +197,9 @@
             android:layout_marginRight="5dp"
             android:layout_width="match_parent"
             android:layout_marginBottom="15dp"
-            android:layout_height="match_parent">
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:layout_height="200dp">
 
         </ListView>
     </LinearLayout>
