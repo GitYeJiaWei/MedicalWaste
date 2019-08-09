@@ -1,30 +1,28 @@
 package com.ioter.medical.bean;
 
 public class WasteViewsBean extends BaseEntity{
+
     /**
      * Id : sample string 1
      * WasteType : sample string 2
-     * Status : 0
-     * CollectionTime : 2019-07-31 14:04:16
-     * DepartmentName : sample string 4
-     * HandOverUserName : sample string 5
+     * Weight : 3.0
+     * Status : 待确认
+     * CollectionTime : 2019-08-09 14:18:01
+     * DepartmentName : sample string 5
+     * HandOverUserName : sample string 6
+     * CollectUserName : sample string 7
+     * StockInTime : 2019-08-09 14:18:01
      */
 
     private String Id;
     private String WasteType;
-    private int Status;
     private double Weight;
+    private String Status;
     private String CollectionTime;
     private String DepartmentName;
     private String HandOverUserName;
-
-    public double getWeight() {
-        return Weight;
-    }
-
-    public void setWeight(double weight) {
-        Weight = weight;
-    }
+    private String CollectUserName;
+    private String StockInTime;
 
     public String getId() {
         return Id;
@@ -42,11 +40,19 @@ public class WasteViewsBean extends BaseEntity{
         this.WasteType = WasteType;
     }
 
-    public int getStatus() {
+    public double getWeight() {
+        return Weight;
+    }
+
+    public void setWeight(double Weight) {
+        this.Weight = Weight;
+    }
+
+    public String getStatus() {
         return Status;
     }
 
-    public void setStatus(int Status) {
+    public void setStatus(String Status) {
         this.Status = Status;
     }
 
@@ -72,5 +78,21 @@ public class WasteViewsBean extends BaseEntity{
 
     public void setHandOverUserName(String HandOverUserName) {
         this.HandOverUserName = HandOverUserName;
+    }
+
+    public String getCollectUserName() {
+        return CollectUserName;
+    }
+
+    public void setCollectUserName(String CollectUserName) {
+        this.CollectUserName = CollectUserName;
+    }
+
+    public String getStockInTime() {
+        return StockInTime;
+    }
+
+    public void setStockInTime(String StockInTime) {
+        this.StockInTime = StockInTime;
     }
 }

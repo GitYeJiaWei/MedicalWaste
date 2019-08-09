@@ -147,7 +147,7 @@ public class HomeFragment extends BaseFragment {
             for (int i = 0; i < mapList.size(); i++) {
                 Map<String, String> map = new HashMap<String, String>();
                 map.put("img", mapList.get(i).get("WasteType") + "");
-                map.put("text", mapList.get(i).get("Count") + " kg");
+                map.put("text", mapList.get(i).get("Weight") + " kg");
                 dataList1.add(map);
             }
         }
