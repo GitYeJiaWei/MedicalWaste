@@ -15,6 +15,7 @@ public class LoginBean extends BaseEntity {
 
     private String access_token;
     private String RealName;
+    private String Id;
 
     public String getRealName() {
         return RealName;
@@ -32,4 +33,11 @@ public class LoginBean extends BaseEntity {
         this.access_token = access_token;
     }
 
+    public String getId() {
+        return Id;
+    }
+
+    public void setId(String id) {
+        Id = id;
+    }
 }

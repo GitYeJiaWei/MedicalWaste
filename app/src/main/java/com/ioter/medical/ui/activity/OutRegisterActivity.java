@@ -1,6 +1,5 @@
 package com.ioter.medical.ui.activity;
 
-import android.content.Intent;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -13,7 +12,6 @@ import com.ioter.medical.R;
 import com.ioter.medical.bean.BaseBean;
 import com.ioter.medical.bean.BaseEpc;
 import com.ioter.medical.bean.Code;
-import com.ioter.medical.bean.Code1;
 import com.ioter.medical.bean.EPC;
 import com.ioter.medical.common.util.ACache;
 import com.ioter.medical.common.util.ToastUtil;
@@ -23,7 +21,6 @@ import com.ioter.medical.di.component.DaggerOutRegisterComponent;
 import com.ioter.medical.di.module.OutRegisterModule;
 import com.ioter.medical.presenter.OutRegisterPresenter;
 import com.ioter.medical.presenter.contract.OutRegisterContract;
-import com.ioter.medical.ui.adapter.MedicalCollectAdapter;
 import com.ioter.medical.ui.adapter.OutRegisterAdapter;
 
 import java.math.BigDecimal;
@@ -31,7 +28,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -130,7 +126,6 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
                                            a += epclist.get(i).getWeight();
                                            DustbinEpcs.add(epclist.get(i).getId());
                                        }
-                                       tvWeight.setText(a + "");
                                        tvTotalWeight.setText(a + "");
                                        //ToastUtil.toast("扫描成功");
                                    } else {

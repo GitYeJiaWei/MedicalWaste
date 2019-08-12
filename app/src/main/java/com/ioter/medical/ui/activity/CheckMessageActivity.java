@@ -85,7 +85,9 @@ public class CheckMessageActivity extends BaseActivity<MedCollectPresenter> impl
     public void init() {
         setTitle("查询结果");
         Intent intent = getIntent();
+        String state = intent.getStringExtra("state");
         String id = intent.getStringExtra("id");
+
         if (!TextUtils.isEmpty(id)) {
             getEPC(id);
             linText.setVisibility(View.VISIBLE);
@@ -186,13 +188,13 @@ public class CheckMessageActivity extends BaseActivity<MedCollectPresenter> impl
                                        } else if (wb.getStatus().equals("已确认")) {
                                            imgSure.setBackgroundResource(R.mipmap.sure_set);
                                        } else if (wb.getStatus().equals("待入库")) {
-                                           imgSure.setBackgroundResource(R.mipmap.sure_set);
+                                           imgSure.setBackgroundResource(R.mipmap.in_wait);
                                        } else if (wb.getStatus().equals("已入库")) {
-                                           imgSure.setBackgroundResource(R.mipmap.sure_set);
+                                           imgSure.setBackgroundResource(R.mipmap.in_set);
                                        } else if (wb.getStatus().equals("待出库")) {
-                                           imgSure.setBackgroundResource(R.mipmap.sure_set);
+                                           imgSure.setBackgroundResource(R.mipmap.out_wait);
                                        } else if (wb.getStatus().equals("已出库")) {
-                                           imgSure.setBackgroundResource(R.mipmap.sure_set);
+                                           imgSure.setBackgroundResource(R.mipmap.out_set);
                                        }
                                    } else {
                                        ToastUtil.toast(baseBean.getMessage());

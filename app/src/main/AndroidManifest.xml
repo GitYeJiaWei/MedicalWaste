@@ -125,7 +125,8 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity android:name=".ui.activity.EnterCheckActivity" />
-        <activity android:name=".ui.activity.CheckMessageActivity"></activity>
+        <activity android:name=".ui.activity.CheckMessageActivity" />
+        <activity android:name=".ui.activity.ScanActivity"></activity>
     </application>
 
 </manifest>

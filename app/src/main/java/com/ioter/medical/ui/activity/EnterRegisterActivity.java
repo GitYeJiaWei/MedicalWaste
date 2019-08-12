@@ -238,7 +238,6 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
                                            a+=epclist.get(i).getWeight();
                                            WasteIds.add(epclist.get(i).getId());
                                        }
-                                       tvWeight.setText(a+"");
                                        tvTotalWeight.setText(a+"");
                                        ToastUtil.toast("扫描成功");
                                    } else {

@@ -1,5 +1,6 @@
 package com.ioter.medical.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +17,12 @@ import com.ioter.medical.bean.BaseBean;
 import com.ioter.medical.bean.FeeRule;
 import com.ioter.medical.common.util.ACache;
 import com.ioter.medical.di.component.AppComponent;
+import com.ioter.medical.ui.activity.CheckMessageActivity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +43,8 @@ public class CountFragment extends BaseFragment {
     private BaseBean<FeeRule> baseBean;
     private List<Map<String, String>> dataList1;
     private SimpleAdapter adapter1;
-
+    private int mYear, mMonth;
+    private String beginTime;
 
     public static CountFragment newInstance() {
         return new CountFragment();
@@ -55,7 +61,7 @@ public class CountFragment extends BaseFragment {
 
     @Override
     public void init(View view) {
-
+        initDate();
         //设置基本概况
         initData1();
         String[] from1 = {"img", "text"};
@@ -66,18 +72,29 @@ public class CountFragment extends BaseFragment {
         listLease.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                /*for (int i = 0; i < dataList1.size(); i++) {
-                    if (i == position) {
-                        LinearLayout linearLayout = (LinearLayout) ((LinearLayout) listLease.getChildAt(i)).getChildAt(0);
-                        linearLayout.setBackground(getResources().getDrawable(R.drawable.button_back));
-                    } else {
-                        LinearLayout linearLayout = (LinearLayout) ((LinearLayout) listLease.getChildAt(i)).getChildAt(0);
-                        linearLayout.setBackground(getResources().getDrawable(R.drawable.button_back1));
-                    }
-                }*/
+                Intent intent = new Intent(AppApplication.getApplication(), CheckMessageActivity.class);
+                intent.putExtra("state","count");
+                intent.putExtra("WasteTypeId",dataList1.get(position).get("id"));
+                intent.putExtra("Begin",beginTime);
+                startActivity(intent);
             }
         });
 
+    }
+
+    private void initDate() {
+        //初始化日期
+        final Calendar calendar = Calendar.getInstance();
+        mYear = calendar.get(Calendar.YEAR);
+        mMonth = calendar.get(Calendar.MONTH);
+        String newDateStr = mYear + "-" + (mMonth + 1) + "-" + "01";
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");//小写的mm表示的是分钟
+            Date date = sdf.parse(newDateStr);
+            beginTime = new SimpleDateFormat("yyyy-MM-dd").format(date);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void initData1() {
@@ -92,6 +109,8 @@ public class CountFragment extends BaseFragment {
                 Map<String, String> map = new HashMap<String, String>();
                 map.put("img", mapList.get(i).get("Count") + "");
                 map.put("text", mapList.get(i).get("WasteType") + "");
+                map.put("id",mapList.get(i).get("Id") + "");
+
                 dataList1.add(map);
             }
         }

@@ -27,7 +27,7 @@ public class BitmapUtil {
             throws WriterException {
         Hashtable<EncodeHintType, String> hints = new Hashtable<EncodeHintType, String>();
         hints.put(EncodeHintType.CHARACTER_SET, "utf-8");
-        BitMatrix matrix = new MultiFormatWriter().encode("lvu",
+        BitMatrix matrix = new MultiFormatWriter().encode(url,
                 BarcodeFormat.QR_CODE, widthAndHeight, widthAndHeight);
 
         int width = matrix.getWidth();

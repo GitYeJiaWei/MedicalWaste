@@ -48,6 +48,7 @@
     <string name="settting_user">账号设置</string>
     <string name="setting_ble">蓝牙设置</string>
     <string name="settting_help">功率设置</string>
+    <string name="settting_scan">我的二维码</string>
     <string name="settting_inform_ip">IP地址：</string>
     <string name="settting_inform_port">端口号：</string>
     <string name="save">保存</string>

@@ -113,13 +113,13 @@ public class CheckMessageAdapter extends BaseAdapter {
         }else if (m1.getStatus().equals("已确认")) {
             listItemView.img_sure.setBackgroundResource(R.mipmap.sure_set);
         }else if (m1.getStatus().equals("待入库")) {
-            listItemView.img_sure.setBackgroundResource(R.mipmap.sure_set);
+            listItemView.img_sure.setBackgroundResource(R.mipmap.in_wait);
         }else if (m1.getStatus().equals("已入库")) {
-            listItemView.img_sure.setBackgroundResource(R.mipmap.sure_set);
+            listItemView.img_sure.setBackgroundResource(R.mipmap.in_set);
         }else if (m1.getStatus().equals("待出库")) {
-            listItemView.img_sure.setBackgroundResource(R.mipmap.sure_set);
+            listItemView.img_sure.setBackgroundResource(R.mipmap.out_wait);
         }else if (m1.getStatus().equals("已出库")) {
-            listItemView.img_sure.setBackgroundResource(R.mipmap.sure_set);
+            listItemView.img_sure.setBackgroundResource(R.mipmap.out_set);
         }
         return convertView;
     }

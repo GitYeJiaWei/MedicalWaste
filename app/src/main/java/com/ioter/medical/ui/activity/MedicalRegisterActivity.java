@@ -140,7 +140,7 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
                                                }
                                            });
                                        }
-                                   }else {
+                                   } else {
                                        ToastUtil.toast(baseBean.getMessage());
                                    }
                                }
@@ -171,15 +171,15 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
     public void showBarCode(String barcode) {
         super.showBarCode(barcode);
         String bar = null;
-        if (barcode.contains("iotId")){
+        if (barcode.contains("iotId")) {
             Code code = AppApplication.getGson().fromJson(barcode, Code.class);
             bar = code.getIotId();
-        }else {
+        } else {
             ToastUtil.toast("垃圾袋二维码");
             return;
         }
 
-        if (bar == null){
+        if (bar == null) {
             ToastUtil.toast("扫描失败，请重新扫描");
             return;
         }
@@ -203,12 +203,12 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
                                        return;
                                    }
                                    if (baseBean.getCode() == 0) {
-                                       Map<String,String> map1 = (Map<String, String>) baseBean.getData();
+                                       Map<String, String> map1 = (Map<String, String>) baseBean.getData();
                                        tvUser.setText(map1.get("Name"));
                                        tvRoom.setText(map1.get("Department"));
                                        HandOverUserId = map1.get("Id");
                                        ToastUtil.toast("扫描成功");
-                                   }else {
+                                   } else {
                                        ToastUtil.toast(baseBean.getMessage());
                                    }
                                }
@@ -229,22 +229,27 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_commit:
-                if(TextUtils.isEmpty(WasteTypeId)){
+                if (TextUtils.isEmpty(WasteTypeId)) {
                     ToastUtil.toast("请选择废物类型");
                     return;
                 }
-                if (TextUtils.isEmpty(HandOverUserId)){
+                if (TextUtils.isEmpty(HandOverUserId)) {
                     ToastUtil.toast("请扫描交接人二维码");
                     return;
                 }
 
                 String weight = tvWeight.getText().toString();
+                if (TextUtils.isEmpty(weight)) {
+                    ToastUtil.toast("请填写称重信息");
+                    return;
+                }
                 //称重数据
                 BigDecimal bigDecimal = new BigDecimal(weight);
 
-                mPresenter.medRegister(HandOverUserId,bigDecimal,WasteTypeId);
+                mPresenter.medRegister(HandOverUserId, bigDecimal, WasteTypeId);
                 break;
             case R.id.btn_cancle:
+                setResult(RESULT_OK);
                 finish();
                 break;
         }
@@ -268,8 +273,8 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
         builder.setNegativeButton("否", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
                 setResult(RESULT_OK);
+                dialog.dismiss();
                 finish();
             }
         });
@@ -279,14 +284,21 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        setResult(RESULT_OK);
+        finish();
+    }
+
+    @Override
     public void medRegisterResult(BaseBean<Object> baseBean) {
         if (baseBean == null) {
             ToastUtil.toast("提交失败");
-           return;
+            return;
         }
-        if (baseBean.getCode() == 0){
+        if (baseBean.getCode() == 0) {
             createDialog();
-        }else {
+        } else {
             ToastUtil.toast(baseBean.getMessage());
         }
     }

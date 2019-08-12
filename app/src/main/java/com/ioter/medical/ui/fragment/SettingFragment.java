@@ -6,15 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.ioter.medical.R;
 import com.ioter.medical.di.component.AppComponent;
 import com.ioter.medical.ui.activity.InformActivity;
 import com.ioter.medical.ui.activity.LoginActivity;
-import com.ioter.medical.ui.activity.MainActivity;
 import com.ioter.medical.ui.activity.PowerActivity;
+import com.ioter.medical.ui.activity.ScanActivity;
 import com.ioter.medical.ui.activity.UserActivity;
 
 import butterknife.BindView;
@@ -36,6 +35,8 @@ public class SettingFragment extends BaseFragment {
     RelativeLayout linBle;
     @BindView(R.id.btn_lease)
     Button btnLease;
+    @BindView(R.id.lin_scan)
+    RelativeLayout linScan;
 
     public static SettingFragment newInstance() {
         return new SettingFragment();
@@ -62,7 +63,7 @@ public class SettingFragment extends BaseFragment {
     }
 
 
-    @OnClick({R.id.lin_inform, R.id.lin_user, R.id.lin_message, R.id.lin_ble,R.id.btn_lease})
+    @OnClick({R.id.lin_scan, R.id.lin_inform, R.id.lin_user, R.id.lin_message, R.id.lin_ble, R.id.btn_lease})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.lin_inform:
@@ -79,6 +80,9 @@ public class SettingFragment extends BaseFragment {
                 break;
             case R.id.btn_lease:
                 startActivity(new Intent(getActivity(), LoginActivity.class));
+                break;
+            case R.id.lin_scan:
+                startActivity(new Intent(getActivity(), ScanActivity.class));
                 break;
         }
     }

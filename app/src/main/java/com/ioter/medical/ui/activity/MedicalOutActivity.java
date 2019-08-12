@@ -37,7 +37,7 @@ public class MedicalOutActivity extends BaseActivity<MedOutPresenter> implements
     //下一页初始化为1
     int nextpage = 1;
     //每一页加载多少数据
-    private int number = 10;
+    private int number = 15;
     private String TAG = "ListTag";
 
     @Override
