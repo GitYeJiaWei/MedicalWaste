@@ -85,7 +85,6 @@ public class CheckMessageActivity extends BaseActivity<MedCollectPresenter> impl
     public void init() {
         setTitle("查询结果");
         Intent intent = getIntent();
-        String state = intent.getStringExtra("state");
         String id = intent.getStringExtra("id");
 
         if (!TextUtils.isEmpty(id)) {

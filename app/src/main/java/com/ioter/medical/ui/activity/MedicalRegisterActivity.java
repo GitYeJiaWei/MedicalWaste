@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
 import com.ioter.medical.bean.BaseBean;
+import com.ioter.medical.bean.BaseEntity;
 import com.ioter.medical.bean.Code;
 import com.ioter.medical.common.http.BaseUrlInterceptor;
 import com.ioter.medical.common.util.ACache;
@@ -113,7 +114,7 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
                                        ToastUtil.toast("医废类型请求失败");
                                        finish();
                                    }
-                                   if (baseBean.getCode() == 0) {
+                                   if (baseBean.getCode() == 0 && baseBean.getData()!=null) {
                                        //ToastUtil.toast("医废类型查询");
                                        if (baseBean.getData() != null) {
                                            dataList = (List<Map<String, String>>) baseBean.getData();
@@ -147,7 +148,7 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
 
                                @Override
                                public void onError(Throwable e) {
-                                   ToastUtil.toast("医废类型请求失败");
+                                   ToastUtil.toast(e.getMessage());
                                }
 
                                @Override
@@ -202,12 +203,12 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
                                        ToastUtil.toast("扫描失败");
                                        return;
                                    }
-                                   if (baseBean.getCode() == 0) {
+                                   if (baseBean.getCode() == 0 && baseBean.getData()!=null) {
                                        Map<String, String> map1 = (Map<String, String>) baseBean.getData();
                                        tvUser.setText(map1.get("Name"));
                                        tvRoom.setText(map1.get("Department"));
                                        HandOverUserId = map1.get("Id");
-                                       ToastUtil.toast("扫描成功");
+                                       //ToastUtil.toast("扫描成功");
                                    } else {
                                        ToastUtil.toast(baseBean.getMessage());
                                    }
@@ -215,7 +216,7 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
 
                                @Override
                                public void onError(Throwable e) {
-                                   ToastUtil.toast("扫描失败");
+                                   ToastUtil.toast(e.getMessage());
                                }
 
                                @Override
@@ -246,6 +247,7 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
                 //称重数据
                 BigDecimal bigDecimal = new BigDecimal(weight);
 
+                btnCommit.setEnabled(false);
                 mPresenter.medRegister(HandOverUserId, bigDecimal, WasteTypeId);
                 break;
             case R.id.btn_cancle:
@@ -292,6 +294,7 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
 
     @Override
     public void medRegisterResult(BaseBean<Object> baseBean) {
+        btnCommit.setEnabled(true);
         if (baseBean == null) {
             ToastUtil.toast("提交失败");
             return;
@@ -301,6 +304,12 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
         } else {
             ToastUtil.toast(baseBean.getMessage());
         }
+    }
+
+    @Override
+    public void showError(String msg) {
+        super.showError(msg);
+        btnCommit.setEnabled(false);
     }
 
 }

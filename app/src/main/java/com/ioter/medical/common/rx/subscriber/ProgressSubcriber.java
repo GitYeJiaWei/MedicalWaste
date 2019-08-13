@@ -3,13 +3,12 @@ package com.ioter.medical.common.rx.subscriber;
 import android.content.Context;
 
 import com.ioter.medical.common.exception.BaseException;
+import com.ioter.medical.common.util.ToastUtil;
 import com.ioter.medical.ui.BaseView;
 
 import io.reactivex.disposables.Disposable;
 
-public  abstract  class ProgressSubcriber<T> extends ErrorHandlerSubscriber<T>  {
-
-
+public abstract class ProgressSubcriber<T> extends ErrorHandlerSubscriber<T> {
 
 
     private BaseView mView;
@@ -22,23 +21,21 @@ public  abstract  class ProgressSubcriber<T> extends ErrorHandlerSubscriber<T>  
     }
 
 
-
-    public boolean isShowProgress(){
+    public boolean isShowProgress() {
         return true;
     }
 
 
     @Override
     public void onSubscribe(Disposable d) {
-        if(isShowProgress()){
+        if (isShowProgress()) {
             mView.showLoading();
         }
     }
 
     @Override
     public void onComplete() {
-
-            mView.dismissLoading();
+        mView.dismissLoading();
     }
 
     @Override
@@ -46,9 +43,12 @@ public  abstract  class ProgressSubcriber<T> extends ErrorHandlerSubscriber<T>  
 
         e.printStackTrace();
 
-        BaseException baseException =  mErrorHandler.handleError(e);
-        mView.showError(baseException.getDisplayMessage());
+        /*BaseException baseException = mErrorHandler.handleError(e);
+        mView.showError(baseException.getDisplayMessage());*/
 
+        ToastUtil.toast(e.getMessage());
+        mView.showError(e.getMessage());
+        mView.dismissLoading();
     }
 
 }

@@ -73,7 +73,6 @@ public class CountFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(AppApplication.getApplication(), CheckMessageActivity.class);
-                intent.putExtra("state","count");
                 intent.putExtra("WasteTypeId",dataList1.get(position).get("id"));
                 intent.putExtra("Begin",beginTime);
                 startActivity(intent);

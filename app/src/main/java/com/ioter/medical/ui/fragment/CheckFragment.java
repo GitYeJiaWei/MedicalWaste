@@ -218,7 +218,6 @@ public class CheckFragment extends BaseFragment {
                     }
                 }
                 Intent intent = new Intent(AppApplication.getApplication(), CheckMessageActivity.class);
-                intent.putExtra("state","check");
                 intent.putExtra("WasteTypeId",WasteTypeId);
                 intent.putExtra("Begin",tvStartTime.getText().toString());
                 intent.putExtra("End",tvEndTime.getText().toString());

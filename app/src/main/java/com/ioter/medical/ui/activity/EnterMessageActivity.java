@@ -139,6 +139,8 @@ public class EnterMessageActivity extends BaseActivity<EnterMessagePresenter> im
                     ToastUtil.toast("确认入库失败");
                     return;
                 }
+
+                btnCommit.setEnabled(false);
                 Map<String,String> map = new HashMap<>();
                 map.put("id",id);
 
@@ -153,6 +155,7 @@ public class EnterMessageActivity extends BaseActivity<EnterMessagePresenter> im
 
                                        @Override
                                        public void onNext(BaseBean<Object> baseBean) {
+                                           btnCommit.setEnabled(true);
                                            if (baseBean == null) {
                                                ToastUtil.toast("扫描失败");
                                                return;
@@ -160,12 +163,15 @@ public class EnterMessageActivity extends BaseActivity<EnterMessagePresenter> im
                                            if (baseBean.getCode() == 0) {
                                                ToastUtil.toast("确认入库成功");
                                                finish();
+                                           }else {
+                                               ToastUtil.toast(baseBean.getMessage());
                                            }
                                        }
 
                                        @Override
                                        public void onError(Throwable e) {
-                                           ToastUtil.toast("确认入库失败");
+                                           btnCommit.setEnabled(false);
+                                           ToastUtil.toast(e.getMessage());
                                        }
 
                                        @Override

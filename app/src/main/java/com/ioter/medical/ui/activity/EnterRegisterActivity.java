@@ -1,6 +1,5 @@
 package com.ioter.medical.ui.activity;
 
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -26,18 +25,14 @@ import com.ioter.medical.presenter.EnterRegisterPresenter;
 import com.ioter.medical.presenter.contract.EnterRegisterContract;
 import com.ioter.medical.ui.adapter.MedicalCollectAdapter;
 
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -194,7 +189,7 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
 
                                @Override
                                public void onError(Throwable e) {
-                                   ToastUtil.toast("扫描失败");
+                                   ToastUtil.toast(e.getMessage());
                                }
 
                                @Override
@@ -239,7 +234,7 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
                                            WasteIds.add(epclist.get(i).getId());
                                        }
                                        tvTotalWeight.setText(a+"");
-                                       ToastUtil.toast("扫描成功");
+                                       //ToastUtil.toast("扫描成功");
                                    } else {
                                        ToastUtil.toast(baseBean.getMessage());
                                    }
@@ -278,6 +273,8 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
                 //称重数据
                 BigDecimal bigDecimal = new BigDecimal(weight);
 
+                btnCommit.setEnabled(false);
+
                 Map<String, Object> map = new HashMap<>();
                 map.put("ReceiverId", HandOverUserId);
                 map.put("DushbinEpc", DushbinEpc);
@@ -293,6 +290,7 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
 
     @Override
     public void EnterRegisterResult(BaseBean<Object> baseBean) {
+        btnCommit.setEnabled(true);
         if (baseBean == null) {
             ToastUtil.toast("提交失败");
             return;
@@ -306,4 +304,9 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
         }
     }
 
+    @Override
+    public void showError(String msg) {
+        super.showError(msg);
+        btnCommit.setEnabled(false);
+    }
 }

@@ -11,5 +11,5 @@
         android:id="@+id/img_scan"
         android:layout_width="300dp"
         android:layout_height="300dp"
-        android:src="@mipmap/ic_launcher"/>
+        android:src="@mipmap/error"/>
 </LinearLayout>

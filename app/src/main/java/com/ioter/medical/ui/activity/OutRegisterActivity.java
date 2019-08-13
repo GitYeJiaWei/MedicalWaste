@@ -218,7 +218,7 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
                                        ToastUtil.toast("扫描失败");
                                        return;
                                    }
-                                   if (baseBean.getCode() == 0) {
+                                   if (baseBean.getCode() == 0 && baseBean.getData()!=null) {
                                        Map<String, String> map1 = (Map<String, String>) baseBean.getData();
                                        tvUser.setText(map1.get("Name"));
                                        HandOverUserId = map1.get("Id");
@@ -230,7 +230,7 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
 
                                @Override
                                public void onError(Throwable e) {
-                                   ToastUtil.toast("扫描失败");
+                                   ToastUtil.toast(e.getMessage());
                                }
 
                                @Override
@@ -240,20 +240,6 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
                 );
     }
 
-    @Override
-    public void OutRegisterResult(BaseBean<Object> baseBean) {
-        if (baseBean == null) {
-            ToastUtil.toast("提交失败");
-            return;
-        }
-        if (baseBean.getCode() == 0){
-            ToastUtil.toast("提交成功");
-            setResult(RESULT_OK);
-            finish();
-        }else {
-            ToastUtil.toast(baseBean.getMessage());
-        }
-    }
 
     @OnClick({R.id.btn_commit, R.id.btn_cancle})
     public void onViewClicked(View view) {
@@ -271,6 +257,7 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
 
                 //称重数据
                 BigDecimal bigDecimal = new BigDecimal(weight);
+                btnCommit.setEnabled(false);
 
                 Map<String, Object> map = new HashMap<>();
                 map.put("ReceiverId", HandOverUserId);
@@ -282,5 +269,27 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
                 finish();
                 break;
         }
+    }
+
+    @Override
+    public void OutRegisterResult(BaseBean<Object> baseBean) {
+        btnCommit.setEnabled(true);
+        if (baseBean == null) {
+            ToastUtil.toast("提交失败");
+            return;
+        }
+        if (baseBean.getCode() == 0){
+            ToastUtil.toast("提交成功");
+            setResult(RESULT_OK);
+            finish();
+        }else {
+            ToastUtil.toast(baseBean.getMessage());
+        }
+    }
+
+    @Override
+    public void showError(String msg) {
+        super.showError(msg);
+        btnCommit.setEnabled(false);
     }
 }

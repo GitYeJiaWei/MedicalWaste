@@ -93,7 +93,7 @@ public class CheckMessageAdapter extends BaseAdapter {
         final WasteViewsBean m1 = (WasteViewsBean) this.getItem(position);
         listItemView.tv_type.setText(m1.getWasteType());
         listItemView.tv_room.setText(m1.getDepartmentName());
-        listItemView.tv_weight.setText(m1.getWeight()+"");
+        listItemView.tv_weight.setText("重量：" + m1.getWeight() + "kg");
         listItemView.tv_name.setText(m1.getHandOverUserName());
         listItemView.tv_startTime.setText(m1.getCollectionTime());
         listItemView.tv_endTime.setText(m1.getStockInTime());
