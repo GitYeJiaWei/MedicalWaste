@@ -242,7 +242,7 @@ public class CheckMessageActivity extends BaseActivity<MedCollectPresenter> impl
     @Override
     public void medCollectResult(BaseBean<Object> baseBean) {
         if (baseBean != null) {
-            if (baseBean.getCode() == 0) {
+            if (baseBean.getCode() == 0 && baseBean.getData()!=null) {
                 List<Map<String, Object>> list = (List<Map<String, Object>>) baseBean.getData();
                 if (list != null) {
                     for (int i = 0; i < list.size(); i++) {
@@ -269,5 +269,11 @@ public class CheckMessageActivity extends BaseActivity<MedCollectPresenter> impl
                 ToastUtil.toast(baseBean.getMessage());
             }
         }
+    }
+
+    @Override
+    public void showError(String msg) {
+        super.showError(msg);
+
     }
 }

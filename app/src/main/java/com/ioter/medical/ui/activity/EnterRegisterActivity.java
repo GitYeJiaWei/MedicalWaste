@@ -95,11 +95,7 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
     @Override
     public void handleUi(BaseEpc baseEpc) {
         super.handleUi(baseEpc);
-        if (map.containsKey(baseEpc._EPC)) {
-            return;
-        }
         tvRoom.setText(baseEpc._EPC);
-        map.put(baseEpc._EPC,"");
     }
 
     @Override
@@ -154,6 +150,10 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
         if (barcode.contains("iotEPC")) {
             Code1 code1 = AppApplication.getGson().fromJson(barcode, Code1.class);
             String bar = code1.getIotEPC();
+            if (map.containsKey(bar)){
+                ToastUtil.toast("重复的垃圾二维码");
+                return;
+            }
             getEPC(bar);
         }
     }
@@ -199,7 +199,7 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
                 );
     }
 
-    private void getEPC(String bar) {
+    private void getEPC(final String bar) {
         final Map<String, String> map = new HashMap<>();
         map.put("id", bar);
 
@@ -219,6 +219,7 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
                                        return;
                                    }
                                    if (baseBean.getCode() == 0 && baseBean.getData()!=null) {
+                                       map.put(bar,bar);
                                        EPC epc = new EPC();
                                        epc.setId(baseBean.getData().getId());
                                        epc.setDepartmentName(baseBean.getData().getDepartmentName());
