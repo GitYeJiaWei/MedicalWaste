@@ -28,8 +28,6 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-import static com.ioter.medical.AppApplication.barcode2DWithSoft;
-
 /**
  * 1.MVP 大家都知道 P的作用是让MV间接拥有肮脏的PY交易，而不是直接让他们进行交易。
  * 2.Rxjava 响应式编程 0.0 一个特别屌的地方就是你可以随便切换线程,异步
@@ -109,21 +107,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
         } else {
             //这个说明系统版本在6.0之下，不需要动态获取权限。
         }
-        if (barcode2DWithSoft == null){
-            new AppApplication.InitBarCodeTask().execute();
-        }
     }
-
-   /* protected void onDestroy() {
-        if (AppApplication.mReader != null) {
-            AppApplication.mReader.free();
-        }
-        if (AppApplication.barcode2DWithSoft != null) {
-            AppApplication.barcode2DWithSoft.stopScan();
-            AppApplication.barcode2DWithSoft.close();
-        }
-        super.onDestroy();
-    }*/
 
     @Override
     public void loginResult(Object baseBean) {
@@ -182,8 +166,8 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            ActivityCollecter.finishAll();
-            return true;
+            //ActivityCollecter.finishAll();
+            return false;
         }
         return super.onKeyDown(keyCode, event);
     }

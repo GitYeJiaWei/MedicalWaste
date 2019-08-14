@@ -105,8 +105,9 @@ public class CountFragment extends BaseFragment {
                 if (mapList.get(i).get("Id")==null){
                     continue;
                 }
+
                 Map<String, String> map = new HashMap<String, String>();
-                map.put("img", mapList.get(i).get("Count") + "");
+                map.put("img", Math.round((double)mapList.get(i).get("Count"))+"");
                 map.put("text", mapList.get(i).get("WasteType") + "");
                 map.put("id",mapList.get(i).get("Id") + "");
 

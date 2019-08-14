@@ -65,6 +65,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.ioter.medical.AppApplication.barcode2DWithSoft;
+
 /**
  * 主页
  */
@@ -121,6 +123,12 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
         String key1 = ACache.get(AppApplication.getApplication()).getAsString("key1");
         if (TextUtils.isEmpty(key1)) {
             key1 = "10";
+        }
+        if (barcode2DWithSoft == null){
+            new AppApplication.InitBarCodeTask().execute();
+        }
+        if (AppApplication.mReader == null){
+            AppApplication.initUHF();
         }
         AppApplication.mReader.setPower(Integer.valueOf(key1));
     }
@@ -378,7 +386,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
                 ((BaseFragment) fragment).myOnKeyDwon();
             }
         } else if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            exit();
+            //exit();
             return true;
         }
         return super.onKeyDown(keyCode, event);

@@ -51,6 +51,8 @@ public class AppApplication extends Application
 
     public static Barcode2DWithSoft barcode2DWithSoft = null;//二维扫码
 
+    public static String TAG ="MEWaste";
+
 
     @Override
     public void onCreate()
@@ -61,14 +63,13 @@ public class AppApplication extends Application
         mApplication = (AppApplication) mAppComponent.getApplication();
         mGson = mAppComponent.getGson();
         mThreadPool = mAppComponent.getExecutorService();
-
-        initUHF();
     }
 
-    private int cycleCount = 3;//循环3次初始化
+    private static int cycleCount = 3;//循环3次初始化
     //初始化RFID扫描
-    public void initUHF()
+    public static void initUHF()
     {
+        cycleCount = 3;
         try
         {
             mReader = RFIDWithUHF.getInstance();
@@ -85,7 +86,7 @@ public class AppApplication extends Application
                 public void run() {
                     if (!mReader.init())
                     {
-                        Log.d("MEW", "init uhf fail,reset ...");
+                        Log.d(TAG, "init uhf fail,reset ...");
                         if(cycleCount > 0)
                         {
                             cycleCount--;
@@ -94,11 +95,10 @@ public class AppApplication extends Application
                                 mReader.free();
                             }
                             initUHF();
-
                         }
                     }else
                     {
-                        Log.d("MEW", "init uhf success");
+                        Log.d(TAG, "init uhf success");
                     }
                 }
             }).start();

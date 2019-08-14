@@ -87,6 +87,10 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
 
         outRegisterAdapter = new OutRegisterAdapter(this, "outRegister");
         listLease.setAdapter(outRegisterAdapter);
+
+        if (AppApplication.mReader == null){
+            AppApplication.initUHF();
+        }
     }
 
     //获取EPC群读数据
@@ -121,6 +125,7 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
                                        epc.setId(stringMap.get("Epc")+"");
                                        epc.setWasteType(stringMap.get("WasteType")+"");
                                        epc.setWeight((double)stringMap.get("Weight"));
+                                       Collections.reverse(epclist);
                                        epclist.add(epc);
                                        Collections.reverse(epclist);
 
@@ -186,6 +191,7 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
                 AppApplication.mReader.stopInventory();
                 loopFlag = false;
                 ToastUtil.toast("扫描失败");
+                AppApplication.initUHF();
             }
         } else {
             AppApplication.mReader.stopInventory();

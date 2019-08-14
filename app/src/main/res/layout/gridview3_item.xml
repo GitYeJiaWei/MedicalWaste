@@ -26,8 +26,10 @@
             android:layout_toLeftOf="@+id/img_tv"
             android:gravity="center"
             android:layout_marginRight="5dp"
-            android:background="@drawable/button_back"
-            android:text="3.3"/>
+            android:textColor="@color/white"
+            android:padding="1dp"
+            android:background="@drawable/round_back"
+            />
 
         <ImageView
             android:id="@+id/img_tv"

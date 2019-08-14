@@ -1,6 +1,7 @@
 package com.ioter.medical.ui.activity;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -91,6 +92,10 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
 
         medicalCollectAdapter = new MedicalCollectAdapter(this, "enterRegister");
         listLease.setAdapter(medicalCollectAdapter);
+
+        if (AppApplication.mReader == null){
+            AppApplication.initUHF();
+        }
     }
 
     //获取EPC群读数据
@@ -130,10 +135,13 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
             if (AppApplication.mReader.startInventoryTag((byte) 0, (byte) 0)) {
                 loopFlag = true;
                 new TagThread(10).start();
+                Log.d(AppApplication.TAG, "uhf success");
             } else {
                 AppApplication.mReader.stopInventory();
                 loopFlag = false;
                 ToastUtil.toast("扫描失败");
+                Log.d(AppApplication.TAG, "uhf failed");
+                AppApplication.initUHF();
             }
         } else {
             AppApplication.mReader.stopInventory();
@@ -226,6 +234,7 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
                                        epc.setDepartmentName(baseBean.getData().getDepartmentName());
                                        epc.setWasteType(baseBean.getData().getWasteType());
                                        epc.setWeight(baseBean.getData().getWeight());
+                                       Collections.reverse(epclist);
                                        epclist.add(epc);
 
                                        Collections.reverse(epclist);
