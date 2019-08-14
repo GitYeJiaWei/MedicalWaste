@@ -26,6 +26,7 @@ import com.ioter.medical.ui.adapter.OutRegisterAdapter;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,6 +59,7 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
     Button btnCancle;
     private String HandOverUserId = null;
     private HashMap<String, String> map = new HashMap<>();
+    private HashMap<String,String> mapEpc = new HashMap<>();
     private OutRegisterAdapter outRegisterAdapter;
     private ArrayList<EPC> epclist = new ArrayList<>();
     private ArrayList<String> DustbinEpcs = new ArrayList<>();
@@ -89,9 +91,9 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
 
     //获取EPC群读数据
     @Override
-    public void handleUi(BaseEpc baseEpc) {
+    public void handleUi(final BaseEpc baseEpc) {
         super.handleUi(baseEpc);
-        if (map.containsValue(baseEpc._EPC)) {
+        if (mapEpc.containsKey(baseEpc._EPC)) {
             return;
         }
         map.put("dustbinepc", baseEpc._EPC);
@@ -107,10 +109,12 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
 
                                @Override
                                public void onNext(BaseBean<Object> baseBean) {
+                                   mapEpc.put(baseEpc._EPC,baseEpc._EPC);
                                    if (baseBean == null) {
                                        return;
                                    }
                                    if (baseBean.getCode() == 0 && baseBean.getData() != null) {
+
                                        Map<String, Object> stringMap = (Map<String, Object>) baseBean.getData();
 
                                        EPC epc = new EPC();
@@ -118,15 +122,18 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
                                        epc.setWasteType(stringMap.get("WasteType")+"");
                                        epc.setWeight((double)stringMap.get("Weight"));
                                        epclist.add(epc);
+                                       Collections.reverse(epclist);
 
                                        outRegisterAdapter.updateDatas(epclist);
 
-                                       double a = 0;
+                                       double sum = 0;
                                        for (int i = 0; i < epclist.size(); i++) {
-                                           a += epclist.get(i).getWeight();
+                                           BigDecimal bd1 = new BigDecimal(Double.toString(epclist.get(i).getWeight()));
+                                           BigDecimal bd2 = new BigDecimal(Double.toString(sum));
+                                           sum = bd1.add(bd2).doubleValue();
                                            DustbinEpcs.add(epclist.get(i).getId());
                                        }
-                                       tvTotalWeight.setText(a + "");
+                                       tvTotalWeight.setText("总重量："+sum+"kg");
                                        //ToastUtil.toast("扫描成功");
                                    } else {
                                        ToastUtil.toast(baseBean.getMessage());

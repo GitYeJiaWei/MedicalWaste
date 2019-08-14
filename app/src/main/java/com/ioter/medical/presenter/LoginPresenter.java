@@ -1,7 +1,6 @@
 package com.ioter.medical.presenter;
 
 import com.ioter.medical.R;
-import com.ioter.medical.bean.LoginBean;
 import com.ioter.medical.common.rx.subscriber.ProgressSubcriber;
 import com.ioter.medical.common.util.NetUtils;
 import com.ioter.medical.common.util.ToastUtil;
@@ -31,9 +30,9 @@ public class LoginPresenter extends BasePresenter<LoginContract.ILoginModel,Logi
         mModel.login(userName,passord)
                 .subscribeOn(Schedulers.io())//访问数据在子线程
                 .observeOn(AndroidSchedulers.mainThread())//拿到数据在主线程
-                .subscribe(new ProgressSubcriber<LoginBean>(mContext,mView) {
+                .subscribe(new ProgressSubcriber<Object>(mContext,mView) {
                     @Override
-                    public void onNext(LoginBean baseBean) {
+                    public void onNext(Object baseBean) {
                         //当Observable发生事件的时候触发
                         mView.loginResult(baseBean);
                     }

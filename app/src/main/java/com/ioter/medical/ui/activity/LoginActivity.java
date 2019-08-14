@@ -8,14 +8,11 @@ import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
-import com.ioter.medical.bean.LoginBean;
 import com.ioter.medical.common.ActivityCollecter;
 import com.ioter.medical.common.util.ACache;
 import com.ioter.medical.common.util.ToastUtil;
@@ -25,6 +22,8 @@ import com.ioter.medical.di.module.LoginModule;
 import com.ioter.medical.presenter.LoginPresenter;
 import com.ioter.medical.presenter.contract.LoginContract;
 import com.ioter.medical.ui.widget.LoadingButton;
+
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -127,21 +126,31 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
     }*/
 
     @Override
-    public void loginResult(LoginBean baseBean) {
+    public void loginResult(Object baseBean) {
         if (baseBean == null) {
             ToastUtil.toast("登陆失败");
             return;
         }
-        ACache.get(AppApplication.getApplication()).put(REAL_NAME, baseBean.getRealName());
-        ACache.get(AppApplication.getApplication()).put(USER_NAME, txtMobi.getText().toString());
-        ACache.get(AppApplication.getApplication()).put(PASS_WORD, txtPassword.getText().toString());
-        ACache.get(AppApplication.getApplication()).put(USER_ID, baseBean.getId());
-        ACache.get(AppApplication.getApplication()).put(TOKEN, baseBean.getAccess_token());
-        Log.d("ReToken", ACache.get(AppApplication.getApplication()).getAsString(TOKEN));
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
-        ToastUtil.toast("登录成功");
+        Map<String,Object> baseMap = (Map<String, Object>) baseBean;
+        if (baseMap.get("access_token")!=null){
+            ACache.get(AppApplication.getApplication()).put(REAL_NAME, baseMap.get("RealName").toString());
+            ACache.get(AppApplication.getApplication()).put(USER_NAME, txtMobi.getText().toString());
+            ACache.get(AppApplication.getApplication()).put(PASS_WORD, txtPassword.getText().toString());
+            ACache.get(AppApplication.getApplication()).put(USER_ID, baseMap.get("Id").toString());
+            ACache.get(AppApplication.getApplication()).put(TOKEN, baseMap.get("access_token").toString());
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+            ToastUtil.toast("登录成功");
+        }else {
+            ToastUtil.toast(baseMap.get("error_description").toString());
+        }
+    }
+
+    @Override
+    public void showError(String msg) {
+        btnLogin.showButtonText();
+        ToastUtil.toast("用户名或密码错误！");
     }
 
     @OnClick(R.id.btn_login)
@@ -163,12 +172,6 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
     @Override
     public void showLoading() {
         btnLogin.showLoading();
-    }
-
-    @Override
-    public void showError(String msg) {
-        btnLogin.showButtonText();
-        ToastUtil.toast("账户或密码不正确");
     }
 
     @Override

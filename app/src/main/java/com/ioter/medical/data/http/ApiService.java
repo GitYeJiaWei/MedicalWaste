@@ -3,7 +3,6 @@ package com.ioter.medical.data.http;
 import com.ioter.medical.bean.BaseBean;
 import com.ioter.medical.bean.Detail;
 import com.ioter.medical.bean.FeeRule;
-import com.ioter.medical.bean.LoginBean;
 import com.ioter.medical.bean.OutDetail;
 import com.ioter.medical.bean.StockIn;
 import com.ioter.medical.bean.StockOut;
@@ -28,7 +27,7 @@ public interface ApiService
     //token为方法名，基类中不能加入方法名
     @FormUrlEncoded
     @POST("token")//登录
-    Observable<LoginBean> login(@FieldMap Map<String ,String> params);
+    Observable<Object> login(@FieldMap Map<String ,String> params);
 
     //更改密码
     @FormUrlEncoded

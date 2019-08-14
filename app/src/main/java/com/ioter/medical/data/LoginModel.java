@@ -1,7 +1,6 @@
 package com.ioter.medical.data;
 
 
-import com.ioter.medical.bean.LoginBean;
 import com.ioter.medical.data.http.ApiService;
 import com.ioter.medical.presenter.contract.LoginContract;
 
@@ -18,7 +17,7 @@ public class LoginModel implements LoginContract.ILoginModel{
     }
 
     @Override
-    public Observable<LoginBean> login(String userName, String password) {
+    public Observable<Object> login(String userName, String password) {
         Map<String,String> params = new HashMap<>();
         params.put("username",userName);
         params.put("password",password);

@@ -28,6 +28,7 @@ import com.ioter.medical.ui.adapter.MedicalCollectAdapter;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -61,7 +62,8 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
     @BindView(R.id.btn_cancle)
     Button btnCancle;
     private String HandOverUserId = null;
-    private HashMap<String,String> map = new HashMap<>();
+    private HashMap<String,String> mapEpc = new HashMap<>();
+    private Map<String, String> map = new HashMap<>();
     private MedicalCollectAdapter medicalCollectAdapter;
     private ArrayList<EPC> epclist = new ArrayList<>();
     private ArrayList<String> WasteIds = new ArrayList<>();
@@ -150,8 +152,8 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
         if (barcode.contains("iotEPC")) {
             Code1 code1 = AppApplication.getGson().fromJson(barcode, Code1.class);
             String bar = code1.getIotEPC();
-            if (map.containsKey(bar)){
-                ToastUtil.toast("重复的垃圾二维码");
+            if (mapEpc.containsKey(bar)){
+                ToastUtil.toast("重复的医废二维码");
                 return;
             }
             getEPC(bar);
@@ -200,7 +202,6 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
     }
 
     private void getEPC(final String bar) {
-        final Map<String, String> map = new HashMap<>();
         map.put("id", bar);
 
         ApiService apIservice = toretrofit().create(ApiService.class);
@@ -219,7 +220,7 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
                                        return;
                                    }
                                    if (baseBean.getCode() == 0 && baseBean.getData()!=null) {
-                                       map.put(bar,bar);
+                                       mapEpc.put(bar,bar);
                                        EPC epc = new EPC();
                                        epc.setId(baseBean.getData().getId());
                                        epc.setDepartmentName(baseBean.getData().getDepartmentName());
@@ -227,14 +228,18 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
                                        epc.setWeight(baseBean.getData().getWeight());
                                        epclist.add(epc);
 
+                                       Collections.reverse(epclist);
                                        medicalCollectAdapter.updateDatas(epclist);
 
-                                       double a =0;
+                                       double sum = 0;
                                        for (int i = 0; i < epclist.size(); i++) {
-                                           a+=epclist.get(i).getWeight();
+                                           BigDecimal bd1 = new BigDecimal(Double.toString(epclist.get(i).getWeight()));
+                                           BigDecimal bd2 = new BigDecimal(Double.toString(sum));
+                                           sum = bd1.add(bd2).doubleValue();
+
                                            WasteIds.add(epclist.get(i).getId());
                                        }
-                                       tvTotalWeight.setText(a+"");
+                                       tvTotalWeight.setText("总重量："+sum+"kg");
                                        //ToastUtil.toast("扫描成功");
                                    } else {
                                        ToastUtil.toast(baseBean.getMessage());

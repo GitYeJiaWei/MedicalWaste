@@ -1,7 +1,6 @@
 package com.ioter.medical.presenter.contract;
 
 
-import com.ioter.medical.bean.LoginBean;
 import com.ioter.medical.ui.BaseView;
 
 import io.reactivex.Observable;
@@ -14,11 +13,11 @@ import io.reactivex.Observable;
 public interface LoginContract {
     //Model的接口,数据请求
     interface ILoginModel{
-        Observable<LoginBean> login(String userName, String password);
+        Observable<Object> login(String userName, String password);
     }
 
     //View的接口，表明View要做的事情
     interface LoginView extends BaseView {
-        void loginResult(LoginBean baseBean);
+        void loginResult(Object baseBean);
     }
 }
