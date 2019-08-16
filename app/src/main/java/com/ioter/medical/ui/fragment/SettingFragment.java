@@ -1,25 +1,20 @@
 package com.ioter.medical.ui.fragment;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import com.ioter.medical.R;
 import com.ioter.medical.di.component.AppComponent;
 import com.ioter.medical.ui.activity.InformActivity;
-import com.ioter.medical.ui.activity.LoginActivity;
 import com.ioter.medical.ui.activity.PowerActivity;
 import com.ioter.medical.ui.activity.ScanActivity;
 import com.ioter.medical.ui.activity.UserActivity;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
+
 
 /**
  * 设置
@@ -79,7 +74,18 @@ public class SettingFragment extends BaseFragment {
                 //startActivity(new Intent(getActivity(), BleActivity.class));
                 break;
             case R.id.btn_lease:
-                startActivity(new Intent(getActivity(), LoginActivity.class));
+                /*if (PrintService.pl != null && PrintService.pl.getState() == PrinterClass.STATE_CONNECTED) {
+                    //断开打印连接
+                    PrintService.pl.disconnect();
+                }
+                if (mReader != null) {
+                    mReader.free();
+                }
+                if (barcode2DWithSoft != null) {
+                    barcode2DWithSoft.stopScan();
+                    barcode2DWithSoft.close();
+                }*/
+                getActivity().finish();
                 break;
             case R.id.lin_scan:
                 startActivity(new Intent(getActivity(), ScanActivity.class));

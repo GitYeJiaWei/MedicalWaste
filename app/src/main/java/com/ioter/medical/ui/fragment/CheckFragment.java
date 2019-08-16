@@ -3,12 +3,10 @@ package com.ioter.medical.ui.fragment;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
-import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -19,7 +17,6 @@ import android.widget.TextView;
 import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
 import com.ioter.medical.bean.BaseBean;
-import com.ioter.medical.bean.Code;
 import com.ioter.medical.bean.Code1;
 import com.ioter.medical.common.util.ToastUtil;
 import com.ioter.medical.data.http.ApiService;
@@ -35,9 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -85,6 +80,7 @@ public class CheckFragment extends BaseFragment {
         qqDataCall.subscribeOn(Schedulers.io())//请求数据的事件发生在io线程
                 .observeOn(AndroidSchedulers.mainThread())//请求完成后在主线程更新UI
                 .subscribe(new Observer<BaseBean<Object>>() {
+
                                @Override
                                public void onSubscribe(Disposable d) {
                                }
@@ -174,7 +170,7 @@ public class CheckFragment extends BaseFragment {
             Code1 code1 = AppApplication.getGson().fromJson(barcode, Code1.class);
             String bar = code1.getIotEPC();
             Intent intent = new Intent(AppApplication.getApplication(), CheckMessageActivity.class);
-            intent.putExtra("id",bar);
+            intent.putExtra("id", bar);
             startActivity(intent);
         }
     }
@@ -210,21 +206,21 @@ public class CheckFragment extends BaseFragment {
         switch (view.getId()) {
             case R.id.btn_lease:
                 String WasteTypeId = null;
-                if (!selected.equals("全部类型垃圾")){
+                if (!selected.equals("全部类型垃圾")) {
                     for (int i = 0; i < dataList.size(); i++) {
-                        if (dataList.get(i).get("Name").equals(selected)){
+                        if (dataList.get(i).get("Name").equals(selected)) {
                             WasteTypeId = dataList.get(i).get("Id");
                         }
                     }
                 }
                 Intent intent = new Intent(AppApplication.getApplication(), CheckMessageActivity.class);
-                intent.putExtra("WasteTypeId",WasteTypeId);
-                intent.putExtra("Begin",tvStartTime.getText().toString());
-                intent.putExtra("End",tvEndTime.getText().toString());
+                intent.putExtra("WasteTypeId", WasteTypeId);
+                intent.putExtra("Begin", tvStartTime.getText().toString());
+                intent.putExtra("End", tvEndTime.getText().toString());
                 startActivity(intent);
                 break;
             case R.id.btn_scan:
-                ((MainActivity)mActivity).ScanBarcode();
+                ((MainActivity) mActivity).ScanBarcode();
                 break;
             case R.id.tv_startTime:
                 mStatus = 0;

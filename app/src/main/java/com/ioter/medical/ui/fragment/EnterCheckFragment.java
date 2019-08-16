@@ -1,13 +1,9 @@
 package com.ioter.medical.ui.fragment;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.TextureView;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.TextView;
 
 import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
@@ -28,6 +24,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static android.app.Activity.RESULT_OK;
+import static com.ioter.medical.AppApplication.TAG;
+
 public class EnterCheckFragment extends BaseFragment<MedEnterPresenter> implements MedEnterContract.MedEnterView {
 
     private AutoListView listLease;
@@ -38,7 +37,7 @@ public class EnterCheckFragment extends BaseFragment<MedEnterPresenter> implemen
     //每一页加载多少数据
     private int number = 10;
     private int Status = 2;
-    private String TAG = "ListTag";
+    private boolean isPrepared = false;
 
     public static EnterCheckFragment newInstance() {
         return new EnterCheckFragment();
@@ -57,6 +56,9 @@ public class EnterCheckFragment extends BaseFragment<MedEnterPresenter> implemen
 
     @Override
     public void init(View view) {
+        Log.d(TAG, "init待确认: "+isPrepared);
+        isPrepared =true;
+
         listLease = view.findViewById(R.id.list_lease);
         listLease.setPageSize(number);
 
@@ -94,15 +96,50 @@ public class EnterCheckFragment extends BaseFragment<MedEnterPresenter> implemen
                 Intent intent = new Intent(AppApplication.getApplication(),EnterMessageActivity.class);
                 intent.putExtra("id",epclist.get(position).getId());
                 intent.putExtra("state","EnterCheck");
-                startActivity(intent);
+                startActivityForResult(intent,1);
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case 1:
+                if (resultCode == RESULT_OK){
+                    nextpage = 1;
+                    epclist.clear();
+
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("Status",Status);
+                    map.put("Page", nextpage);
+                    map.put("Rows", number);
+                    mPresenter.medEnter(map);
+                }
+        }
     }
 
     @Override
     public void showBarCode(String barCode) {
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        //isVisibleTouser为true表示当前界面正在展示（fragment滑动的时候调用）
+        Log.d(TAG, "setUserVisibleHint待确认: "+isVisibleToUser +"isPrepared待确认"+isPrepared);
+        if (isPrepared && isVisibleToUser) {
+            //加载数据
+            nextpage = 1;
+            epclist.clear();
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("Status",Status);
+            map.put("Page", nextpage);
+            map.put("Rows", number);
+            mPresenter.medEnter(map);
+        }
+    }
 
     @Override
     public void medEnterResult(BaseBean<List<StockIn>> baseBean) {

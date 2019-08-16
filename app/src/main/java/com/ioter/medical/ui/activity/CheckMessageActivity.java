@@ -1,5 +1,6 @@
 package com.ioter.medical.ui.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -155,8 +156,14 @@ public class CheckMessageActivity extends BaseActivity<MedCollectPresenter> impl
         qqDataCall.subscribeOn(Schedulers.io())//请求数据的事件发生在io线程
                 .observeOn(AndroidSchedulers.mainThread())//请求完成后在主线程更新UI
                 .subscribe(new Observer<BaseBean<WasteViewsBean>>() {
+                    ProgressDialog mypDialog;
                                @Override
                                public void onSubscribe(Disposable d) {
+                                   mypDialog = new ProgressDialog(CheckMessageActivity.this);
+                                   mypDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                                   mypDialog.setMessage("查询中...");
+                                   mypDialog.setCanceledOnTouchOutside(false);
+                                   mypDialog.show();
                                }
 
                                @Override
@@ -202,11 +209,13 @@ public class CheckMessageActivity extends BaseActivity<MedCollectPresenter> impl
 
                                @Override
                                public void onError(Throwable e) {
+                                   mypDialog.cancel();
                                    ToastUtil.toast(e.getMessage());
                                }
 
                                @Override
                                public void onComplete() {
+                                   mypDialog.cancel();
                                }//订阅
                            }
                 );

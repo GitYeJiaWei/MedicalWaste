@@ -1,5 +1,6 @@
 package com.ioter.medical.ui.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.ioter.medical.presenter.EnterMessagePresenter;
 import com.ioter.medical.presenter.contract.EnterMessageContract;
 import com.ioter.medical.ui.adapter.MedicalCollectAdapter;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -80,10 +82,10 @@ public class EnterMessageActivity extends BaseActivity<EnterMessagePresenter> im
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
         String state = intent.getStringExtra("state");
-        if (state.equals("MedicalEnter") ||state.equals("EnterSure")) {
+        if (state.equals("MedicalEnter") || state.equals("EnterSure")) {
             btnBack.setVisibility(View.VISIBLE);
             messageEnter.setVisibility(View.GONE);
-        }else if (state.equals("EnterCheck")){
+        } else if (state.equals("EnterCheck")) {
             btnBack.setVisibility(View.GONE);
             messageEnter.setVisibility(View.VISIBLE);
         }
@@ -111,7 +113,7 @@ public class EnterMessageActivity extends BaseActivity<EnterMessagePresenter> im
                 tvUser.setText(detail.getReceiverName());
                 tvEpc.setText(detail.getDushbinEpc());
                 tvWeight.setText(detail.getReceivedWeight() + "");
-                tvTotalWeight.setText(detail.getDeliverWeight() + "");
+                tvTotalWeight.setText("总重量：" + detail.getDeliverWeight() + "kg");
 
                 for (int i = 0; i < detail.getWasteViews().size(); i++) {
                     EPC epc = new EPC();
@@ -141,16 +143,23 @@ public class EnterMessageActivity extends BaseActivity<EnterMessagePresenter> im
                 }
 
                 btnCommit.setEnabled(false);
-                Map<String,String> map = new HashMap<>();
-                map.put("id",id);
+                Map<String, String> map = new HashMap<>();
+                map.put("id", id);
 
                 ApiService apIservice = toretrofit().create(ApiService.class);
                 Observable<BaseBean<Object>> qqDataCall = apIservice.stockinconfirm(map);
                 qqDataCall.subscribeOn(Schedulers.io())//请求数据的事件发生在io线程
                         .observeOn(AndroidSchedulers.mainThread())//请求完成后在主线程更新UI
                         .subscribe(new Observer<BaseBean<Object>>() {
+                                       ProgressDialog mypDialog;
+
                                        @Override
                                        public void onSubscribe(Disposable d) {
+                                           mypDialog = new ProgressDialog(EnterMessageActivity.this);
+                                           mypDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                                           mypDialog.setMessage("查询中...");
+                                           mypDialog.setCanceledOnTouchOutside(false);
+                                           mypDialog.show();
                                        }
 
                                        @Override
@@ -162,20 +171,23 @@ public class EnterMessageActivity extends BaseActivity<EnterMessagePresenter> im
                                            }
                                            if (baseBean.getCode() == 0) {
                                                ToastUtil.toast("确认入库成功");
+                                               setResult(RESULT_OK);
                                                finish();
-                                           }else {
+                                           } else {
                                                ToastUtil.toast(baseBean.getMessage());
                                            }
                                        }
 
                                        @Override
                                        public void onError(Throwable e) {
+                                           mypDialog.cancel();
                                            btnCommit.setEnabled(false);
                                            ToastUtil.toast(e.getMessage());
                                        }
 
                                        @Override
                                        public void onComplete() {
+                                           mypDialog.cancel();
                                        }//订阅
                                    }
                         );

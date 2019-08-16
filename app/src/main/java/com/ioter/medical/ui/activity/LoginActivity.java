@@ -124,8 +124,8 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
             ACache.get(AppApplication.getApplication()).put(TOKEN, baseMap.get("access_token").toString());
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
-            finish();
-            ToastUtil.toast("登录成功");
+
+            //ToastUtil.toast("登录成功");
         }else {
             ToastUtil.toast(baseMap.get("error_description").toString());
         }

@@ -1,5 +1,6 @@
 package com.ioter.medical.ui.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -69,8 +70,15 @@ public class OutMessageActivity extends BaseActivity {
         qqDataCall.subscribeOn(Schedulers.io())//请求数据的事件发生在io线程
                 .observeOn(AndroidSchedulers.mainThread())//请求完成后在主线程更新UI
                 .subscribe(new Observer<BaseBean<OutDetail>>() {
+                               ProgressDialog mypDialog;
+
                                @Override
                                public void onSubscribe(Disposable d) {
+                                   mypDialog = new ProgressDialog(OutMessageActivity.this);
+                                   mypDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                                   mypDialog.setMessage("查询中...");
+                                   mypDialog.setCanceledOnTouchOutside(false);
+                                   mypDialog.show();
                                }
 
                                @Override
@@ -86,7 +94,7 @@ public class OutMessageActivity extends BaseActivity {
                                        tvTime.setText(detail.getDeliverTime());
                                        tvUser.setText(detail.getReceiverName());
                                        tvWeight.setText(detail.getReceivedWeight() + "");
-                                       tvTotalWeight.setText(detail.getDeliverWeight() + "");
+                                       tvTotalWeight.setText("总重量：" + detail.getDeliverWeight() + "kg");
                                        //ToastUtil.toast("查询成功");
                                        for (int i = 0; i < detail.getDushbinViews().size(); i++) {
                                            EPC epc = new EPC();
@@ -103,11 +111,13 @@ public class OutMessageActivity extends BaseActivity {
 
                                @Override
                                public void onError(Throwable e) {
+                                   mypDialog.cancel();
                                    ToastUtil.toast(e.getMessage());
                                }
 
                                @Override
                                public void onComplete() {
+                                   mypDialog.cancel();
                                }//订阅
                            }
                 );

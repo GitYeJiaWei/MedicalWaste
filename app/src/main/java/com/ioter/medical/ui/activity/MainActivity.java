@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -39,7 +40,6 @@ import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
 import com.ioter.medical.bean.BaseBean;
 import com.ioter.medical.bean.FeeRule;
-import com.ioter.medical.common.ActivityCollecter;
 import com.ioter.medical.common.download.LoadingService;
 import com.ioter.medical.common.download.Utils;
 import com.ioter.medical.common.util.ACache;
@@ -60,12 +60,12 @@ import com.ioter.medical.ui.fragment.HomeFragment;
 import com.ioter.medical.ui.fragment.SettingFragment;
 import com.qs.helper.printer.PrintService;
 import com.qs.helper.printer.PrinterClass;
+import com.rscja.deviceapi.RFIDWithUHF;
+import com.zebra.adc.decoder.Barcode2DWithSoft;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.ioter.medical.AppApplication.barcode2DWithSoft;
 
 /**
  * 主页
@@ -84,7 +84,6 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
     private MyFragmentPagerAdapter mAdapter;
     //退出时的时间
     private long mExitTime;
-    //private BaseBean<FeeRule> baseBean;
 
     private HomeFragment myFragment1 = null;
     private CountFragment myFragment2 = null;
@@ -97,6 +96,10 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
     private boolean isLoading;
     private MyReceive myReceive;
     private String path;
+
+    public static RFIDWithUHF mReader; //RFID扫描
+
+    public static Barcode2DWithSoft barcode2DWithSoft = null;//二维扫码
 
     @Override
     public int setLayout() {
@@ -124,14 +127,97 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
         if (TextUtils.isEmpty(key1)) {
             key1 = "10";
         }
-        if (barcode2DWithSoft == null){
-            new AppApplication.InitBarCodeTask().execute();
-        }
-        if (AppApplication.mReader == null){
-            AppApplication.initUHF();
-        }
-        AppApplication.mReader.setPower(Integer.valueOf(key1));
+
+        new InitBarCodeTask().execute();
+        initUHF();
+        mReader.setPower(Integer.valueOf(key1));
     }
+
+    private int cycleCount = 3;//循环3次初始化
+    //初始化RFID扫描
+    public void initUHF()
+    {
+        cycleCount = 3;
+        try
+        {
+            mReader = RFIDWithUHF.getInstance();
+        } catch (Exception ex)
+        {
+            ToastUtil.toast(ex.getMessage());
+            return;
+        }
+
+        if (mReader != null)
+        {
+            AppApplication.getExecutorService().execute(new Runnable() {
+                @Override
+                public void run() {
+                    if (!mReader.init())
+                    {
+                        ToastUtil.toast("init uhf fail,reset ...");
+                        if(cycleCount > 0)
+                        {
+                            cycleCount--;
+                            if (mReader != null)
+                            {
+                                mReader.free();
+                            }
+                            initUHF();
+                        }
+                    }else
+                    {
+                        ToastUtil.toast("init uhf success");
+                    }
+                }
+            });
+        }
+    }
+
+    public class InitBarCodeTask extends AsyncTask<String, Integer, Boolean>
+    {
+        @Override
+        protected Boolean doInBackground(String... params)
+        {
+
+            if (barcode2DWithSoft == null)
+            {
+                barcode2DWithSoft = Barcode2DWithSoft.getInstance();
+            }
+            boolean reuslt = false;
+            if (barcode2DWithSoft != null)
+            {
+                reuslt = barcode2DWithSoft.open(MainActivity.this);
+            }
+            return reuslt;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result)
+        {
+            super.onPostExecute(result);
+            if (result)
+            {
+                barcode2DWithSoft.setParameter(324, 1);
+                barcode2DWithSoft.setParameter(300, 0); // Snapshot Aiming
+                barcode2DWithSoft.setParameter(361, 0); // Image Capture Illumination
+
+                // interleaved 2 of 5
+                barcode2DWithSoft.setParameter(6, 1);
+                barcode2DWithSoft.setParameter(22, 0);
+                barcode2DWithSoft.setParameter(23, 55);
+
+            } else
+            {
+            }
+        }
+
+        @Override
+        protected void onPreExecute()
+        {
+            super.onPreExecute();
+        }
+    }
+
 
     //网络检测
     @Override
@@ -323,7 +409,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
             mDrawerLayout.closeDrawer(mleftLin);
             if (position == 0)//headView click
             {
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                startActivity(new Intent(MainActivity.this, UserActivity.class));
             } else {
                 if (!NetUtils.isConnected(MainActivity.this)) {
                     ToastUtil.toast(R.string.error_network_unreachable);
@@ -343,7 +429,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
                 fragment = HomeFragment.newInstance();
                 break;
             case 3:
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                finish();
                 return;
         }
         if (fragment == null) {
@@ -386,7 +472,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
                 ((BaseFragment) fragment).myOnKeyDwon();
             }
         } else if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            //exit();
+            exit();
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -418,18 +504,23 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
             Toast.makeText(MainActivity.this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
             mExitTime = System.currentTimeMillis();
         } else {
-            if (PrintService.pl != null && PrintService.pl.getState() == PrinterClass.STATE_CONNECTED) {
-                //断开打印连接
-                PrintService.pl.disconnect();
-            }
-            if (AppApplication.mReader != null) {
-                AppApplication.mReader.free();
-            }
-            if (AppApplication.barcode2DWithSoft != null) {
-                AppApplication.barcode2DWithSoft.stopScan();
-                AppApplication.barcode2DWithSoft.close();
-            }
-            ActivityCollecter.finishAll();
+            finish();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (PrintService.pl != null && PrintService.pl.getState() == PrinterClass.STATE_CONNECTED) {
+            //断开打印连接
+            PrintService.pl.disconnect();
+        }
+        if (mReader != null) {
+            mReader.free();
+        }
+        if (barcode2DWithSoft != null) {
+            barcode2DWithSoft.stopScan();
+            barcode2DWithSoft.close();
         }
     }
 

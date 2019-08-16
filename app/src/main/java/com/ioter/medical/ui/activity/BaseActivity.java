@@ -45,6 +45,9 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.ioter.medical.ui.activity.MainActivity.barcode2DWithSoft;
+import static com.ioter.medical.ui.activity.MainActivity.mReader;
+
 
 public abstract class BaseActivity<T extends BasePresenter> extends AppCompatActivity implements BaseView
 {
@@ -112,9 +115,9 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
 
     //扫条码
     public void ScanBarcode() {
-        if (AppApplication.barcode2DWithSoft != null) {
-            AppApplication.barcode2DWithSoft.scan();
-            AppApplication.barcode2DWithSoft.setScanCallback(ScanBack);
+        if (barcode2DWithSoft != null) {
+            barcode2DWithSoft.scan();
+            barcode2DWithSoft.setScanCallback(ScanBack);
         }
     }
 
@@ -246,7 +249,7 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
             String[] res = null;
             while (loopFlag) {
 
-                res = AppApplication.mReader.readTagFromBuffer();//.readTagFormBuffer();
+                res = mReader.readTagFromBuffer();//.readTagFormBuffer();
 
                 if (res != null) {
 
@@ -258,7 +261,7 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
                     }
                     Message msg = handler.obtainMessage();
                     BaseEpc baseEpc = new BaseEpc();
-                    baseEpc._EPC = AppApplication.mReader.convertUiiToEPC(res[1]);
+                    baseEpc._EPC = mReader.convertUiiToEPC(res[1]);
                     baseEpc._TID = strResult;
                     try
                     {

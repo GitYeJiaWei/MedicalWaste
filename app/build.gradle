@@ -58,6 +58,6 @@ dependencies {
     implementation files('libs/IGLBarDecoder.jar')
     implementation files('libs/qsprintersdk.jar')
     implementation files('libs/xUtils-2.6.14.jar')
-    implementation files('libs/cw-deviceapi20180323.jar')
     implementation files('libs/core-3.3.0.jar')
+    implementation files('libs/cw-deviceapi20190214.jar')
 }

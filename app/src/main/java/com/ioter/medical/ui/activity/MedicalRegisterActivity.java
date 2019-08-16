@@ -1,8 +1,8 @@
 package com.ioter.medical.ui.activity;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
@@ -18,9 +18,7 @@ import android.widget.TextView;
 import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
 import com.ioter.medical.bean.BaseBean;
-import com.ioter.medical.bean.BaseEntity;
 import com.ioter.medical.bean.Code;
-import com.ioter.medical.common.http.BaseUrlInterceptor;
 import com.ioter.medical.common.util.ACache;
 import com.ioter.medical.common.util.ToastUtil;
 import com.ioter.medical.data.http.ApiService;
@@ -45,10 +43,6 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.OkHttpClient;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> implements MedRegisterContract.MedRegisterView {
     @BindView(R.id.tv_name)
@@ -104,8 +98,15 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
         qqDataCall.subscribeOn(Schedulers.io())//请求数据的事件发生在io线程
                 .observeOn(AndroidSchedulers.mainThread())//请求完成后在主线程更新UI
                 .subscribe(new Observer<BaseBean<Object>>() {
+                               ProgressDialog mypDialog;
+
                                @Override
                                public void onSubscribe(Disposable d) {
+                                   mypDialog = new ProgressDialog(MedicalRegisterActivity.this);
+                                   mypDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                                   mypDialog.setMessage("查询中...");
+                                   mypDialog.setCanceledOnTouchOutside(false);
+                                   mypDialog.show();
                                }
 
                                @Override
@@ -114,7 +115,7 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
                                        ToastUtil.toast("医废类型请求失败");
                                        finish();
                                    }
-                                   if (baseBean.getCode() == 0 && baseBean.getData()!=null) {
+                                   if (baseBean.getCode() == 0 && baseBean.getData() != null) {
                                        //ToastUtil.toast("医废类型查询");
                                        if (baseBean.getData() != null) {
                                            dataList = (List<Map<String, String>>) baseBean.getData();
@@ -148,11 +149,13 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
 
                                @Override
                                public void onError(Throwable e) {
+                                   mypDialog.cancel();
                                    ToastUtil.toast(e.getMessage());
                                }
 
                                @Override
                                public void onComplete() {
+                                   mypDialog.cancel();
                                }//订阅
                            }
                 );
@@ -192,9 +195,15 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
         qqDataCall.subscribeOn(Schedulers.io())//请求数据的事件发生在io线程
                 .observeOn(AndroidSchedulers.mainThread())//请求完成后在主线程更新UI
                 .subscribe(new Observer<BaseBean<Object>>() {
+                               ProgressDialog mypDialog;
+
                                @Override
                                public void onSubscribe(Disposable d) {
-
+                                   mypDialog = new ProgressDialog(MedicalRegisterActivity.this);
+                                   mypDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                                   mypDialog.setMessage("查询中...");
+                                   mypDialog.setCanceledOnTouchOutside(false);
+                                   mypDialog.show();
                                }
 
                                @Override
@@ -203,7 +212,7 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
                                        ToastUtil.toast("扫描失败");
                                        return;
                                    }
-                                   if (baseBean.getCode() == 0 && baseBean.getData()!=null) {
+                                   if (baseBean.getCode() == 0 && baseBean.getData() != null) {
                                        Map<String, String> map1 = (Map<String, String>) baseBean.getData();
                                        tvUser.setText(map1.get("Name"));
                                        tvRoom.setText(map1.get("Department"));
@@ -216,11 +225,13 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
 
                                @Override
                                public void onError(Throwable e) {
+                                   mypDialog.cancel();
                                    ToastUtil.toast(e.getMessage());
                                }
 
                                @Override
                                public void onComplete() {
+                                   mypDialog.cancel();
                                }//订阅
                            }
                 );

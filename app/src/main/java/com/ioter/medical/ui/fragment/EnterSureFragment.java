@@ -2,13 +2,9 @@ package com.ioter.medical.ui.fragment;
 
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.TextureView;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.TextView;
 
 import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
@@ -29,6 +25,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.ioter.medical.AppApplication.TAG;
+
 public class EnterSureFragment extends BaseFragment<MedEnterPresenter> implements MedEnterContract.MedEnterView {
 
     private AutoListView listLease;
@@ -39,7 +37,7 @@ public class EnterSureFragment extends BaseFragment<MedEnterPresenter> implement
     //每一页加载多少数据
     private int number = 10;
     private int Status = 3;
-    private String TAG = "ListTag";
+    private boolean isPrepared = false;
 
     public static EnterSureFragment newInstance() {
         return new EnterSureFragment();
@@ -58,6 +56,9 @@ public class EnterSureFragment extends BaseFragment<MedEnterPresenter> implement
 
     @Override
     public void init(View view) {
+        Log.d(TAG, "init已确认: "+isPrepared);
+        isPrepared = true;
+
         listLease = view.findViewById(R.id.list_lease);
         listLease.setPageSize(number);
 
@@ -104,6 +105,24 @@ public class EnterSureFragment extends BaseFragment<MedEnterPresenter> implement
     @Override
     public void showBarCode(String barCode) {
 
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        //isVisibleTouser为true表示当前界面正在展示（fragment滑动的时候调用）
+        Log.d(TAG, "setUserVisibleHint已确认: "+isVisibleToUser +"isPrepared已确认"+isPrepared);
+        if (isPrepared && isVisibleToUser) {
+            //加载数据
+            nextpage = 1;
+            epclist.clear();
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("Status",Status);
+            map.put("Page", nextpage);
+            map.put("Rows", number);
+            mPresenter.medEnter(map);
+        }
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.ioter.medical.ui.activity;
 
+import android.app.ProgressDialog;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -42,6 +43,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.ioter.medical.ui.activity.MainActivity.mReader;
+
+
 public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> implements EnterRegisterContract.EnterRegisterView {
 
     @BindView(R.id.tv_name)
@@ -63,7 +67,7 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
     @BindView(R.id.btn_cancle)
     Button btnCancle;
     private String HandOverUserId = null;
-    private HashMap<String,String> mapEpc = new HashMap<>();
+    private HashMap<String, String> mapEpc = new HashMap<>();
     private Map<String, String> map = new HashMap<>();
     private MedicalCollectAdapter medicalCollectAdapter;
     private ArrayList<EPC> epclist = new ArrayList<>();
@@ -93,9 +97,6 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
         medicalCollectAdapter = new MedicalCollectAdapter(this, "enterRegister");
         listLease.setAdapter(medicalCollectAdapter);
 
-        if (AppApplication.mReader == null){
-            AppApplication.initUHF();
-        }
     }
 
     //获取EPC群读数据
@@ -112,7 +113,7 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
                 ScanBarcode();
             }
         }
-        if (keyCode == 139){
+        if (keyCode == 139) {
             if (event.getRepeatCount() == 0) {
                 readTag("扫描");
             }
@@ -122,7 +123,7 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (keyCode == 139){
+        if (keyCode == 139) {
             if (event.getRepeatCount() == 0) {
                 readTag("停止");
             }
@@ -132,19 +133,18 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
 
     private void readTag(String state) {
         if (state.equals("扫描")) {
-            if (AppApplication.mReader.startInventoryTag((byte) 0, (byte) 0)) {
+            if (mReader.startInventoryTag((byte) 0, (byte) 0)) {
                 loopFlag = true;
                 new TagThread(10).start();
                 Log.d(AppApplication.TAG, "uhf success");
             } else {
-                AppApplication.mReader.stopInventory();
+                mReader.stopInventory();
                 loopFlag = false;
                 ToastUtil.toast("扫描失败");
                 Log.d(AppApplication.TAG, "uhf failed");
-                AppApplication.initUHF();
             }
         } else {
-            AppApplication.mReader.stopInventory();
+            mReader.stopInventory();
             loopFlag = false;
         }
     }
@@ -160,7 +160,7 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
         if (barcode.contains("iotEPC")) {
             Code1 code1 = AppApplication.getGson().fromJson(barcode, Code1.class);
             String bar = code1.getIotEPC();
-            if (mapEpc.containsKey(bar)){
+            if (mapEpc.containsKey(bar)) {
                 ToastUtil.toast("重复的医废二维码");
                 return;
             }
@@ -177,8 +177,15 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
         qqDataCall.subscribeOn(Schedulers.io())//请求数据的事件发生在io线程
                 .observeOn(AndroidSchedulers.mainThread())//请求完成后在主线程更新UI
                 .subscribe(new Observer<BaseBean<Object>>() {
+                               ProgressDialog mypDialog;
+
                                @Override
                                public void onSubscribe(Disposable d) {
+                                   mypDialog = new ProgressDialog(EnterRegisterActivity.this);
+                                   mypDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                                   mypDialog.setMessage("查询中...");
+                                   mypDialog.setCanceledOnTouchOutside(false);
+                                   mypDialog.show();
                                }
 
                                @Override
@@ -187,7 +194,7 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
                                        ToastUtil.toast("扫描失败");
                                        return;
                                    }
-                                   if (baseBean.getCode() == 0 && baseBean.getData()!=null) {
+                                   if (baseBean.getCode() == 0 && baseBean.getData() != null) {
                                        Map<String, String> map1 = (Map<String, String>) baseBean.getData();
                                        tvUser.setText(map1.get("Name"));
                                        HandOverUserId = map1.get("Id");
@@ -199,11 +206,13 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
 
                                @Override
                                public void onError(Throwable e) {
+                                   mypDialog.cancel();
                                    ToastUtil.toast(e.getMessage());
                                }
 
                                @Override
                                public void onComplete() {
+                                   mypDialog.cancel();
                                }//订阅
                            }
                 );
@@ -217,8 +226,14 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
         qqDataCall.subscribeOn(Schedulers.io())//请求数据的事件发生在io线程
                 .observeOn(AndroidSchedulers.mainThread())//请求完成后在主线程更新UI
                 .subscribe(new Observer<BaseBean<WasteViewsBean>>() {
+                    ProgressDialog mypDialog;
                                @Override
                                public void onSubscribe(Disposable d) {
+                                   mypDialog = new ProgressDialog(EnterRegisterActivity.this);
+                                   mypDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                                   mypDialog.setMessage("查询中...");
+                                   mypDialog.setCanceledOnTouchOutside(false);
+                                   mypDialog.show();
                                }
 
                                @Override
@@ -227,8 +242,8 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
                                        ToastUtil.toast("扫描失败");
                                        return;
                                    }
-                                   if (baseBean.getCode() == 0 && baseBean.getData()!=null) {
-                                       mapEpc.put(bar,bar);
+                                   if (baseBean.getCode() == 0 && baseBean.getData() != null) {
+                                       mapEpc.put(bar, bar);
                                        EPC epc = new EPC();
                                        epc.setId(baseBean.getData().getId());
                                        epc.setDepartmentName(baseBean.getData().getDepartmentName());
@@ -248,7 +263,7 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
 
                                            WasteIds.add(epclist.get(i).getId());
                                        }
-                                       tvTotalWeight.setText("总重量："+sum+"kg");
+                                       tvTotalWeight.setText("总重量：" + sum + "kg");
                                        //ToastUtil.toast("扫描成功");
                                    } else {
                                        ToastUtil.toast(baseBean.getMessage());
@@ -257,11 +272,13 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
 
                                @Override
                                public void onError(Throwable e) {
+                                   mypDialog.cancel();
                                    ToastUtil.toast(e.getMessage());
                                }
 
                                @Override
                                public void onComplete() {
+                                   mypDialog.cancel();
                                }//订阅
                            }
                 );
@@ -281,7 +298,7 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
                     return;
                 }
                 String DushbinEpc = tvRoom.getText().toString();
-                if (TextUtils.isEmpty(DushbinEpc)){
+                if (TextUtils.isEmpty(DushbinEpc)) {
                     ToastUtil.toast("周转桶标签不能为空");
                     return;
                 }

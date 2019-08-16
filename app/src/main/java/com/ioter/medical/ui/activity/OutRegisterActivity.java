@@ -1,5 +1,6 @@
 package com.ioter.medical.ui.activity;
 
+import android.app.ProgressDialog;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -39,6 +40,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.ioter.medical.ui.activity.MainActivity.mReader;
+
+
 public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> implements OutRegisterContract.OutRegisterView {
 
     @BindView(R.id.tv_name)
@@ -59,7 +63,7 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
     Button btnCancle;
     private String HandOverUserId = null;
     private HashMap<String, String> map = new HashMap<>();
-    private HashMap<String,String> mapEpc = new HashMap<>();
+    private HashMap<String, String> mapEpc = new HashMap<>();
     private OutRegisterAdapter outRegisterAdapter;
     private ArrayList<EPC> epclist = new ArrayList<>();
     private ArrayList<String> DustbinEpcs = new ArrayList<>();
@@ -88,9 +92,6 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
         outRegisterAdapter = new OutRegisterAdapter(this, "outRegister");
         listLease.setAdapter(outRegisterAdapter);
 
-        if (AppApplication.mReader == null){
-            AppApplication.initUHF();
-        }
     }
 
     //获取EPC群读数据
@@ -107,13 +108,20 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
         qqDataCall.subscribeOn(Schedulers.io())//请求数据的事件发生在io线程
                 .observeOn(AndroidSchedulers.mainThread())//请求完成后在主线程更新UI
                 .subscribe(new Observer<BaseBean<Object>>() {
+                               ProgressDialog mypDialog;
+
                                @Override
                                public void onSubscribe(Disposable d) {
+                                   mypDialog = new ProgressDialog(OutRegisterActivity.this);
+                                   mypDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                                   mypDialog.setMessage("查询中...");
+                                   mypDialog.setCanceledOnTouchOutside(false);
+                                   mypDialog.show();
                                }
 
                                @Override
                                public void onNext(BaseBean<Object> baseBean) {
-                                   mapEpc.put(baseEpc._EPC,baseEpc._EPC);
+                                   mapEpc.put(baseEpc._EPC, baseEpc._EPC);
                                    if (baseBean == null) {
                                        return;
                                    }
@@ -122,9 +130,9 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
                                        Map<String, Object> stringMap = (Map<String, Object>) baseBean.getData();
 
                                        EPC epc = new EPC();
-                                       epc.setId(stringMap.get("Epc")+"");
-                                       epc.setWasteType(stringMap.get("WasteType")+"");
-                                       epc.setWeight((double)stringMap.get("Weight"));
+                                       epc.setId(stringMap.get("Epc") + "");
+                                       epc.setWasteType(stringMap.get("WasteType") + "");
+                                       epc.setWeight((double) stringMap.get("Weight"));
                                        Collections.reverse(epclist);
                                        epclist.add(epc);
                                        Collections.reverse(epclist);
@@ -138,7 +146,7 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
                                            sum = bd1.add(bd2).doubleValue();
                                            DustbinEpcs.add(epclist.get(i).getId());
                                        }
-                                       tvTotalWeight.setText("总重量："+sum+"kg");
+                                       tvTotalWeight.setText("总重量：" + sum + "kg");
                                        //ToastUtil.toast("扫描成功");
                                    } else {
                                        ToastUtil.toast(baseBean.getMessage());
@@ -147,11 +155,13 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
 
                                @Override
                                public void onError(Throwable e) {
+                                   mypDialog.cancel();
                                    ToastUtil.toast(e.getMessage());
                                }
 
                                @Override
                                public void onComplete() {
+                                   mypDialog.cancel();
                                }//订阅
                            }
                 );
@@ -184,17 +194,16 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
 
     private void readTag(String state) {
         if (state.equals("扫描")) {
-            if (AppApplication.mReader.startInventoryTag((byte) 0, (byte) 0)) {
+            if (mReader.startInventoryTag((byte) 0, (byte) 0)) {
                 loopFlag = true;
                 new TagThread(10).start();
             } else {
-                AppApplication.mReader.stopInventory();
+                mReader.stopInventory();
                 loopFlag = false;
                 ToastUtil.toast("扫描失败");
-                AppApplication.initUHF();
             }
         } else {
-            AppApplication.mReader.stopInventory();
+            mReader.stopInventory();
             loopFlag = false;
         }
     }
@@ -221,8 +230,15 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
         qqDataCall.subscribeOn(Schedulers.io())//请求数据的事件发生在io线程
                 .observeOn(AndroidSchedulers.mainThread())//请求完成后在主线程更新UI
                 .subscribe(new Observer<BaseBean<Object>>() {
+                               ProgressDialog mypDialog;
+
                                @Override
                                public void onSubscribe(Disposable d) {
+                                   mypDialog = new ProgressDialog(OutRegisterActivity.this);
+                                   mypDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                                   mypDialog.setMessage("查询中...");
+                                   mypDialog.setCanceledOnTouchOutside(false);
+                                   mypDialog.show();
                                }
 
                                @Override
@@ -231,7 +247,7 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
                                        ToastUtil.toast("扫描失败");
                                        return;
                                    }
-                                   if (baseBean.getCode() == 0 && baseBean.getData()!=null) {
+                                   if (baseBean.getCode() == 0 && baseBean.getData() != null) {
                                        Map<String, String> map1 = (Map<String, String>) baseBean.getData();
                                        tvUser.setText(map1.get("Name"));
                                        HandOverUserId = map1.get("Id");
@@ -243,11 +259,13 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
 
                                @Override
                                public void onError(Throwable e) {
+                                   mypDialog.cancel();
                                    ToastUtil.toast(e.getMessage());
                                }
 
                                @Override
                                public void onComplete() {
+                                   mypDialog.cancel();
                                }//订阅
                            }
                 );
@@ -291,11 +309,11 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
             ToastUtil.toast("提交失败");
             return;
         }
-        if (baseBean.getCode() == 0){
+        if (baseBean.getCode() == 0) {
             ToastUtil.toast("提交成功");
             setResult(RESULT_OK);
             finish();
-        }else {
+        } else {
             ToastUtil.toast(baseBean.getMessage());
         }
     }
