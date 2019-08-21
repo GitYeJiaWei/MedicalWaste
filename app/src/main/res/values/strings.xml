@@ -30,6 +30,27 @@
     <string name="default_loading">loading</string>
     <string name="login">登  录</string>
 
+    <string name="activity_devicelist_title_paired_devices">已配对设备</string>
+    <string name="activity_devicelist_title_other_devices">其它设备</string>
+    <string name="activity_devicelist_button_scan">扫描蓝牙</string>
+    <string name="activity_devicelist_none_paired">未配对设备</string>
+    <string name="activity_devicelist_scanning">扫描中......</string>
+    <string name="activity_devicelist_select_device">设备列表</string>
+    <string name="activity_devicelist_connect">连接</string>
+    <string name="activity_devicelist_get_device_err">获取设备失败:</string>
+    <string name="activity_devicelist_bond_error">配对失败!Please bond bluetooth printer in settings panel first.</string>
+    <string name="activity_main_scan_error">扫描失败！</string>
+    <string name="activity_main_scan_success">扫描成功！</string>
+
+    <string name="activity_main_originalsize">原大小:</string>
+    <string name="activity_main_minifront">小字体:</string>
+    <string name="activity_main_heightsize">倍高:</string>
+    <string name="activity_main_widthsize">倍宽:</string>
+    <string name="activity_main_heightwidthsize">倍高倍宽:</string>
+    <string name="activity_main_bold">加粗:</string>
+    <string name="activity_main_underline">下划线:</string>
+
+
     <!-- Options available in the Navigation Drawer of the application -->
     <string-array name="options_array">
         <item>主页</item>

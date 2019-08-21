@@ -3,6 +3,7 @@ package com.ioter.medical.ui.activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
@@ -19,6 +20,7 @@ import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
 import com.ioter.medical.bean.BaseBean;
 import com.ioter.medical.bean.Code;
+import com.ioter.medical.bean.WasteViewsBean;
 import com.ioter.medical.common.util.ACache;
 import com.ioter.medical.common.util.ToastUtil;
 import com.ioter.medical.data.http.ApiService;
@@ -43,6 +45,7 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import print.Print;
 
 public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> implements MedRegisterContract.MedRegisterView {
     @BindView(R.id.tv_name)
@@ -64,6 +67,7 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
     private List<Map<String, String>> dataList;
     private String WasteTypeId = null;
     private String HandOverUserId = null;
+    private WasteViewsBean wasteViewsBean;
 
     @Override
     public int setLayout() {
@@ -271,15 +275,15 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
     private void createDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("提交成功：");
-        builder.setMessage("是否继续提交");
+        builder.setMessage("是否打印");
         builder.setIcon(R.mipmap.ic_launcher_round);
         //点击对话框以外的区域是否让对话框消失
-        builder.setCancelable(true);
+        builder.setCancelable(false);
         //设置正面按钮
         builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+                printMessage(dialog);
             }
         });
         //设置反面按钮
@@ -296,6 +300,82 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
         dialog.show();
     }
 
+    private void printMessage(DialogInterface dialog) {
+        if (!Print.IsOpened()) {
+            dialog.dismiss();
+            ToastUtil.toast("请连接打印机");
+            Intent intent = new Intent(MedicalRegisterActivity.this, BleActivity.class);
+            intent.putExtra("print", "print");
+            startActivityForResult(intent, 1);
+        } else {
+            try {
+                PrintTestPage();//打印信息
+
+                setResult(RESULT_OK);
+                dialog.dismiss();
+                finish();
+            } catch (Exception e) {
+                ToastUtil.toast(e.getMessage());
+            }
+        }
+    }
+
+    public void PrintTestPage() {
+        try {
+            //进入页模式。
+            Print.SelectPageMode();
+            //设置打印区域。
+            Print.SetPageModePrintArea(0, 0, 600, 200);
+            //设置打印方向
+            Print.SetPageModePrintDirection(0);
+            //设置 X,Y 的坐标。
+            Print.SetPageModeAbsolutePosition(50, 10);
+            //打印二维码（你也可以打印文字和条码）。
+            Print.PrintText("***医院  医废交接单***", 0, 2, 0);
+            //设置打印区域。
+            Print.SetPageModePrintArea(0, 90, 200, 200);
+            //设置打印方向
+            Print.SetPageModePrintDirection(0);
+            //设置 X,Y 的坐标。
+            Print.SetPageModeAbsolutePosition(0, 0);
+            //打印二维码（你也可以打印文字和条码）。
+            Print.PrintQRCode("{iotEPC:" + wasteViewsBean.getId() + "}", 3, 48, 1);
+            //设置打印区域。
+            Print.SetPageModePrintArea(100, 50, 300, 200);
+            //设置打印方向
+            Print.SetPageModePrintDirection(0);
+            //设置 X,Y 的坐标。
+            Print.SetPageModeAbsolutePosition(0, 0);
+            //打印二维码（你也可以打印文字和条码）。
+            Print.PrintText(wasteViewsBean.getWasteType()+" 重量:"+wasteViewsBean.getWeight()+"kg", 0, 1, 0);
+            Print.PrintText("科室:"+wasteViewsBean.getDepartmentName(), 0, 0, 0);
+            Print.PrintText("移交人员:"+wasteViewsBean.getHandOverUserName(), 0, 0, 0);
+            Print.PrintText("回收人员:"+wasteViewsBean.getCollectUserName(), 0, 0, 0);
+            Print.PrintText("收集时间:"+wasteViewsBean.getCollectionTime(), 0, 1, 0);
+            //打印。
+            Print.PrintDataInPageMode();
+        } catch (Exception e) {
+            ToastUtil.toast(e.getMessage());
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                try {
+                    PrintTestPage();//打印信息
+
+                    setResult(RESULT_OK);
+                    finish();
+                } catch (Exception e) {
+                    ToastUtil.toast(e.getMessage());
+                }
+            }
+        }
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -304,13 +384,14 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
     }
 
     @Override
-    public void medRegisterResult(BaseBean<Object> baseBean) {
+    public void medRegisterResult(BaseBean<WasteViewsBean> baseBean) {
         btnCommit.setEnabled(true);
         if (baseBean == null) {
             ToastUtil.toast("提交失败");
             return;
         }
-        if (baseBean.getCode() == 0) {
+        if (baseBean.getCode() == 0 && baseBean.getData() != null) {
+            wasteViewsBean = baseBean.getData();
             createDialog();
         } else {
             ToastUtil.toast(baseBean.getMessage());

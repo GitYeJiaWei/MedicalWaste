@@ -106,10 +106,10 @@ public class CheckMessageActivity extends BaseActivity<MedCollectPresenter> impl
                 map.put("WasteTypeId", WasteTypeId);
             }
             if (!TextUtils.isEmpty(Begin)) {
-                map.put("Begin", Begin + "00:00:00");
+                map.put("Begin", Begin + " 00:00:00");
             }
             if (!TextUtils.isEmpty(End)) {
-                map.put("End", End + "00:00:00");
+                map.put("End", End + " 23:59:59");
             }
             map.put("Page", nextpage);
             map.put("Rows", number);
@@ -128,10 +128,10 @@ public class CheckMessageActivity extends BaseActivity<MedCollectPresenter> impl
                         map.put("WasteTypeId", WasteTypeId);
                     }
                     if (!TextUtils.isEmpty(Begin)) {
-                        map.put("Begin", Begin + "00:00:00");
+                        map.put("Begin", Begin + " 00:00:00");
                     }
                     if (!TextUtils.isEmpty(End)) {
-                        map.put("End", End + "00:00:00");
+                        map.put("End", End + " 23:59:59");
                     }
                     map.put("Page", nextpage);
                     map.put("Rows", number);
@@ -264,8 +264,11 @@ public class CheckMessageActivity extends BaseActivity<MedCollectPresenter> impl
                         epc.setDepartmentName(list.get(i).get("DepartmentName") + "");
                         epc.setHandOverUserName(list.get(i).get("HandOverUserName") + "");
                         epc.setCollectUserName(list.get(i).get("CollectUserName") + "");
-                        epc.setStockInTime(list.get(i).get("StockInTime") + "");
-
+                        if (list.get(i).get("StockInTime")!=null){
+                            epc.setStockInTime(list.get(i).get("StockInTime")+"");
+                        }else {
+                            epc.setStockInTime("");
+                        }
                         epclist.add(epc);
                     }
                     //通知listview改变UI中的数据

@@ -58,14 +58,14 @@ import com.ioter.medical.ui.fragment.CheckFragment;
 import com.ioter.medical.ui.fragment.CountFragment;
 import com.ioter.medical.ui.fragment.HomeFragment;
 import com.ioter.medical.ui.fragment.SettingFragment;
-import com.qs.helper.printer.PrintService;
-import com.qs.helper.printer.PrinterClass;
 import com.rscja.deviceapi.RFIDWithUHF;
 import com.zebra.adc.decoder.Barcode2DWithSoft;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import print.Print;
 
 /**
  * 主页
@@ -511,9 +511,13 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (PrintService.pl != null && PrintService.pl.getState() == PrinterClass.STATE_CONNECTED) {
-            //断开打印连接
-            PrintService.pl.disconnect();
+        try {
+            if(Print.IsOpened())
+            {
+                Print.PortClose();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         if (mReader != null) {
             mReader.free();

@@ -46,7 +46,7 @@ public interface ApiService
     //收集医废
     @FormUrlEncoded
     @POST("api/Waste/Save")
-    Observable<BaseBean<Object>> wastesave(@FieldMap Map<String,Object> params);
+    Observable<BaseBean<WasteViewsBean>> wastesave(@FieldMap Map<String,Object> params);
 
     //获取用户信息（二维码扫描）
     @GET("api/User/GetUser")

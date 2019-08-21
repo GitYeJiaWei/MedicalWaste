@@ -7,6 +7,7 @@ import android.widget.RelativeLayout;
 
 import com.ioter.medical.R;
 import com.ioter.medical.di.component.AppComponent;
+import com.ioter.medical.ui.activity.BleActivity;
 import com.ioter.medical.ui.activity.InformActivity;
 import com.ioter.medical.ui.activity.PowerActivity;
 import com.ioter.medical.ui.activity.ScanActivity;
@@ -71,20 +72,9 @@ public class SettingFragment extends BaseFragment {
                 startActivity(new Intent(getActivity(), PowerActivity.class));
                 break;
             case R.id.lin_ble:
-                //startActivity(new Intent(getActivity(), BleActivity.class));
+                startActivity(new Intent(getActivity(), BleActivity.class));
                 break;
             case R.id.btn_lease:
-                /*if (PrintService.pl != null && PrintService.pl.getState() == PrinterClass.STATE_CONNECTED) {
-                    //断开打印连接
-                    PrintService.pl.disconnect();
-                }
-                if (mReader != null) {
-                    mReader.free();
-                }
-                if (barcode2DWithSoft != null) {
-                    barcode2DWithSoft.stopScan();
-                    barcode2DWithSoft.close();
-                }*/
                 getActivity().finish();
                 break;
             case R.id.lin_scan:

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="10dp"
+    tools:context=".ui.activity.BleActivity">
+
+    <TextView
+        android:id="@+id/tv_ble"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@drawable/back_text"
+        android:gravity="center"
+        android:layout_marginTop="10dp" />
+
+    <Button
+        android:id="@+id/btn_bl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_select"
+        android:layout_marginTop="100dp"
+        android:textColor="@color/white"
+        android:text="蓝牙连接"/>
+
+    <Button
+        android:id="@+id/btn_print"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_select"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/white"
+        android:text="测试打印"/>
+
+</LinearLayout>

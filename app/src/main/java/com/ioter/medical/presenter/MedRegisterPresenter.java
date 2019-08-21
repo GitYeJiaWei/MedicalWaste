@@ -3,6 +3,7 @@ package com.ioter.medical.presenter;
 
 import com.ioter.medical.R;
 import com.ioter.medical.bean.BaseBean;
+import com.ioter.medical.bean.WasteViewsBean;
 import com.ioter.medical.common.rx.subscriber.ProgressSubcriber;
 import com.ioter.medical.common.util.NetUtils;
 import com.ioter.medical.common.util.ToastUtil;
@@ -31,9 +32,9 @@ public class MedRegisterPresenter extends BasePresenter<MedRegisterContract.IMed
         mModel.medRegister(HandOverUserId,Weight,WasteTypeId)
                 .subscribeOn(Schedulers.io())//访问数据在子线程
                 .observeOn(AndroidSchedulers.mainThread())//拿到数据在主线程
-                .subscribe(new ProgressSubcriber<BaseBean<Object>>(mContext,mView) {
+                .subscribe(new ProgressSubcriber<BaseBean<WasteViewsBean>>(mContext,mView) {
                     @Override
-                    public void onNext(BaseBean<Object> baseBean) {
+                    public void onNext(BaseBean<WasteViewsBean> baseBean) {
                         //当Observable发生事件的时候触发
                         mView.medRegisterResult(baseBean);
                     }

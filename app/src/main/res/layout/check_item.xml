@@ -8,8 +8,10 @@
     <LinearLayout
         android:id="@+id/lin_text"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="107dp"
         android:layout_marginTop="5dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="2dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:background="@color/white"
@@ -41,6 +43,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
                     android:textSize="18sp"
+                    android:singleLine="true"
                     android:text=""/>
 
                 <TextView
@@ -50,14 +53,16 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/button_back"
                     android:textColor="@color/white"
+                    android:singleLine="true"
                     android:text=""/>
 
                 <TextView
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="10dp"
                     android:id="@+id/tv_weight"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
+                    android:singleLine="true"
                     android:text=""
                     />
 

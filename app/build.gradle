@@ -56,8 +56,8 @@ dependencies {
     implementation 'jp.wasabeef:glide-transformations:2.0.1'
     implementation 'org.greenrobot:eventbus:3.1.1'
     implementation files('libs/IGLBarDecoder.jar')
-    implementation files('libs/qsprintersdk.jar')
     implementation files('libs/xUtils-2.6.14.jar')
     implementation files('libs/core-3.3.0.jar')
     implementation files('libs/cw-deviceapi20190214.jar')
+    implementation files('libs/Android_Print_SDK_ESC_V1.09.jar')
 }
