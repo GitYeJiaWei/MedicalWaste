@@ -5,8 +5,11 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -80,6 +83,68 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
                 .build().inject(this);
     }
 
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 1) {
+                ToastUtil.toast("打印机断开");
+                if (Print.IsOpened()){
+                    try {
+                        Print.PortClose();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }else if (msg.what == 2){
+                ToastUtil.toast("上盖开");
+            }else if (msg.what == 3){
+                ToastUtil.toast("打印机温度异常");
+            }else if (msg.what == 4){
+                ToastUtil.toast("传感器检测到无纸");
+            }
+        }
+    };
+
+    private void getState() {
+        AppApplication.getExecutorService().execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    byte[] statusData = Print.GetRealTimeStatus((byte) 3);//检测上盖和温度异常
+                    byte[] statusData1 = Print.GetRealTimeStatus((byte) 4);//检测有无纸
+                    if (statusData.length == 0) {
+                        handler.sendEmptyMessage(1);
+                    } else {
+                        if ((statusData[0] & 0x20) == 32) {
+                            handler.sendEmptyMessage(2);
+                            Log.d("getState", "上盖开");
+                        } else {
+                            Log.d("getState", "上盖关");
+                        }
+
+                        if ((statusData[0] & 0x40) == 64) {
+                            handler.sendEmptyMessage(3);
+                            Log.d("getState", "打印机温度异常");
+                        } else {
+                            Log.d("getState", "打印机温度正常");
+                        }
+
+                        if ((statusData1[0] & 0x60) == 0) {
+                            Log.d("getState", "传感器检测到有纸");
+                        } else {
+                            handler.sendEmptyMessage(4);
+                            Log.d("getState", "传感器检测到无纸");
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    handler.sendEmptyMessage(1);
+                }
+            }
+        });
+    }
+
     @Override
     public void init() {
         setTitle("医废登记");
@@ -92,6 +157,8 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
         Date date = new Date(System.currentTimeMillis());
         String str_time = simpleDateFormat.format(date);
         tvTime.setText(str_time);
+
+        getState();
     }
 
     private void initWasteTypes() {

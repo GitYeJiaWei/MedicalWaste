@@ -5,7 +5,8 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
@@ -13,17 +14,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
 import com.ioter.medical.common.ScreenUtils;
 import com.ioter.medical.common.util.ToastUtil;
 import com.ioter.medical.di.component.AppComponent;
 
-import java.util.Arrays;
-
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import print.Print;
 
@@ -48,6 +46,34 @@ public class BleActivity extends BaseActivity {
 
     }
 
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 1) {
+                ToastUtil.toast("打印机断开");
+                tvBle.setText("请连接打印机");
+                btnBl.setText("蓝牙连接");
+                if (Print.IsOpened()){
+                    try {
+                        Print.PortClose();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }else if (msg.what == 2){
+                tvBle.setText("上盖开");
+                ToastUtil.toast("上盖开");
+            }else if (msg.what == 3){
+                tvBle.setText("打印机温度异常");
+                ToastUtil.toast("打印机温度异常");
+            }else if (msg.what == 4){
+                tvBle.setText("传感器检测到无纸");
+                ToastUtil.toast("传感器检测到无纸");
+            }
+        }
+    };
+
     @Override
     public void init() {
         setTitle("蓝牙设置");
@@ -58,40 +84,44 @@ public class BleActivity extends BaseActivity {
     }
 
     private void getState() {
-        try {
-            byte[] statusData = Print.GetRealTimeStatus((byte)3);
-            byte[] statusData1 = Print.GetRealTimeStatus((byte)4);
-            if (statusData.length ==0){
-                ToastUtil.toast("打印机未打开");
-                tvBle.setText("请连接打印机");
-                btnBl.setText("蓝牙连接");
-                return;
-            }else {
-                //ToastUtil.toast(statusData[0]);
-                if ((statusData[0]&0x20) == 32){
-                    ToastUtil.toast("上盖开");
-                    Log.d("getState", "上盖开");
-                }else {
-                    Log.d("getState", "上盖关");
-                }
+        AppApplication.getExecutorService().execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    byte[] statusData = Print.GetRealTimeStatus((byte) 3);//检测上盖和温度异常
+                    byte[] statusData1 = Print.GetRealTimeStatus((byte) 4);//检测有无纸
+                    if (statusData.length == 0) {
+                        handler.sendEmptyMessage(1);
+                    } else {
+                        //ToastUtil.toast(statusData[0]);
+                        if ((statusData[0] & 0x20) == 32) {
+                            handler.sendEmptyMessage(2);
+                            Log.d("getState", "上盖开");
+                        } else {
+                            Log.d("getState", "上盖关");
+                        }
 
-                if ((statusData[0]&0x40) == 64){
-                    ToastUtil.toast("打印机温度异常");
-                    Log.d("getState", "打印机温度异常");
-                }else {
-                    Log.d("getState", "打印机温度正常");
-                }
+                        if ((statusData[0] & 0x40) == 64) {
+                            handler.sendEmptyMessage(3);
+                            Log.d("getState", "打印机温度异常");
+                        } else {
+                            Log.d("getState", "打印机温度正常");
+                        }
 
-                if ((statusData1[0]&0x60) == 0){
-                    Log.d("getState", "传感器检测到有纸");
-                }else {
-                    ToastUtil.toast("传感器检测到无纸");
-                    Log.d("getState", "传感器检测到无纸");
+                        if ((statusData1[0] & 0x60) == 0) {
+                            Log.d("getState", "传感器检测到有纸");
+                        } else {
+                            handler.sendEmptyMessage(4);
+                            Log.d("getState", "传感器检测到无纸");
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    handler.sendEmptyMessage(1);
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        });
+
         if (Print.IsOpened()) {
             tvBle.setText("已连接成功");
             btnBl.setText("断开连接");
@@ -186,7 +216,7 @@ public class BleActivity extends BaseActivity {
             //设置 X,Y 的坐标。
             Print.SetPageModeAbsolutePosition(50, 10);
             //打印二维码（你也可以打印文字和条码）。
-            Print.PrintText("***医院  医废交接单***",0,2,0);
+            Print.PrintText("***医院  医废交接单***", 0, 2, 0);
             //设置打印区域。
             Print.SetPageModePrintArea(0, 70, 200, 200);
             //设置打印方向
@@ -202,11 +232,11 @@ public class BleActivity extends BaseActivity {
             //设置 X,Y 的坐标。
             Print.SetPageModeAbsolutePosition(0, 0);
             //打印二维码（你也可以打印文字和条码）。
-            Print.PrintText("损伤性垃圾 重量:510.54kg",0,1,0);
-            Print.PrintText("科室:急诊科",0,0,0);
-            Print.PrintText("移交人员:AAA",0,0,0);
-            Print.PrintText("回收人员:AAA",0,0,0);
-            Print.PrintText("收集时间:2019-08-01 18:00:00",0,1,0);
+            Print.PrintText("损伤性垃圾 重量:510.54kg", 0, 1, 0);
+            Print.PrintText("科室:急诊科", 0, 0, 0);
+            Print.PrintText("移交人员:AAA", 0, 0, 0);
+            Print.PrintText("回收人员:AAA", 0, 0, 0);
+            Print.PrintText("收集时间:2019-08-01 18:00:00", 0, 1, 0);
             //打印。
             Print.PrintDataInPageMode();
         } catch (Exception e) {

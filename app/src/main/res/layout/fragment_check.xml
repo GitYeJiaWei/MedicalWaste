@@ -38,7 +38,7 @@
             android:layout_width="80dp"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="确认时间：" />
+            android:text="收集时间：" />
 
 
         <TextView
