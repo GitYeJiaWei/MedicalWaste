@@ -14,6 +14,7 @@ import com.ioter.medical.bean.BaseBean;
 import com.ioter.medical.bean.Detail;
 import com.ioter.medical.bean.EPC;
 import com.ioter.medical.bean.WasteViewsBean;
+import com.ioter.medical.common.ScreenUtils;
 import com.ioter.medical.common.util.ToastUtil;
 import com.ioter.medical.data.http.ApiService;
 import com.ioter.medical.di.component.AppComponent;
@@ -133,9 +134,13 @@ public class EnterMessageActivity extends BaseActivity<EnterMessagePresenter> im
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_back:
+                if (!ScreenUtils.Utils.isFastClick()) return;
+
                 finish();
                 break;
             case R.id.btn_commit:
+                if (!ScreenUtils.Utils.isFastClick()) return;
+
                 String id = tvNum.getText().toString().trim();
                 if (TextUtils.isEmpty(id)) {
                     ToastUtil.toast("确认入库失败");
@@ -193,6 +198,8 @@ public class EnterMessageActivity extends BaseActivity<EnterMessagePresenter> im
                         );
                 break;
             case R.id.btn_cancle:
+                if (!ScreenUtils.Utils.isFastClick()) return;
+
                 finish();
                 break;
         }

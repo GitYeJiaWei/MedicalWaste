@@ -7,6 +7,7 @@ import android.widget.EditText;
 import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
 import com.ioter.medical.bean.BaseBean;
+import com.ioter.medical.common.ScreenUtils;
 import com.ioter.medical.common.util.ACache;
 import com.ioter.medical.common.util.ToastUtil;
 import com.ioter.medical.di.component.AppComponent;
@@ -56,6 +57,8 @@ public class UserActivity extends BaseActivity<SettingPresenter> implements Sett
 
     @OnClick(R.id.btn_save)
     public void onViewClicked() {
+        if (!ScreenUtils.Utils.isFastClick()) return;
+
         String password = edtPass.getText().toString();
         String newpassword = edtPass1.getText().toString();
         String twopassword = edtPass2.getText().toString();

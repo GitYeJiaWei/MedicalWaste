@@ -24,6 +24,7 @@ import com.ioter.medical.R;
 import com.ioter.medical.bean.BaseBean;
 import com.ioter.medical.bean.Code;
 import com.ioter.medical.bean.WasteViewsBean;
+import com.ioter.medical.common.ScreenUtils;
 import com.ioter.medical.common.util.ACache;
 import com.ioter.medical.common.util.ToastUtil;
 import com.ioter.medical.data.http.ApiService;
@@ -312,6 +313,8 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_commit:
+                if (!ScreenUtils.Utils.isFastClick()) return;
+
                 if (TextUtils.isEmpty(WasteTypeId)) {
                     ToastUtil.toast("请选择废物类型");
                     return;
@@ -333,6 +336,8 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
                 mPresenter.medRegister(HandOverUserId, bigDecimal, WasteTypeId);
                 break;
             case R.id.btn_cancle:
+                if (!ScreenUtils.Utils.isFastClick()) return;
+
                 setResult(RESULT_OK);
                 finish();
                 break;
@@ -351,12 +356,14 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 printMessage(dialog);
+                btnCommit.setEnabled(true);
             }
         });
         //设置反面按钮
         builder.setNegativeButton("否", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                btnCommit.setEnabled(true);
                 setResult(RESULT_OK);
                 dialog.dismiss();
                 finish();
@@ -452,8 +459,8 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
 
     @Override
     public void medRegisterResult(BaseBean<WasteViewsBean> baseBean) {
-        btnCommit.setEnabled(true);
         if (baseBean == null) {
+            btnCommit.setEnabled(true);
             ToastUtil.toast("提交失败");
             return;
         }

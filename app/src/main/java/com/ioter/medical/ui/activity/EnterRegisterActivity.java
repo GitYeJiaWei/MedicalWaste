@@ -17,6 +17,7 @@ import com.ioter.medical.bean.Code;
 import com.ioter.medical.bean.Code1;
 import com.ioter.medical.bean.EPC;
 import com.ioter.medical.bean.WasteViewsBean;
+import com.ioter.medical.common.ScreenUtils;
 import com.ioter.medical.common.util.ACache;
 import com.ioter.medical.common.util.ToastUtil;
 import com.ioter.medical.data.http.ApiService;
@@ -288,6 +289,8 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_commit:
+                if (!ScreenUtils.Utils.isFastClick()) return;
+
                 if (TextUtils.isEmpty(HandOverUserId)) {
                     ToastUtil.toast("请扫描交接人二维码");
                     return;
@@ -315,6 +318,8 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
                 mPresenter.EnterRegister(map);
                 break;
             case R.id.btn_cancle:
+                if (!ScreenUtils.Utils.isFastClick()) return;
+
                 finish();
                 break;
         }

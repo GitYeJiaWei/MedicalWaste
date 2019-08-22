@@ -1,13 +1,12 @@
 package com.ioter.medical.ui.activity;
 
-import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-
 import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
+import com.ioter.medical.common.ScreenUtils;
 import com.ioter.medical.common.util.ACache;
 import com.ioter.medical.common.util.ToastUtil;
 import com.ioter.medical.di.component.AppComponent;
@@ -62,6 +61,8 @@ public class PowerActivity extends BaseActivity implements SeekBar.OnSeekBarChan
 
     @OnClick(R.id.btn_sure)
     public void onViewClicked() {
+        if (!ScreenUtils.Utils.isFastClick()) return;
+
         String key1 = tvShow1.getText().toString();
         ACache.get(AppApplication.getApplication()).put("key1", key1);
         mReader.setPower(Integer.valueOf(key1));

@@ -10,6 +10,7 @@ import android.widget.ListView;
 import com.ioter.medical.R;
 import com.ioter.medical.bean.BaseBean;
 import com.ioter.medical.bean.EPC;
+import com.ioter.medical.common.ScreenUtils;
 import com.ioter.medical.common.util.ToastUtil;
 import com.ioter.medical.di.component.AppComponent;
 import com.ioter.medical.di.component.DaggerMedCollectComponent;
@@ -105,6 +106,8 @@ public class MedicalCollectActivity extends BaseActivity<MedCollectPresenter> im
 
     @OnClick(R.id.btn_lease)
     public void onViewClicked() {
+        if (!ScreenUtils.Utils.isFastClick()) return;
+
         Intent intent = new Intent(this, MedicalRegisterActivity.class);
         startActivityForResult(intent,1);
     }

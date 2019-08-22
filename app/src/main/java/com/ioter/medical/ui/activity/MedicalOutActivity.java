@@ -9,6 +9,7 @@ import android.widget.Button;
 import com.ioter.medical.R;
 import com.ioter.medical.bean.BaseBean;
 import com.ioter.medical.bean.StockOut;
+import com.ioter.medical.common.ScreenUtils;
 import com.ioter.medical.common.util.ToastUtil;
 import com.ioter.medical.di.component.AppComponent;
 import com.ioter.medical.di.module.MedOutModule;
@@ -111,6 +112,8 @@ public class MedicalOutActivity extends BaseActivity<MedOutPresenter> implements
 
     @OnClick(R.id.btn_lease)
     public void onViewClicked() {
+        if (!ScreenUtils.Utils.isFastClick()) return;
+
         Intent intent = new Intent(this,OutRegisterActivity.class);
         startActivityForResult(intent,1);
     }

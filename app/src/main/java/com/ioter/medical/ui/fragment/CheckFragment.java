@@ -18,6 +18,7 @@ import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
 import com.ioter.medical.bean.BaseBean;
 import com.ioter.medical.bean.Code1;
+import com.ioter.medical.common.ScreenUtils;
 import com.ioter.medical.common.util.ToastUtil;
 import com.ioter.medical.data.http.ApiService;
 import com.ioter.medical.di.component.AppComponent;
@@ -205,6 +206,8 @@ public class CheckFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_lease:
+                if (!ScreenUtils.Utils.isFastClick()) return;
+
                 String WasteTypeId = null;
                 if (!selected.equals("全部类型垃圾")) {
                     for (int i = 0; i < dataList.size(); i++) {
@@ -220,14 +223,20 @@ public class CheckFragment extends BaseFragment {
                 startActivity(intent);
                 break;
             case R.id.btn_scan:
+                if (!ScreenUtils.Utils.isFastClick()) return;
+
                 ((MainActivity) mActivity).ScanBarcode();
                 break;
             case R.id.tv_startTime:
+                if (!ScreenUtils.Utils.isFastClick()) return;
+
                 mStatus = 0;
                 dataPickerDialog = new DatePickerDialog(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT, mdateListener, mYear, mMonth, mDay);
                 dataPickerDialog.show();
                 break;
             case R.id.tv_endTime:
+                if (!ScreenUtils.Utils.isFastClick()) return;
+
                 mStatus = 1;
                 dataPickerDialog = new DatePickerDialog(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT, mdateListener, mYear, mMonth, mDay);
                 dataPickerDialog.show();

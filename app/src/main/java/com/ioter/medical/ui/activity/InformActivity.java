@@ -7,6 +7,7 @@ import android.widget.EditText;
 
 import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
+import com.ioter.medical.common.ScreenUtils;
 import com.ioter.medical.common.util.ACache;
 import com.ioter.medical.common.util.ToastUtil;
 import com.ioter.medical.di.component.AppComponent;
@@ -51,6 +52,8 @@ public class InformActivity extends BaseActivity {
 
     @OnClick(R.id.btn_save)
     public void onViewClicked() {
+        if (!ScreenUtils.Utils.isFastClick()) return;
+
         String ip = etIp.getText().toString();
         String host = etHost.getText().toString();
         if (TextUtils.isEmpty(ip) || TextUtils.isEmpty(host)){

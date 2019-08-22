@@ -6,6 +6,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import com.ioter.medical.R;
+import com.ioter.medical.common.ScreenUtils;
 import com.ioter.medical.di.component.AppComponent;
 import com.ioter.medical.ui.activity.BleActivity;
 import com.ioter.medical.ui.activity.InformActivity;
@@ -63,21 +64,27 @@ public class SettingFragment extends BaseFragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.lin_inform:
+                if (!ScreenUtils.Utils.isFastClick()) return;
                 startActivity(new Intent(getActivity(), InformActivity.class));
                 break;
             case R.id.lin_user:
+                if (!ScreenUtils.Utils.isFastClick()) return;
                 startActivity(new Intent(getActivity(), UserActivity.class));
                 break;
             case R.id.lin_message:
+                if (!ScreenUtils.Utils.isFastClick()) return;
                 startActivity(new Intent(getActivity(), PowerActivity.class));
                 break;
             case R.id.lin_ble:
+                if (!ScreenUtils.Utils.isFastClick()) return;
                 startActivity(new Intent(getActivity(), BleActivity.class));
                 break;
             case R.id.btn_lease:
+                if (!ScreenUtils.Utils.isFastClick()) return;
                 getActivity().finish();
                 break;
             case R.id.lin_scan:
+                if (!ScreenUtils.Utils.isFastClick()) return;
                 startActivity(new Intent(getActivity(), ScanActivity.class));
                 break;
         }
