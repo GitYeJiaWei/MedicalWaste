@@ -154,7 +154,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
                 public void run() {
                     if (!mReader.init())
                     {
-                        ToastUtil.toast("init uhf fail,reset ...");
+                        //ToastUtil.toast("init uhf fail,reset ...");
                         if(cycleCount > 0)
                         {
                             cycleCount--;
@@ -166,7 +166,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
                         }
                     }else
                     {
-                        ToastUtil.toast("init uhf success");
+                        ToastUtil.toast("初始化成功");
                     }
                 }
             });
@@ -231,10 +231,10 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
 
     //界面布局，数据初始化
     private void initview() {
-        mDrawerLayout = findViewById(R.id.drawer_layout);
-        mDrawerList = findViewById(R.id.left_drawer);
-        mleftLin = findViewById(R.id.left_lin);
-        mVersionCode = findViewById(R.id.tv_versionCode);
+        mDrawerLayout = findViewById(R.id.drawer_layout);//整个布局
+        mDrawerList = findViewById(R.id.left_drawer);    //抽屉的list
+        mleftLin = findViewById(R.id.left_lin);          //抽屉layout
+        mVersionCode = findViewById(R.id.tv_versionCode);//抽屉下方版本号
 
         //官方导航栏
         ActionBar actionBar = getSupportActionBar();
@@ -243,6 +243,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        //为抽屉头部 R.layout.layout_header 指定一个父布局抽屉 mDrawerList
         headerView = LayoutInflater.from(this).inflate(R.layout.layout_header, mDrawerList, false);
         mDrawerList.addHeaderView(headerView);
         TextView mTxt_username = headerView.findViewById(R.id.txt_username);
@@ -250,7 +251,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
 
         mDrawerLayout.setDrawerShadow(R.mipmap.drawer_shadow, GravityCompat.START);
         mDrawerList.setAdapter(new DrawerListAdapter(this, R.layout.drawer_list_item, DrawerListContent.ITEMS));
-        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());//抽屉的item点击
 
         try {
             mVersionCode.setText("当前版本号：" + Utils.getVersionName(this));
@@ -285,7 +286,6 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
         titleList.add(mOptionTitles[1]);
         titleList.add(mOptionTitles[2]);
         titleList.add(mOptionTitles[5]);
-
         mBitMaps = new int[]{R.drawable.map_first, R.drawable.map_second,
                 R.drawable.map_third, R.drawable.map_forth};
         picList = new ArrayList<>();
@@ -377,12 +377,6 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
     }
 
     @Override
-    public void showError(String msg) {
-        ToastUtil.toast("操作失败,请退出重新登录");
-    }
-
-
-    @Override
     public void SendMessageValue(String strValue) {
         if (strValue.equals("MedicalCollectActivity")) {
             startActivity(new Intent(this,MedicalCollectActivity.class));
@@ -407,14 +401,14 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             mDrawerLayout.closeDrawer(mleftLin);
+            if (!NetUtils.isConnected(MainActivity.this)) {
+                ToastUtil.toast(R.string.error_network_unreachable);
+                return;
+            }
             if (position == 0)//headView click
             {
                 startActivity(new Intent(MainActivity.this, UserActivity.class));
             } else {
-                if (!NetUtils.isConnected(MainActivity.this)) {
-                    ToastUtil.toast(R.string.error_network_unreachable);
-                    return;
-                }
                 selectItem(position);
             }
         }
@@ -501,7 +495,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
 
     public void exit() {
         if ((System.currentTimeMillis() - mExitTime) > 2000) {
-            Toast.makeText(MainActivity.this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "再按一次退出登录", Toast.LENGTH_SHORT).show();
             mExitTime = System.currentTimeMillis();
         } else {
             finish();
@@ -511,6 +505,13 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (mReader != null) {
+            mReader.free();
+        }
+        if (barcode2DWithSoft != null) {
+            barcode2DWithSoft.stopScan();
+            barcode2DWithSoft.close();
+        }
         try {
             if(Print.IsOpened())
             {
@@ -518,13 +519,6 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        if (mReader != null) {
-            mReader.free();
-        }
-        if (barcode2DWithSoft != null) {
-            barcode2DWithSoft.stopScan();
-            barcode2DWithSoft.close();
         }
     }
 

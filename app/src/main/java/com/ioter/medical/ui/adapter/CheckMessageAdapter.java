@@ -1,5 +1,6 @@
 package com.ioter.medical.ui.adapter;
 
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -121,6 +122,24 @@ public class CheckMessageAdapter extends BaseAdapter {
         }else if (m1.getStatus().equals("已出库")) {
             listItemView.img_sure.setBackgroundResource(R.mipmap.out_set);
         }
+
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+                View view = context.getLayoutInflater().inflate(R.layout.scan_dialog,null);
+                final ImageView imageView = view.findViewById(R.id.img_scan);
+                dialog.setView(view);
+                dialog.setCancelable(true);
+                AppApplication.getExecutorService().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        context.Create2QR2("{iotEPC:"+m1.getId()+"}", imageView);
+                    }
+                });
+                dialog.show();
+            }
+        });
         return convertView;
     }
 

@@ -74,7 +74,7 @@
     <string name="settting_inform_port">端口号：</string>
     <string name="save">保存</string>
     <string name="setting_user_name">用户名：</string>
-    <string name="setting_user_pass">原密码：</string>
+    <string name="setting_user_pass">初始密码：</string>
     <string name="setting_user_pass1">新密码：</string>
     <string name="setting_user_pass2">密码确认：</string>
     <string name="lease_num">租赁卡编号：</string>

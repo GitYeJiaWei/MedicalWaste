@@ -11,7 +11,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="@string/setting_user_name"/>
@@ -22,17 +22,20 @@
             android:layout_width="200dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
-            android:text="123"
+            android:gravity="center"
+            android:background="@drawable/back_text"
+            android:text="admin"
             />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="@string/setting_user_pass"/>
@@ -43,17 +46,20 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
             android:inputType="textPassword"
-            android:text="8080"
+            android:background="@drawable/text_stroke"
+            android:gravity="center"
+            android:text="12"
             />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="@string/setting_user_pass1"/>
@@ -64,17 +70,20 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
             android:inputType="textPassword"
-            android:text="8080"
+            android:gravity="center"
+            android:background="@drawable/text_stroke"
+            android:text="12"
             />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:layout_marginTop="5dp"
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="@string/setting_user_pass2"/>
@@ -84,7 +93,9 @@
             android:layout_width="200dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
-            android:text="8080"
+            android:gravity="center"
+            android:text="12"
+            android:background="@drawable/text_stroke"
             android:inputType="textPassword"
             />
     </LinearLayout>

@@ -447,6 +447,14 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
                     ToastUtil.toast(e.getMessage());
                 }
             }
+            if (resultCode == RESULT_CANCELED){
+                try {
+                    setResult(RESULT_OK);
+                    finish();
+                } catch (Exception e) {
+                    ToastUtil.toast(e.getMessage());
+                }
+            }
         }
     }
 
@@ -475,7 +483,7 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
     @Override
     public void showError(String msg) {
         super.showError(msg);
-        btnCommit.setEnabled(false);
+        btnCommit.setEnabled(true);
     }
 
 }

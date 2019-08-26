@@ -96,7 +96,7 @@ public class BleActivity extends BaseActivity {
                         handler.sendEmptyMessage(1);
                     } else {
                         ToastUtil.toast(Arrays.toString(statusData)+"中间"+statusData1[0]);
-                        if ((statusData[0] & 0x20) == 32) {
+                        if ((   statusData[0] & 0x20) == 32) {
                             handler.sendEmptyMessage(2);
                             Log.d("getState", "上盖开");
                         } else {
@@ -212,33 +212,33 @@ public class BleActivity extends BaseActivity {
             //进入页模式。
             Print.SelectPageMode();
             //设置打印区域。
-            Print.SetPageModePrintArea(0, 0, 600, 200);
+            Print.SetPageModePrintArea(0, 0, 600, 280);
             //设置打印方向
             Print.SetPageModePrintDirection(0);
             //设置 X,Y 的坐标。
-            Print.SetPageModeAbsolutePosition(50, 10);
+            Print.SetPageModeAbsolutePosition(50, 5);
             //打印二维码（你也可以打印文字和条码）。
             Print.PrintText("***医院  医废交接单***", 0, 2, 0);
             //设置打印区域。
-            Print.SetPageModePrintArea(0, 70, 200, 200);
+            Print.SetPageModePrintArea(0, 90, 200, 280);
             //设置打印方向
             Print.SetPageModePrintDirection(0);
             //设置 X,Y 的坐标。
             Print.SetPageModeAbsolutePosition(0, 0);
             //打印二维码（你也可以打印文字和条码）。
-            Print.PrintQRCode("abcdef", 5, 48, 1);
+            Print.PrintQRCode("{iotEPC:" + 123456789 + "}", 3, 48, 1);
             //设置打印区域。
-            Print.SetPageModePrintArea(110, 50, 300, 200);
+            Print.SetPageModePrintArea(80, 50, 300, 280);
             //设置打印方向
             Print.SetPageModePrintDirection(0);
             //设置 X,Y 的坐标。
             Print.SetPageModeAbsolutePosition(0, 0);
             //打印二维码（你也可以打印文字和条码）。
-            Print.PrintText("损伤性垃圾 重量:510.54kg", 0, 1, 0);
-            Print.PrintText("科室:急诊科", 0, 0, 0);
-            Print.PrintText("移交人员:AAA", 0, 0, 0);
-            Print.PrintText("回收人员:AAA", 0, 0, 0);
-            Print.PrintText("收集时间:2019-08-01 18:00:00", 0, 1, 0);
+            Print.PrintText("损伤性垃圾 重量:510.54kg", 0, 2, 0);
+            Print.PrintText("科室:急诊科", 0, 2, 0);
+            Print.PrintText("移交人员:AAA", 0, 2, 0);
+            Print.PrintText("回收人员:AAA", 0, 2, 0);
+            Print.PrintText("收集时间:2019-08-01 18:00:00", 0, 2, 0);
             //打印。
             Print.PrintDataInPageMode();
         } catch (Exception e) {
@@ -268,5 +268,13 @@ public class BleActivity extends BaseActivity {
                     }
                 }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!TextUtils.isEmpty(MedicalRegister)) {
+            setResult(RESULT_CANCELED);
+        }
+        super.onBackPressed();
     }
 }

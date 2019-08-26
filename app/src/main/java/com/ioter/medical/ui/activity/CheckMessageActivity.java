@@ -4,9 +4,11 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -70,6 +72,7 @@ public class CheckMessageActivity extends BaseActivity<MedCollectPresenter> impl
     private String WasteTypeId = null;
     private String Begin = null;
     private String End = null;
+    private String id = null;
 
     @Override
     public int setLayout() {
@@ -86,7 +89,7 @@ public class CheckMessageActivity extends BaseActivity<MedCollectPresenter> impl
     public void init() {
         setTitle("查询结果");
         Intent intent = getIntent();
-        String id = intent.getStringExtra("id");
+        final String id = intent.getStringExtra("id");
 
         if (!TextUtils.isEmpty(id)) {
             getEPC(id);
@@ -140,11 +143,28 @@ public class CheckMessageActivity extends BaseActivity<MedCollectPresenter> impl
 
                 @Override
                 public void onAfterScroll(int firstVisibleItem) {
-
                 }
             });
 
         }
+
+        linText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(CheckMessageActivity.this);
+                View view = getLayoutInflater().inflate(R.layout.scan_dialog,null);
+                final ImageView imageView = view.findViewById(R.id.img_scan);
+                alertDialog.setView(view);
+                alertDialog.setCancelable(true);
+                AppApplication.getExecutorService().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        Create2QR2("{iotEPC:" + id + "}", imageView);
+                    }
+                });
+                alertDialog.show();
+            }
+        });
     }
 
     private void getEPC(String bar) {
@@ -175,6 +195,7 @@ public class CheckMessageActivity extends BaseActivity<MedCollectPresenter> impl
                                    if (baseBean.getCode() == 0 && baseBean.getData() != null) {
                                        final WasteViewsBean wb = baseBean.getData();
 
+                                       id = wb.getId();
                                        AppApplication.getExecutorService().execute(new Runnable() {
                                            @Override
                                            public void run() {
