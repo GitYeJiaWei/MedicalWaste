@@ -93,6 +93,9 @@ public class EnterSureFragment extends BaseFragment<MedEnterPresenter> implement
         listLease.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (epclist.size()==0){
+                    return;
+                }
                 Intent intent = new Intent(AppApplication.getApplication(), EnterMessageActivity.class);
                 intent.putExtra("id", epclist.get(position).getId());
                 intent.putExtra("state", "EnterSure");

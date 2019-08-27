@@ -2,6 +2,7 @@ package com.ioter.medical.ui.activity;
 
 import android.app.ProgressDialog;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -291,6 +292,12 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
 
                 //称重数据
                 BigDecimal bigDecimal = new BigDecimal(weight);
+                double b1 = bigDecimal.doubleValue();
+                Log.d("EnterDouble", "b1"+b1+"  bigDecimal"+bigDecimal);
+                if (b1<0.01 || b1>9999.99){
+                    ToastUtil.toast("复核重量范围0.01~9999.99之间");
+                    return;
+                }
                 btnCommit.setEnabled(false);
 
                 Map<String, Object> map = new HashMap<>();

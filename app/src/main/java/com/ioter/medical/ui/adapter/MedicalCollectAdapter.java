@@ -1,6 +1,7 @@
 package com.ioter.medical.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 
 import com.ioter.medical.R;
 import com.ioter.medical.bean.EPC;
+import com.ioter.medical.ui.activity.CollectMessageActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,6 +97,15 @@ public class MedicalCollectAdapter extends BaseAdapter {
             listItemView.time.setText(m1.getCollectionTime());
             listItemView.room.setText(m1.getDepartmentName());
             listItemView.user.setText(m1.getHandOverUserName());
+
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, CollectMessageActivity.class);
+                    intent.putExtra("id",m1.getId());
+                    context.startActivity(intent);
+                }
+            });
         }
         return convertView;
     }

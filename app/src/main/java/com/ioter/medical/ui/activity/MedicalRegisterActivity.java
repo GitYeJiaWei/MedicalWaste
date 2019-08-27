@@ -289,7 +289,6 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
                                        tvUser.setText(map1.get("Name"));
                                        tvRoom.setText(map1.get("Department"));
                                        HandOverUserId = map1.get("Id");
-                                       //ToastUtil.toast("扫描成功");
                                    } else {
                                        ToastUtil.toast(baseBean.getMessage());
                                    }
@@ -329,8 +328,15 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
                     ToastUtil.toast("请填写称重信息");
                     return;
                 }
+
                 //称重数据
                 BigDecimal bigDecimal = new BigDecimal(weight);
+                double b1 = bigDecimal.doubleValue();
+                Log.d("EnterDouble", "b1"+b1+"  bigDecimal"+bigDecimal);
+                if (b1<0.01 || b1>99.99){
+                    ToastUtil.toast("称重信息范围0.01~99.99之间");
+                    return;
+                }
 
                 btnCommit.setEnabled(false);
                 mPresenter.medRegister(HandOverUserId, bigDecimal, WasteTypeId);
@@ -399,15 +405,15 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
             //进入页模式。
             Print.SelectPageMode();
             //设置打印区域。
-            Print.SetPageModePrintArea(0, 0, 600, 200);
+            Print.SetPageModePrintArea(0, 0, 600, 280);
             //设置打印方向
             Print.SetPageModePrintDirection(0);
             //设置 X,Y 的坐标。
-            Print.SetPageModeAbsolutePosition(50, 10);
+            Print.SetPageModeAbsolutePosition(50, 5);
             //打印二维码（你也可以打印文字和条码）。
             Print.PrintText("***医院  医废交接单***", 0, 2, 0);
             //设置打印区域。
-            Print.SetPageModePrintArea(0, 90, 200, 200);
+            Print.SetPageModePrintArea(0, 90, 200, 280);
             //设置打印方向
             Print.SetPageModePrintDirection(0);
             //设置 X,Y 的坐标。
@@ -415,17 +421,17 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
             //打印二维码（你也可以打印文字和条码）。
             Print.PrintQRCode("{iotEPC:" + wasteViewsBean.getId() + "}", 3, 48, 1);
             //设置打印区域。
-            Print.SetPageModePrintArea(100, 50, 300, 200);
+            Print.SetPageModePrintArea(80, 50, 300, 280);
             //设置打印方向
             Print.SetPageModePrintDirection(0);
             //设置 X,Y 的坐标。
             Print.SetPageModeAbsolutePosition(0, 0);
             //打印二维码（你也可以打印文字和条码）。
-            Print.PrintText(wasteViewsBean.getWasteType()+" 重量:"+wasteViewsBean.getWeight()+"kg", 0, 1, 0);
-            Print.PrintText("科室:"+wasteViewsBean.getDepartmentName(), 0, 0, 0);
-            Print.PrintText("移交人员:"+wasteViewsBean.getHandOverUserName(), 0, 0, 0);
-            Print.PrintText("回收人员:"+wasteViewsBean.getCollectUserName(), 0, 0, 0);
-            Print.PrintText("收集时间:"+wasteViewsBean.getCollectionTime(), 0, 1, 0);
+            Print.PrintText(wasteViewsBean.getWasteType()+" 重量:"+wasteViewsBean.getWeight()+"kg", 0, 2, 0);
+            Print.PrintText("科室:"+wasteViewsBean.getDepartmentName(), 0, 2, 0);
+            Print.PrintText("移交人员:"+wasteViewsBean.getHandOverUserName(), 0, 2, 0);
+            Print.PrintText("回收人员:"+wasteViewsBean.getCollectUserName(), 0, 2, 0);
+            Print.PrintText("收集时间:"+wasteViewsBean.getCollectionTime(), 0, 2, 0);
             //打印。
             Print.PrintDataInPageMode();
         } catch (Exception e) {

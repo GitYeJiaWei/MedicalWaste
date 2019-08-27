@@ -307,6 +307,13 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
                 }
                 //称重数据
                 BigDecimal bigDecimal = new BigDecimal(weight);
+                double b1 = bigDecimal.doubleValue();
+                Log.d("EnterDouble", "b1"+b1+"  bigDecimal"+bigDecimal);
+                if (b1<0.01 || b1>999.99){
+                    ToastUtil.toast("复核重量范围0.01~999.99之间");
+                    return;
+                }
+
 
                 btnCommit.setEnabled(false);
 

@@ -33,7 +33,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
- * 医废统计
+ * 医废统计,统计的是当前月份的数据
  */
 public class CountFragment extends BaseFragment {
     @BindView(R.id.list_lease)
@@ -102,15 +102,16 @@ public class CountFragment extends BaseFragment {
         if (baseBean != null && baseBean.getData().getWasteStatistics() != null) {
             List<HashMap<String, Object>> mapList = (List<HashMap<String, Object>>) baseBean.getData().getWasteStatistics();
             for (int i = 0; i < mapList.size(); i++) {
-                if (mapList.get(i).get("Id")==null){
-                    continue;
-                }
-
                 Map<String, String> map = new HashMap<String, String>();
-                map.put("img", Math.round((double)mapList.get(i).get("Count"))+"");
-                map.put("text", mapList.get(i).get("WasteType") + "");
-                map.put("id",mapList.get(i).get("Id") + "");
-
+                if (mapList.get(i).get("Id")==null){
+                    map.put("img", Math.round((double)mapList.get(i).get("Count"))+"");
+                    map.put("text", mapList.get(i).get("WasteType") + "");
+                    map.put("id",null);
+                }else {
+                    map.put("img", Math.round((double)mapList.get(i).get("Count"))+"");
+                    map.put("text", mapList.get(i).get("WasteType") + "");
+                    map.put("id",mapList.get(i).get("Id") + "");
+                }
                 dataList1.add(map);
             }
         }

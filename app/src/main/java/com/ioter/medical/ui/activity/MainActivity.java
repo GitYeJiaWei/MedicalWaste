@@ -40,6 +40,7 @@ import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
 import com.ioter.medical.bean.BaseBean;
 import com.ioter.medical.bean.FeeRule;
+import com.ioter.medical.common.ActivityCollecter;
 import com.ioter.medical.common.download.LoadingService;
 import com.ioter.medical.common.download.Utils;
 import com.ioter.medical.common.util.ACache;
@@ -94,7 +95,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
     private List<Integer> picList;
     private TabLayout tablayout;
     private boolean isLoading;
-    private MyReceive myReceive;
+
     private String path;
 
     public static RFIDWithUHF mReader; //RFID扫描
@@ -114,11 +115,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
 
     @Override
     public void init() {
-        myReceive = new MyReceive();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("android.intent.action.loading_over");
-        filter.addAction("android.intent.action.loading");
-        registerReceiver(myReceive, filter);//注册广播
+        startScreenBroadcastReceiver();
 
         mPresenter.feeRule();
         initview();
@@ -134,38 +131,31 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
     }
 
     private int cycleCount = 3;//循环3次初始化
+
     //初始化RFID扫描
-    public void initUHF()
-    {
+    public void initUHF() {
         cycleCount = 3;
-        try
-        {
+        try {
             mReader = RFIDWithUHF.getInstance();
-        } catch (Exception ex)
-        {
+        } catch (Exception ex) {
             ToastUtil.toast(ex.getMessage());
             return;
         }
 
-        if (mReader != null)
-        {
+        if (mReader != null) {
             AppApplication.getExecutorService().execute(new Runnable() {
                 @Override
                 public void run() {
-                    if (!mReader.init())
-                    {
+                    if (!mReader.init()) {
                         //ToastUtil.toast("init uhf fail,reset ...");
-                        if(cycleCount > 0)
-                        {
+                        if (cycleCount > 0) {
                             cycleCount--;
-                            if (mReader != null)
-                            {
+                            if (mReader != null) {
                                 mReader.free();
                             }
                             initUHF();
                         }
-                    }else
-                    {
+                    } else {
                         ToastUtil.toast("初始化成功");
                     }
                 }
@@ -173,30 +163,24 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
         }
     }
 
-    public class InitBarCodeTask extends AsyncTask<String, Integer, Boolean>
-    {
+    public class InitBarCodeTask extends AsyncTask<String, Integer, Boolean> {
         @Override
-        protected Boolean doInBackground(String... params)
-        {
+        protected Boolean doInBackground(String... params) {
 
-            if (barcode2DWithSoft == null)
-            {
+            if (barcode2DWithSoft == null) {
                 barcode2DWithSoft = Barcode2DWithSoft.getInstance();
             }
             boolean reuslt = false;
-            if (barcode2DWithSoft != null)
-            {
+            if (barcode2DWithSoft != null) {
                 reuslt = barcode2DWithSoft.open(MainActivity.this);
             }
             return reuslt;
         }
 
         @Override
-        protected void onPostExecute(Boolean result)
-        {
+        protected void onPostExecute(Boolean result) {
             super.onPostExecute(result);
-            if (result)
-            {
+            if (result) {
                 barcode2DWithSoft.setParameter(324, 1);
                 barcode2DWithSoft.setParameter(300, 0); // Snapshot Aiming
                 barcode2DWithSoft.setParameter(361, 0); // Image Capture Illumination
@@ -206,14 +190,12 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
                 barcode2DWithSoft.setParameter(22, 0);
                 barcode2DWithSoft.setParameter(23, 55);
 
-            } else
-            {
+            } else {
             }
         }
 
         @Override
-        protected void onPreExecute()
-        {
+        protected void onPreExecute() {
             super.onPreExecute();
         }
     }
@@ -326,7 +308,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
 
     @Override
     public void feeRuleResult(BaseBean<FeeRule> baseBean1) {
-        if (baseBean1==null){
+        if (baseBean1 == null) {
             ToastUtil.toast("获取数据失败");
             finish();
         }
@@ -350,14 +332,14 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
             TextView tv = view.findViewById(R.id.tv);
             tv.setText(titleList.get(i));
             iv.setBackgroundResource(picList.get(i));
-            if (i==0)
+            if (i == 0)
                 iv.setFocusable(true);
             //给tab设置view
             tab.setCustomView(view);
 
         }
 
-         tablayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        tablayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 tab.getCustomView().findViewById(R.id.iv).setFocusable(true);
@@ -379,17 +361,17 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
     @Override
     public void SendMessageValue(String strValue) {
         if (strValue.equals("MedicalCollectActivity")) {
-            startActivity(new Intent(this,MedicalCollectActivity.class));
+            startActivity(new Intent(this, MedicalCollectActivity.class));
         } else if (strValue.equals("MedicalEnterActivity")) {
-            startActivity(new Intent(this,MedicalEnterActivity.class));
+            startActivity(new Intent(this, MedicalEnterActivity.class));
         } else if (strValue.equals("SettingFragment")) {
             vpager.setCurrentItem(3);
-        } else if (strValue.equals("CheckFragment")){
+        } else if (strValue.equals("CheckFragment")) {
             vpager.setCurrentItem(2);
-        } else if (strValue.equals("EnterCheckActivity")){
-            startActivity(new Intent(this,EnterCheckActivity.class));
-        } else if (strValue.equals("MedicalOutActivity")){
-            startActivity(new Intent(this,MedicalOutActivity.class));
+        } else if (strValue.equals("EnterCheckActivity")) {
+            startActivity(new Intent(this, EnterCheckActivity.class));
+        } else if (strValue.equals("MedicalOutActivity")) {
+            startActivity(new Intent(this, MedicalOutActivity.class));
         }
     }
 
@@ -484,11 +466,9 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
     }
 
     @Override
-    public void showBarCode(String barCodeText)
-    {
+    public void showBarCode(String barCodeText) {
         Fragment fragment = (BaseFragment) mAdapter.instantiateItem(vpager, vpager.getCurrentItem());
-        if (fragment != null)
-        {
+        if (fragment != null) {
             ((BaseFragment) fragment).showBarCode(barCodeText);
         }
     }
@@ -513,8 +493,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
             barcode2DWithSoft.close();
         }
         try {
-            if(Print.IsOpened())
-            {
+            if (Print.IsOpened()) {
                 Print.PortClose();
             }
         } catch (Exception e) {
@@ -565,7 +544,8 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
         //模拟从服务器获取信息
         SharedPreferences sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
         sharedPreferences.edit().putString("url", "").commit();
-        sharedPreferences.edit().putString("path", path).commit();//getExternalCacheDir获取到的路径 为系统为app分配的内存 卸载app后 该目录下的资源也会删除
+        sharedPreferences.edit().putString("path", path).commit();
+        //getExternalCacheDir获取到的路径 为系统为app分配的内存 卸载app后 该目录下的资源也会删除
         //比较版本信息
         try {
             int result = Utils.compareVersion(Utils.getVersionName(this), "");
@@ -589,10 +569,10 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
         TextView version, content;
         Button left, right;
         View view = inflater.inflate(R.layout.version_update, null, false);
-        version = (TextView) view.findViewById(R.id.version);
-        content = (TextView) view.findViewById(R.id.content);
-        left = (Button) view.findViewById(R.id.left);
-        right = (Button) view.findViewById(R.id.right);
+        version =  view.findViewById(R.id.version);
+        content =  view.findViewById(R.id.content);
+        left =  view.findViewById(R.id.left);
+        right =  view.findViewById(R.id.right);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             content.setText(Html.fromHtml("", Html.FROM_HTML_MODE_LEGACY));
         } else {
@@ -640,6 +620,8 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
         LoadingService.startUploadImg(this);
     }
 
+    private MyReceive myReceive;//接受升级的广播
+
     /**
      * 定义广播接收者 接受下载状态
      */
@@ -653,6 +635,46 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
                 isLoading = true;
             }
         }
+    }
+
+    private ScreenBroadcastReceiver mScreenReceiver;
+
+    /**
+     * 定义广播接收者 接受屏幕状态
+     */
+    private class ScreenBroadcastReceiver extends BroadcastReceiver {
+        private String action = null;
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            action = intent.getAction();
+            if (Intent.ACTION_SCREEN_ON.equals(action)) {
+                // 开屏
+            } else if (Intent.ACTION_SCREEN_OFF.equals(action)) {
+                // 锁屏
+                ActivityCollecter.finishAll();
+            } else if (Intent.ACTION_USER_PRESENT.equals(action)) {
+                // 解锁
+            }
+        }
+    }
+
+    /**
+     * 注册广播
+     */
+    private void startScreenBroadcastReceiver() {
+        mScreenReceiver = new ScreenBroadcastReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        filter.addAction(Intent.ACTION_USER_PRESENT);
+        registerReceiver(mScreenReceiver, filter);//注册屏幕开关的广播
+
+        myReceive = new MyReceive();
+        IntentFilter filter1 = new IntentFilter();
+        filter1.addAction("android.intent.action.loading_over");
+        filter1.addAction("android.intent.action.loading");
+        registerReceiver(myReceive, filter1);//注册升级的广播
     }
 }
 
