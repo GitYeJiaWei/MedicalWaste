@@ -7,6 +7,25 @@
     android:orientation="vertical"
     tools:context=".ui.activity.EnterCheckActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:fitsSystemWindows="true"
+        android:background="@color/colorPrimary"
+        >
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="标题"
+            android:textColor="@color/white"
+            android:textSize="22sp" />
+
+    </android.support.v7.widget.Toolbar>
+
     <!--app:tabIndicatorColor="@color/green" //改变指示器下标颜色-->
     <!--app:tabSelectedTextColor="@color/red"//选中色-->
     <!--tabTextColor="@color/blue"//未选中色-->

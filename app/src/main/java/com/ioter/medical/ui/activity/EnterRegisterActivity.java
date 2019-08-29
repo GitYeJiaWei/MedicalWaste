@@ -1,6 +1,7 @@
 package com.ioter.medical.ui.activity;
 
 import android.app.ProgressDialog;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -67,6 +68,10 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
     Button btnCommit;
     @BindView(R.id.btn_cancle)
     Button btnCancle;
+    @BindView(R.id.title)
+    TextView title;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     private String HandOverUserId = null;
     private HashMap<String, String> mapEpc = new HashMap<>();
     private Map<String, String> map = new HashMap<>();
@@ -87,7 +92,7 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
 
     @Override
     public void init() {
-        setTitle("入库登记");
+        title.setText("入库登记");
 
         tvName.setText(ACache.get(AppApplication.getApplication()).getAsString(LoginActivity.REAL_NAME));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -227,7 +232,8 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
         qqDataCall.subscribeOn(Schedulers.io())//请求数据的事件发生在io线程
                 .observeOn(AndroidSchedulers.mainThread())//请求完成后在主线程更新UI
                 .subscribe(new Observer<BaseBean<WasteViewsBean>>() {
-                    ProgressDialog mypDialog;
+                               ProgressDialog mypDialog;
+
                                @Override
                                public void onSubscribe(Disposable d) {
                                    mypDialog = new ProgressDialog(EnterRegisterActivity.this);
@@ -308,8 +314,8 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
                 //称重数据
                 BigDecimal bigDecimal = new BigDecimal(weight);
                 double b1 = bigDecimal.doubleValue();
-                Log.d("EnterDouble", "b1"+b1+"  bigDecimal"+bigDecimal);
-                if (b1<0.01 || b1>999.99){
+                Log.d("EnterDouble", "b1" + b1 + "  bigDecimal" + bigDecimal);
+                if (b1 < 0.01 || b1 > 999.99) {
                     ToastUtil.toast("复核重量范围0.01~999.99之间");
                     return;
                 }

@@ -11,6 +11,26 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            android:background="@color/colorPrimary"
+            app:navigationIcon="@mipmap/button_daohang"
+            >
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="标题"
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+
+        </android.support.v7.widget.Toolbar>
+
         <TextView
             android:id="@+id/network_view"
             android:layout_width="match_parent"
@@ -46,6 +66,8 @@
         android:layout_width="180dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        android:layout_marginTop="24dp"
         android:background="@color/permissionBgColorBlue"
         android:orientation="vertical">
 

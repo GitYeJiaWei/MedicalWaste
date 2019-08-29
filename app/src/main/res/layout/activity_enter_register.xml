@@ -3,12 +3,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:focusableInTouchMode="true"
     android:focusable="true"
     tools:context=".ui.activity.MedicalRegisterActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:fitsSystemWindows="true"
+        android:background="@color/colorPrimary"
+        >
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="标题"
+            android:textColor="@color/white"
+            android:textSize="22sp" />
+
+    </android.support.v7.widget.Toolbar>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -130,6 +148,8 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:orientation="horizontal">
 
         <TextView
@@ -237,7 +257,7 @@
             android:id="@+id/btn_commit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_margin="15dp"
             android:layout_weight="1"
             android:background="@drawable/btn_select"
             android:text="入库"
@@ -247,7 +267,7 @@
             android:id="@+id/btn_cancle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_margin="15dp"
             android:layout_weight="1"
             android:background="@drawable/btn_select"
             android:text="取消"

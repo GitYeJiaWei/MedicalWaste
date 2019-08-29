@@ -2,9 +2,10 @@ package com.ioter.medical.ui.activity;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
@@ -13,15 +14,17 @@ import com.ioter.medical.common.util.ACache;
 import com.ioter.medical.di.component.AppComponent;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 import static com.ioter.medical.ui.activity.LoginActivity.USER_ID;
-import static com.ioter.medical.ui.activity.LoginActivity.USER_NAME;
 
 public class ScanActivity extends BaseActivity {
 
     @BindView(R.id.img_scan)
     ImageView imgScan;
+    @BindView(R.id.title)
+    TextView title;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     @Override
     public int setLayout() {
@@ -34,7 +37,7 @@ public class ScanActivity extends BaseActivity {
 
     @Override
     public void init() {
-        setTitle("我的二维码");
+        title.setText("我的二维码");
 
         final String id = ACache.get(AppApplication.getApplication()).getAsString(USER_ID);
         AppApplication.getExecutorService().execute(new Runnable() {

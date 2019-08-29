@@ -1,5 +1,6 @@
 package com.ioter.medical.ui.activity;
 
+import android.support.v7.widget.Toolbar;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -29,6 +30,10 @@ public class PowerActivity extends BaseActivity implements SeekBar.OnSeekBarChan
     TextView tvShow1;
     @BindView(R.id.btn_sure)
     Button btnSure;
+    @BindView(R.id.title)
+    TextView title;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     @Override
     public int setLayout() {
@@ -42,13 +47,13 @@ public class PowerActivity extends BaseActivity implements SeekBar.OnSeekBarChan
 
     @Override
     public void init() {
-        setTitle("功率设置");
+        title.setText("功率设置");
         initview();
 
     }
 
     private void initview() {
-        String key1 = mReader.getPower()+"";
+        String key1 = mReader.getPower() + "";
         ACache.get(AppApplication.getApplication()).put("key1", key1);
 
         tvShow1.setText(key1);

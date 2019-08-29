@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -35,6 +36,10 @@ public class BleActivity extends BaseActivity {
     TextView tvBle;
     @BindView(R.id.btn_print)
     Button btnPrint;
+    @BindView(R.id.title)
+    TextView title;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     private BluetoothAdapter mBluetoothAdapter;
     private String MedicalRegister = null;
 
@@ -56,20 +61,20 @@ public class BleActivity extends BaseActivity {
                 ToastUtil.toast("打印机断开");
                 tvBle.setText("请连接打印机");
                 btnBl.setText("蓝牙连接");
-                if (Print.IsOpened()){
+                if (Print.IsOpened()) {
                     try {
                         Print.PortClose();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
-            }else if (msg.what == 2){
+            } else if (msg.what == 2) {
                 tvBle.setText("上盖开");
                 ToastUtil.toast("上盖开");
-            }else if (msg.what == 3){
+            } else if (msg.what == 3) {
                 tvBle.setText("打印机温度异常");
                 ToastUtil.toast("打印机温度异常");
-            }else if (msg.what == 4){
+            } else if (msg.what == 4) {
                 tvBle.setText("传感器检测到无纸");
                 ToastUtil.toast("传感器检测到无纸");
             }
@@ -78,7 +83,7 @@ public class BleActivity extends BaseActivity {
 
     @Override
     public void init() {
-        setTitle("蓝牙设置");
+        title.setText("蓝牙设置");
 
         EnableBluetooth();
         MedicalRegister = getIntent().getStringExtra("print");
@@ -95,8 +100,8 @@ public class BleActivity extends BaseActivity {
                     if (statusData.length == 0) {
                         handler.sendEmptyMessage(1);
                     } else {
-                        ToastUtil.toast(Arrays.toString(statusData)+"中间"+statusData1[0]);
-                        if ((   statusData[0] & 0x20) == 32) {
+                        ToastUtil.toast(Arrays.toString(statusData) + "中间" + statusData1[0]);
+                        if ((statusData[0] & 0x20) == 32) {
                             handler.sendEmptyMessage(2);
                             Log.d("getState", "上盖开");
                         } else {

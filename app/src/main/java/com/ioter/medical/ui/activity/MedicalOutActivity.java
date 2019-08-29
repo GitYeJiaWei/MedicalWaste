@@ -1,10 +1,12 @@
 package com.ioter.medical.ui.activity;
 
 import android.content.Intent;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.ioter.medical.R;
 import com.ioter.medical.bean.BaseBean;
@@ -12,11 +14,10 @@ import com.ioter.medical.bean.StockOut;
 import com.ioter.medical.common.ScreenUtils;
 import com.ioter.medical.common.util.ToastUtil;
 import com.ioter.medical.di.component.AppComponent;
+import com.ioter.medical.di.component.DaggerMedOutComponent;
 import com.ioter.medical.di.module.MedOutModule;
 import com.ioter.medical.presenter.MedOutPresenter;
 import com.ioter.medical.presenter.contract.MedOutContract;
-import com.ioter.medical.di.component.DaggerMedOutComponent;
-import com.ioter.medical.ui.adapter.MedicalEnterAdapter;
 import com.ioter.medical.ui.adapter.MedicalOutAdapter;
 import com.ioter.medical.ui.widget.AutoListView;
 
@@ -32,6 +33,10 @@ public class MedicalOutActivity extends BaseActivity<MedOutPresenter> implements
 
     @BindView(R.id.btn_lease)
     Button btnLease;
+    @BindView(R.id.title)
+    TextView title;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     private AutoListView listLease;
     private MedicalOutAdapter medicalOutAdapter;
     private ArrayList<StockOut> epclist = new ArrayList<>();
@@ -54,11 +59,12 @@ public class MedicalOutActivity extends BaseActivity<MedOutPresenter> implements
 
     @Override
     public void init() {
-        setTitle("医废出库");
+        title.setText("医废出库");
+
         listLease = findViewById(R.id.list_lease);
         listLease.setPageSize(number);
 
-        Log.d(TAG, "nextpage: "+nextpage);
+        Log.d(TAG, "nextpage: " + nextpage);
         Map<String, Integer> map = new HashMap<>();
         map.put("Page", nextpage);
         map.put("Rows", number);
@@ -72,7 +78,7 @@ public class MedicalOutActivity extends BaseActivity<MedOutPresenter> implements
             public void onLoad() {
                 nextpage++;
 
-                Log.d(TAG, "nextpage: "+nextpage);
+                Log.d(TAG, "nextpage: " + nextpage);
                 Map<String, Integer> map = new HashMap<>();
                 map.put("Page", nextpage);
                 map.put("Rows", number);
@@ -87,8 +93,8 @@ public class MedicalOutActivity extends BaseActivity<MedOutPresenter> implements
         listLease.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(MedicalOutActivity.this,OutMessageActivity.class);
-                intent.putExtra("id",epclist.get(position).getId());
+                Intent intent = new Intent(MedicalOutActivity.this, OutMessageActivity.class);
+                intent.putExtra("id", epclist.get(position).getId());
                 startActivity(intent);
             }
         });
@@ -97,8 +103,8 @@ public class MedicalOutActivity extends BaseActivity<MedOutPresenter> implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==1){
-            if (resultCode ==RESULT_OK){
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
                 nextpage = 1;
                 epclist.clear();
 
@@ -114,15 +120,15 @@ public class MedicalOutActivity extends BaseActivity<MedOutPresenter> implements
     public void onViewClicked() {
         if (!ScreenUtils.Utils.isFastClick()) return;
 
-        Intent intent = new Intent(this,OutRegisterActivity.class);
-        startActivityForResult(intent,1);
+        Intent intent = new Intent(this, OutRegisterActivity.class);
+        startActivityForResult(intent, 1);
     }
 
     @Override
     public void medOutResult(BaseBean<List<StockOut>> baseBean) {
         if (baseBean != null) {
             if (baseBean.getCode() == 0) {
-                if (baseBean.getData()!=null){
+                if (baseBean.getData() != null) {
                     for (int i = 0; i < baseBean.getData().size(); i++) {
                         StockOut stockOut = baseBean.getData().get(i);
                         epclist.add(stockOut);

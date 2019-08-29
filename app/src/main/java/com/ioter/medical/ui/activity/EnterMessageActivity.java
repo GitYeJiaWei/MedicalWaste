@@ -2,6 +2,7 @@ package com.ioter.medical.ui.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -13,7 +14,6 @@ import com.ioter.medical.R;
 import com.ioter.medical.bean.BaseBean;
 import com.ioter.medical.bean.Detail;
 import com.ioter.medical.bean.EPC;
-import com.ioter.medical.bean.WasteViewsBean;
 import com.ioter.medical.common.ScreenUtils;
 import com.ioter.medical.common.util.ToastUtil;
 import com.ioter.medical.data.http.ApiService;
@@ -24,7 +24,6 @@ import com.ioter.medical.presenter.EnterMessagePresenter;
 import com.ioter.medical.presenter.contract.EnterMessageContract;
 import com.ioter.medical.ui.adapter.MedicalCollectAdapter;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,6 +62,10 @@ public class EnterMessageActivity extends BaseActivity<EnterMessagePresenter> im
     Button btnCancle;
     @BindView(R.id.message_enter)
     LinearLayout messageEnter;
+    @BindView(R.id.title)
+    TextView title;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     private MedicalCollectAdapter medicalCollectAdapter;
     private ArrayList<EPC> epclist = new ArrayList<>();
 
@@ -79,7 +82,8 @@ public class EnterMessageActivity extends BaseActivity<EnterMessagePresenter> im
 
     @Override
     public void init() {
-        setTitle("入库详情");
+        title.setText("入库详情");
+
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
         String state = intent.getStringExtra("state");

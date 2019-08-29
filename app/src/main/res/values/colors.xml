@@ -330,4 +330,8 @@
 
     <color name="back_base">#e1e1e1</color>
     <color name="back_text">#8b8b8b</color>
+
+    <color name="primary">#FF03A9F4</color>
+    <color name="primary_dark">#FF0288D1</color>
+    <color name="status_bar_color">@color/primary_dark</color>
 </resources>

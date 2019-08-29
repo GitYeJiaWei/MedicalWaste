@@ -7,23 +7,22 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -73,7 +72,6 @@ import print.Print;
  */
 public class MainActivity extends BaseActivity<RuleListPresenter>
         implements RuleListContract.FeeRuleView, HomeFragment.CallBackValue, CountFragment.CallBackTag {
-    public static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
     private String[] mOptionTitles;
     private int[] mBitMaps;
     private DrawerLayout mDrawerLayout;
@@ -95,6 +93,8 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
     private List<String> titleList;
     private List<Integer> picList;
     private TabLayout tablayout;
+    private Toolbar toolbar;
+    private TextView title;
     private boolean isLoading;
 
     private String path;
@@ -220,12 +220,34 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
         mleftLin = findViewById(R.id.left_lin);          //抽屉layout
         mVersionCode = findViewById(R.id.tv_versionCode);//抽屉下方版本号
 
-        //官方导航栏
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+
+        //Toolbar导航栏和文字title
+        toolbar = findViewById(R.id.toolbar);
+        title = findViewById(R.id.title);
+        //设置toolbar为Action对象
+        toolbar.setNavigationIcon(R.mipmap.button_daohang);
+
+        //点击左边返回按钮监听事件
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Fragment fragment = (BaseFragment) mAdapter.instantiateItem(vpager, vpager.getCurrentItem());
+                if (fragment instanceof HomeFragment || fragment instanceof CheckFragment ||
+                        fragment instanceof CountFragment || fragment instanceof SettingFragment) {
+                    if (mDrawerLayout.isDrawerVisible(mleftLin)) {
+                        mDrawerLayout.closeDrawer(mleftLin);
+                    } else {
+                        mDrawerLayout.openDrawer(mleftLin);
+                    }
+                } else {
+                    if (isSoftShowing()) {
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+                    }
+                    //this.onBackPressed();
+                }
+            }
+        });
 
         //为抽屉头部 R.layout.layout_header 指定一个父布局抽屉 mDrawerList
         headerView = LayoutInflater.from(this).inflate(R.layout.layout_header, mDrawerList, false);
@@ -292,13 +314,13 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
             public void onPageSelected(int position) {
                 Fragment fragment = (BaseFragment) mAdapter.instantiateItem(vpager, vpager.getCurrentItem());
                 if (fragment == myFragment2) {
-                    setTitle(mOptionTitles[1]);
+                    title.setText(mOptionTitles[1]);
                 } else if (fragment == myFragment3) {
-                    setTitle(mOptionTitles[2]);
+                    title.setText(mOptionTitles[2]);
                 } else if (fragment == myFragment4) {
-                    setTitle(mOptionTitles[5]);
+                    title.setText(mOptionTitles[5]);
                 } else {
-                    setTitle(mOptionTitles[0]);
+                    title.setText(mOptionTitles[0]);
                 }
             }
 
@@ -342,6 +364,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
 
         }
 
+        //tab得选中监听
         tablayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -401,6 +424,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
             {
                 startActivity(new Intent(MainActivity.this, UserActivity.class));
             } else {
+                //用来跳转到其它fragment或者activity
                 selectItem(position);
             }
         }
@@ -425,7 +449,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
     }
 
     public void replaceFragment(int position, Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        /*FragmentManager fragmentManager = getSupportFragmentManager();
         if (position == 0) {
             //addToBackStack()对应的是popBackStack()
             //popBackStack(String name, int flag)：name为addToBackStack(String name)的参数，
@@ -437,17 +461,11 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
         } else {
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             fragmentManager.beginTransaction().replace(R.id.vpager, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
-        }
+        }*/
 
         mDrawerList.setItemChecked(position, true);//高亮选中项
-        setTitle(mOptionTitles[position]);
+        title.setText(mOptionTitles[position]);
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null && position == 0) {
-            actionBar.setHomeAsUpIndicator(R.mipmap.button_daohang);
-        } else {
-            actionBar.setHomeAsUpIndicator(null);
-        }
         mDrawerLayout.closeDrawer(mleftLin);
     }
 
@@ -512,31 +530,6 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
         }
     }
 
-    //点击左侧按钮,Home通常是导航到前一个页面，可以自己拦截Home得点击事件
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                final Fragment fragment = getSupportFragmentManager().findFragmentByTag(TAG_CONTENT_FRAGMENT);
-                if (fragment != null) {
-                    if (fragment instanceof HomeFragment) {
-                        if (mDrawerLayout.isDrawerVisible(mleftLin)) {
-                            mDrawerLayout.closeDrawer(mleftLin);
-                        } else {
-                            mDrawerLayout.openDrawer(mleftLin);
-                        }
-                    } else {
-                        if (isSoftShowing()) {
-                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
-                        }
-                        //this.onBackPressed();
-                    }
-                    return true;
-                }
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     private boolean isSoftShowing() {
         //获取当前屏幕内容的高度
@@ -580,10 +573,10 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
         TextView version, content;
         Button left, right;
         View view = inflater.inflate(R.layout.version_update, null, false);
-        version =  view.findViewById(R.id.version);
-        content =  view.findViewById(R.id.content);
-        left =  view.findViewById(R.id.left);
-        right =  view.findViewById(R.id.right);
+        version = view.findViewById(R.id.version);
+        content = view.findViewById(R.id.content);
+        left = view.findViewById(R.id.left);
+        right = view.findViewById(R.id.right);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             content.setText(Html.fromHtml("", Html.FROM_HTML_MODE_LEGACY));
         } else {

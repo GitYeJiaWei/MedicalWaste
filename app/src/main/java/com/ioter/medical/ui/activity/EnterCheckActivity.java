@@ -5,6 +5,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
+import android.widget.TextView;
 
 import com.ioter.medical.R;
 import com.ioter.medical.di.component.AppComponent;
@@ -22,7 +24,11 @@ public class EnterCheckActivity extends BaseActivity {
     TabLayout tablayout;
     @BindView(R.id.viewpager)
     ViewPager viewpager;
-    private List<String> tabList=new ArrayList<>();
+    @BindView(R.id.title)
+    TextView title;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    private List<String> tabList = new ArrayList<>();
 
     @Override
     public int setLayout() {
@@ -35,10 +41,11 @@ public class EnterCheckActivity extends BaseActivity {
 
     @Override
     public void init() {
-        setTitle("入库确认");
+        title.setText("入库确认");
+
         addData();
-        tablayout   = (TabLayout) findViewById(R.id.tablayout);
-        viewpager= (ViewPager) findViewById(R.id.viewpager);
+        tablayout = (TabLayout) findViewById(R.id.tablayout);
+        viewpager = (ViewPager) findViewById(R.id.viewpager);
 
         TabAdapter tabAdapter = new TabAdapter(getSupportFragmentManager());
 
@@ -56,10 +63,10 @@ public class EnterCheckActivity extends BaseActivity {
 
         @Override
         public Fragment getItem(int position) {
-            Fragment fragment= null;
-            if (position==0){
+            Fragment fragment = null;
+            if (position == 0) {
                 fragment = EnterCheckFragment.newInstance();
-            }else {
+            } else {
                 fragment = EnterSureFragment.newInstance();
             }
             return fragment;
@@ -76,7 +83,7 @@ public class EnterCheckActivity extends BaseActivity {
         }
     }
 
-    private void addData(){
+    private void addData() {
         tabList.add("待确认");
         tabList.add("已确认");
     }

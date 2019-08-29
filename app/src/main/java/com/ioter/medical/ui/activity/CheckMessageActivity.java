@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -63,6 +63,10 @@ public class CheckMessageActivity extends BaseActivity<MedCollectPresenter> impl
     LinearLayout linText;
     @BindView(R.id.list_lease)
     AutoListView listLease;
+    @BindView(R.id.title)
+    TextView title;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     private CheckMessageAdapter checkMessageAdapter;
     private ArrayList<WasteViewsBean> epclist = new ArrayList<>();
     //下一页初始化为1
@@ -87,7 +91,8 @@ public class CheckMessageActivity extends BaseActivity<MedCollectPresenter> impl
 
     @Override
     public void init() {
-        setTitle("查询结果");
+        title.setText("查询结果");
+
         Intent intent = getIntent();
         final String id = intent.getStringExtra("id");
 
@@ -152,7 +157,7 @@ public class CheckMessageActivity extends BaseActivity<MedCollectPresenter> impl
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(CheckMessageActivity.this);
-                View view = getLayoutInflater().inflate(R.layout.scan_dialog,null);
+                View view = getLayoutInflater().inflate(R.layout.scan_dialog, null);
                 final ImageView imageView = view.findViewById(R.id.img_scan);
                 alertDialog.setView(view);
                 alertDialog.setCancelable(true);
@@ -176,7 +181,8 @@ public class CheckMessageActivity extends BaseActivity<MedCollectPresenter> impl
         qqDataCall.subscribeOn(Schedulers.io())//请求数据的事件发生在io线程
                 .observeOn(AndroidSchedulers.mainThread())//请求完成后在主线程更新UI
                 .subscribe(new Observer<BaseBean<WasteViewsBean>>() {
-                    ProgressDialog mypDialog;
+                               ProgressDialog mypDialog;
+
                                @Override
                                public void onSubscribe(Disposable d) {
                                    mypDialog = new ProgressDialog(CheckMessageActivity.this);
@@ -272,7 +278,7 @@ public class CheckMessageActivity extends BaseActivity<MedCollectPresenter> impl
     @Override
     public void medCollectResult(BaseBean<Object> baseBean) {
         if (baseBean != null) {
-            if (baseBean.getCode() == 0 && baseBean.getData()!=null) {
+            if (baseBean.getCode() == 0 && baseBean.getData() != null) {
                 List<Map<String, Object>> list = (List<Map<String, Object>>) baseBean.getData();
                 if (list != null) {
                     for (int i = 0; i < list.size(); i++) {
@@ -285,9 +291,9 @@ public class CheckMessageActivity extends BaseActivity<MedCollectPresenter> impl
                         epc.setDepartmentName(list.get(i).get("DepartmentName") + "");
                         epc.setHandOverUserName(list.get(i).get("HandOverUserName") + "");
                         epc.setCollectUserName(list.get(i).get("CollectUserName") + "");
-                        if (list.get(i).get("StockInTime")!=null){
-                            epc.setStockInTime(list.get(i).get("StockInTime")+"");
-                        }else {
+                        if (list.get(i).get("StockInTime") != null) {
+                            epc.setStockInTime(list.get(i).get("StockInTime") + "");
+                        } else {
                             epc.setStockInTime("");
                         }
                         epclist.add(epc);
@@ -302,11 +308,5 @@ public class CheckMessageActivity extends BaseActivity<MedCollectPresenter> impl
                 ToastUtil.toast(baseBean.getMessage());
             }
         }
-    }
-
-    @Override
-    public void showError(String msg) {
-        super.showError(msg);
-
     }
 }

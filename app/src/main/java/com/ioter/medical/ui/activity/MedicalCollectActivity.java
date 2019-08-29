@@ -1,11 +1,10 @@
 package com.ioter.medical.ui.activity;
 
 import android.content.Intent;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
-import android.widget.AbsListView;
 import android.widget.Button;
-import android.widget.ListView;
+import android.widget.TextView;
 
 import com.ioter.medical.R;
 import com.ioter.medical.bean.BaseBean;
@@ -20,7 +19,6 @@ import com.ioter.medical.presenter.contract.MedCollectContract;
 import com.ioter.medical.ui.adapter.MedicalCollectAdapter;
 import com.ioter.medical.ui.widget.AutoListView;
 
-import java.lang.invoke.CallSite;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +31,10 @@ public class MedicalCollectActivity extends BaseActivity<MedCollectPresenter> im
 
     @BindView(R.id.btn_lease)
     Button btnLease;
+    @BindView(R.id.title)
+    TextView title;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     private AutoListView listLease;
     private MedicalCollectAdapter medicalCollectAdapter;
     private ArrayList<EPC> epclist = new ArrayList<>();
@@ -55,12 +57,13 @@ public class MedicalCollectActivity extends BaseActivity<MedCollectPresenter> im
 
     @Override
     public void init() {
-        setTitle("医废收集");
+        //设置toolbar为Action对象
+        title.setText("医废收集");
 
         listLease = findViewById(R.id.list_lease);
         listLease.setPageSize(number);
 
-        Log.d(TAG, "nextpage: "+nextpage);
+        Log.d(TAG, "nextpage: " + nextpage);
         Map<String, Object> map = new HashMap<>();
         map.put("Page", nextpage);
         map.put("Rows", number);
@@ -74,7 +77,7 @@ public class MedicalCollectActivity extends BaseActivity<MedCollectPresenter> im
             public void onLoad() {
                 nextpage++;
 
-                Log.d(TAG, "nextpage: "+nextpage);
+                Log.d(TAG, "nextpage: " + nextpage);
                 Map<String, Object> map = new HashMap<>();
                 map.put("Page", nextpage);
                 map.put("Rows", number);
@@ -91,8 +94,8 @@ public class MedicalCollectActivity extends BaseActivity<MedCollectPresenter> im
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1){
-            if (resultCode == RESULT_OK){
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
                 nextpage = 1;
                 epclist.clear();
 
@@ -109,7 +112,7 @@ public class MedicalCollectActivity extends BaseActivity<MedCollectPresenter> im
         if (!ScreenUtils.Utils.isFastClick()) return;
 
         Intent intent = new Intent(this, MedicalRegisterActivity.class);
-        startActivityForResult(intent,1);
+        startActivityForResult(intent, 1);
     }
 
     @Override

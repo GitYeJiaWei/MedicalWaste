@@ -4,12 +4,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
+    android:orientation="vertical"
     tools:context=".ui.activity.ScanActivity">
 
-    <ImageView
-        android:id="@+id/img_scan"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:src="@mipmap/error"/>
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:fitsSystemWindows="true"
+        android:background="@color/colorPrimary"
+        >
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="标题"
+            android:textColor="@color/white"
+            android:textSize="22sp" />
+
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/img_scan"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:src="@mipmap/error"/>
+    </LinearLayout>
+
 </LinearLayout>

@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -51,6 +52,10 @@ public class CollectMessageActivity extends BaseActivity {
     Button btnScan;
     @BindView(R.id.btn_cancle)
     Button btnCancle;
+    @BindView(R.id.title)
+    TextView title;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     private WasteViewsBean wasteViewsBean;
 
     @Override
@@ -127,6 +132,7 @@ public class CollectMessageActivity extends BaseActivity {
 
     @Override
     public void init() {
+        title.setText("收集详情");
         //获取打印机状态
         getState();
 
@@ -249,8 +255,8 @@ public class CollectMessageActivity extends BaseActivity {
                     ToastUtil.toast(e.getMessage());
                 }
             }
-            if (resultCode == RESULT_CANCELED){
-               finish();
+            if (resultCode == RESULT_CANCELED) {
+                finish();
             }
         }
     }
@@ -282,11 +288,11 @@ public class CollectMessageActivity extends BaseActivity {
             //设置 X,Y 的坐标。
             Print.SetPageModeAbsolutePosition(0, 0);
             //打印二维码（你也可以打印文字和条码）。
-            Print.PrintText(wasteViewsBean.getWasteType()+" 重量:"+wasteViewsBean.getWeight()+"kg", 0, 2, 0);
-            Print.PrintText("科室:"+wasteViewsBean.getDepartmentName(), 0, 2, 0);
-            Print.PrintText("移交人员:"+wasteViewsBean.getHandOverUserName(), 0, 2, 0);
-            Print.PrintText("回收人员:"+wasteViewsBean.getCollectUserName(), 0, 2, 0);
-            Print.PrintText("收集时间:"+wasteViewsBean.getCollectionTime(), 0, 2, 0);
+            Print.PrintText(wasteViewsBean.getWasteType() + " 重量:" + wasteViewsBean.getWeight() + "kg", 0, 2, 0);
+            Print.PrintText("科室:" + wasteViewsBean.getDepartmentName(), 0, 2, 0);
+            Print.PrintText("移交人员:" + wasteViewsBean.getHandOverUserName(), 0, 2, 0);
+            Print.PrintText("回收人员:" + wasteViewsBean.getCollectUserName(), 0, 2, 0);
+            Print.PrintText("收集时间:" + wasteViewsBean.getCollectionTime(), 0, 2, 0);
             //打印。
             Print.PrintDataInPageMode();
         } catch (Exception e) {

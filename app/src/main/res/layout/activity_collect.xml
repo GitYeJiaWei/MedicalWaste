@@ -6,9 +6,29 @@
     android:layout_height="match_parent"
     tools:context=".ui.activity.MedicalCollectActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:fitsSystemWindows="true"
+        android:background="@color/colorPrimary"
+        >
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="标题"
+            android:textColor="@color/white"
+            android:textSize="22sp" />
+
+    </android.support.v7.widget.Toolbar>
+
     <LinearLayout
         android:id="@+id/top"
         android:layout_width="match_parent"
+        android:layout_below="@+id/toolbar"
         android:layout_height="35dp"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="5dp"
@@ -85,7 +105,7 @@
     <Button
         android:id="@+id/btn_lease"
         android:layout_alignParentBottom="true"
-        android:layout_margin="10dp"
+        android:layout_margin="15dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/btn_select"

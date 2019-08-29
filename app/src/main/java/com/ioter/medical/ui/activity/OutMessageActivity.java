@@ -2,6 +2,8 @@ package com.ioter.medical.ui.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -19,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -41,6 +44,10 @@ public class OutMessageActivity extends BaseActivity {
     TextView tvTotalWeight;
     @BindView(R.id.list_lease)
     ListView listLease;
+    @BindView(R.id.title)
+    TextView title;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     private OutRegisterAdapter outRegisterAdapter;
     private ArrayList<EPC> epclist = new ArrayList<>();
 
@@ -55,7 +62,7 @@ public class OutMessageActivity extends BaseActivity {
 
     @Override
     public void init() {
-        setTitle("出库详情");
+        title.setText("出库详情");
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
 
@@ -123,4 +130,10 @@ public class OutMessageActivity extends BaseActivity {
                 );
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
+    }
 }

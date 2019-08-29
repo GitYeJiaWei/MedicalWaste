@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.RequiresApi;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -68,6 +69,10 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
     Button btnCancle;
     @BindView(R.id.gridview)
     GridView gridview;
+    @BindView(R.id.title)
+    TextView title;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     private List<Map<String, String>> dataList;
     private String WasteTypeId = null;
     private String HandOverUserId = null;
@@ -90,18 +95,18 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
             super.handleMessage(msg);
             if (msg.what == 1) {
                 ToastUtil.toast("打印机断开");
-                if (Print.IsOpened()){
+                if (Print.IsOpened()) {
                     try {
                         Print.PortClose();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
-            }else if (msg.what == 2){
+            } else if (msg.what == 2) {
                 ToastUtil.toast("上盖开");
-            }else if (msg.what == 3){
+            } else if (msg.what == 3) {
                 ToastUtil.toast("打印机温度异常");
-            }else if (msg.what == 4){
+            } else if (msg.what == 4) {
                 ToastUtil.toast("传感器检测到无纸");
             }
         }
@@ -148,7 +153,7 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
 
     @Override
     public void init() {
-        setTitle("医废登记");
+        title.setText("医废登记");
 
         //医废类型查询
         initWasteTypes();
@@ -332,8 +337,8 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
                 //称重数据
                 BigDecimal bigDecimal = new BigDecimal(weight);
                 double b1 = bigDecimal.doubleValue();
-                Log.d("EnterDouble", "b1"+b1+"  bigDecimal"+bigDecimal);
-                if (b1<0.01 || b1>99.99){
+                Log.d("EnterDouble", "b1" + b1 + "  bigDecimal" + bigDecimal);
+                if (b1 < 0.01 || b1 > 99.99) {
                     ToastUtil.toast("称重信息范围0.01~99.99之间");
                     return;
                 }
@@ -427,11 +432,11 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
             //设置 X,Y 的坐标。
             Print.SetPageModeAbsolutePosition(0, 0);
             //打印二维码（你也可以打印文字和条码）。
-            Print.PrintText(wasteViewsBean.getWasteType()+" 重量:"+wasteViewsBean.getWeight()+"kg", 0, 2, 0);
-            Print.PrintText("科室:"+wasteViewsBean.getDepartmentName(), 0, 2, 0);
-            Print.PrintText("移交人员:"+wasteViewsBean.getHandOverUserName(), 0, 2, 0);
-            Print.PrintText("回收人员:"+wasteViewsBean.getCollectUserName(), 0, 2, 0);
-            Print.PrintText("收集时间:"+wasteViewsBean.getCollectionTime(), 0, 2, 0);
+            Print.PrintText(wasteViewsBean.getWasteType() + " 重量:" + wasteViewsBean.getWeight() + "kg", 0, 2, 0);
+            Print.PrintText("科室:" + wasteViewsBean.getDepartmentName(), 0, 2, 0);
+            Print.PrintText("移交人员:" + wasteViewsBean.getHandOverUserName(), 0, 2, 0);
+            Print.PrintText("回收人员:" + wasteViewsBean.getCollectUserName(), 0, 2, 0);
+            Print.PrintText("收集时间:" + wasteViewsBean.getCollectionTime(), 0, 2, 0);
             //打印。
             Print.PrintDataInPageMode();
         } catch (Exception e) {
@@ -453,7 +458,7 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
                     ToastUtil.toast(e.getMessage());
                 }
             }
-            if (resultCode == RESULT_CANCELED){
+            if (resultCode == RESULT_CANCELED) {
                 try {
                     setResult(RESULT_OK);
                     finish();
@@ -491,5 +496,4 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
         super.showError(msg);
         btnCommit.setEnabled(true);
     }
-
 }
