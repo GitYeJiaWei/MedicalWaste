@@ -1,5 +1,6 @@
 package com.ioter.medical.ui.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -45,6 +46,7 @@ public class CountFragment extends BaseFragment {
     private SimpleAdapter adapter1;
     private int mYear, mMonth;
     private String beginTime;
+    CallBackTag callBack;
 
     public static CountFragment newInstance() {
         return new CountFragment();
@@ -57,6 +59,12 @@ public class CountFragment extends BaseFragment {
 
     @Override
     public void setupAcitivtyComponent(AppComponent appComponent) {
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        callBack = (CallBackTag) getActivity();
     }
 
     @Override
@@ -124,5 +132,10 @@ public class CountFragment extends BaseFragment {
 
     @OnClick(R.id.btn_lease)
     public void onViewClicked() {
+        callBack.sendTag();
+    }
+
+    public interface CallBackTag{
+        void sendTag();
     }
 }

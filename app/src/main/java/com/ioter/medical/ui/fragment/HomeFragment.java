@@ -45,7 +45,6 @@ public class HomeFragment extends BaseFragment {
     private List<Map<String, String>> dataList1;
     private MyAdapter adapter;
     private SimpleAdapter adapter1;
-    CallBackValue callBackValue;
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -66,6 +65,8 @@ public class HomeFragment extends BaseFragment {
     public void setupAcitivtyComponent(AppComponent appComponent) {
 
     }
+
+    CallBackValue callBackValue;
 
     /**
      * fragment与activity产生关联是  回调这个方法
@@ -190,7 +191,7 @@ public class HomeFragment extends BaseFragment {
 
     //定义一个回调接口
     public interface CallBackValue {
-        public void SendMessageValue(String strValue);
+        void SendMessageValue(String strValue);
     }
 
 }

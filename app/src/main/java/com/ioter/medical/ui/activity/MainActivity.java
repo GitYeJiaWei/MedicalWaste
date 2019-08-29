@@ -71,7 +71,8 @@ import print.Print;
 /**
  * 主页
  */
-public class MainActivity extends BaseActivity<RuleListPresenter> implements RuleListContract.FeeRuleView, HomeFragment.CallBackValue {
+public class MainActivity extends BaseActivity<RuleListPresenter>
+        implements RuleListContract.FeeRuleView, HomeFragment.CallBackValue, CountFragment.CallBackTag {
     public static final String TAG_CONTENT_FRAGMENT = "ContentFragment";
     private String[] mOptionTitles;
     private int[] mBitMaps;
@@ -115,6 +116,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
 
     @Override
     public void init() {
+        //注册广播
         startScreenBroadcastReceiver();
 
         mPresenter.feeRule();
@@ -304,6 +306,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
             public void onPageScrollStateChanged(int state) {
             }
         });
+
     }
 
     @Override
@@ -358,6 +361,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
         //getVersionInfoFromServer();
     }
 
+    //获取回调的数据
     @Override
     public void SendMessageValue(String strValue) {
         if (strValue.equals("MedicalCollectActivity")) {
@@ -373,6 +377,12 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
         } else if (strValue.equals("MedicalOutActivity")) {
             startActivity(new Intent(this, MedicalOutActivity.class));
         }
+    }
+
+    //获取条件查询的回调
+    @Override
+    public void sendTag() {
+        vpager.setCurrentItem(2);
     }
 
     /**
@@ -431,6 +441,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
 
         mDrawerList.setItemChecked(position, true);//高亮选中项
         setTitle(mOptionTitles[position]);
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null && position == 0) {
             actionBar.setHomeAsUpIndicator(R.mipmap.button_daohang);
@@ -501,7 +512,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter> implements Rul
         }
     }
 
-    //点击左侧按钮
+    //点击左侧按钮,Home通常是导航到前一个页面，可以自己拦截Home得点击事件
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
