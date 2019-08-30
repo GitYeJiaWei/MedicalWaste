@@ -70,7 +70,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:textColor="@color/white"
-            android:text="入库总数量"/>
+            android:text="复核重量"/>
 
         <View
             android:layout_width="0.5dp"

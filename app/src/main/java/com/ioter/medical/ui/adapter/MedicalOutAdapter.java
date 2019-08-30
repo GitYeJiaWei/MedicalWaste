@@ -87,7 +87,7 @@ public class MedicalOutAdapter extends BaseAdapter {
         final StockOut m1 = (StockOut) this.getItem(position);
         listItemView.num.setText(m1.getId());
         listItemView.time.setText(m1.getDeliverCount() + "");
-        listItemView.room.setText(m1.getDeliverWeight() + "");
+        listItemView.room.setText(m1.getReceivedWeight() + "");
         listItemView.user.setText(m1.getDeliverTime()+"");
 
         return convertView;
