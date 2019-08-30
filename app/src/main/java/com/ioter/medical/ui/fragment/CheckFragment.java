@@ -115,6 +115,12 @@ public class CheckFragment extends BaseFragment {
                 );
     }
 
+    @Override
+    public void myOnKeyDwon() {
+        super.myOnKeyDwon();
+        ((MainActivity) mActivity).ScanBarcode();
+    }
+
     private void initSpinner() {
         /*
          * 动态添显示下来菜单的选项，可以动态添加元素
@@ -158,8 +164,6 @@ public class CheckFragment extends BaseFragment {
         mYear = calendar.get(Calendar.YEAR);
         mMonth = calendar.get(Calendar.MONTH);
         mDay = calendar.get(Calendar.DAY_OF_MONTH);
-       /* SetDateTimeToTextView(tvStartTime);
-        SetDateTimeToTextView(tvEndTime);*/
     }
 
     @Override

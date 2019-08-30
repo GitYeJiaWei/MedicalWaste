@@ -292,7 +292,7 @@ public class CollectMessageActivity extends BaseActivity {
             Print.PrintText("科室:" + wasteViewsBean.getDepartmentName(), 0, 2, 0);
             Print.PrintText("移交人员:" + wasteViewsBean.getHandOverUserName(), 0, 2, 0);
             Print.PrintText("回收人员:" + wasteViewsBean.getCollectUserName(), 0, 2, 0);
-            Print.PrintText("收集时间:" + wasteViewsBean.getCollectionTime(), 0, 2, 0);
+            Print.PrintText("收集时间:" + wasteViewsBean.getCollectionTime().substring(0,16), 0, 2, 0);
             //打印。
             Print.PrintDataInPageMode();
         } catch (Exception e) {
