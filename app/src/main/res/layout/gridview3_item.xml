@@ -26,10 +26,8 @@
             android:layout_toLeftOf="@+id/img_tv"
             android:gravity="center"
             android:layout_marginRight="5dp"
-            android:textColor="@color/white"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:background="@drawable/round_back"
             />
 
         <ImageView

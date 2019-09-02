@@ -82,7 +82,7 @@ public class CountFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(AppApplication.getApplication(), CheckMessageActivity.class);
                 intent.putExtra("WasteTypeId",dataList1.get(position).get("id"));
-                intent.putExtra("Begin",beginTime);
+                //intent.putExtra("Begin",beginTime);
                 startActivity(intent);
             }
         });

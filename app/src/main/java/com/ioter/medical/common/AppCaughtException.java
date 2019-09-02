@@ -34,6 +34,11 @@ public class AppCaughtException implements UncaughtExceptionHandler
         mDefaultUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
     }
 
+    /**
+     * ComponentName，顾名思义，就是组件名称，通过调用Intent中的setComponent方法，我们可以打开另外一个应用中的Activity或者服务
+     * @param thread
+     * @param ex
+     */
     @Override
     public void uncaughtException(Thread thread, Throwable ex)
     {
@@ -44,16 +49,23 @@ public class AppCaughtException implements UncaughtExceptionHandler
         } else
         {
             Intent intent = new Intent();
+            //第一个参数是要启动应用的包名称，第二个参数是你要启动的Activity或者Service的全称（包名+类名）
             intent.setComponent(
-                    new ComponentName(VariableConstant.APP_PACKAGE_MAIN, "com.ioter.medical"));
+                    new ComponentName(VariableConstant.APP_PACKAGE_MAIN, "com.ioter.medical.ui.activity.LoginActivity"));
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             AppApplication.getApplication().startActivity(intent);
 
             android.os.Process.killProcess(android.os.Process.myPid());
-            System.exit(1);
+            ActivityCollecter.finishAll();
         }
     }
 
+    /**
+     * 保存错误日志到本地
+     * @param context
+     * @param ex
+     * @return
+     */
     private String savaInfoToSD(Context context, Throwable ex)
     {
         String fileName = null;

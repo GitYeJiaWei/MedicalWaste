@@ -245,7 +245,11 @@ public class BleActivity extends BaseActivity {
             Print.PrintText("回收人员:AAA", 0, 2, 0);
             Print.PrintText("收集时间:"+"2019-08-01 18:00:00".substring(0,16), 0, 2, 0);
             //打印。
-            Print.PrintDataInPageMode();
+            int a = Print.PrintDataInPageMode();
+            if (a== -1){
+                ToastUtil.toast("发送失败!");
+                return;
+            }
         } catch (Exception e) {
             Log.e("HPRTSDKSample", (new StringBuilder("Activity_Main --> onClickWIFI ")).append(e.getMessage()).toString());
         }
