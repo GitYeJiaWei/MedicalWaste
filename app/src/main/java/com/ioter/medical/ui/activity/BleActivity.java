@@ -100,7 +100,7 @@ public class BleActivity extends BaseActivity {
                     if (statusData.length == 0) {
                         handler.sendEmptyMessage(1);
                     } else {
-                        ToastUtil.toast(Arrays.toString(statusData) + "中间" + statusData1[0]);
+                        //ToastUtil.toast(Arrays.toString(statusData) + " " + statusData1[0]);
                         if ((statusData[0] & 0x20) == 32) {
                             handler.sendEmptyMessage(2);
                             Log.d("getState", "上盖开");

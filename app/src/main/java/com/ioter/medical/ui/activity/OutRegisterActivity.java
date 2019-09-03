@@ -151,9 +151,11 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
                                            BigDecimal bd1 = new BigDecimal(Double.toString(epclist.get(i).getWeight()));
                                            BigDecimal bd2 = new BigDecimal(Double.toString(sum));
                                            sum = bd1.add(bd2).doubleValue();
-                                           DustbinEpcs.add(epclist.get(i).getId());
                                        }
+
+                                       DustbinEpcs.add(stringMap.get("Epc")+"");
                                        tvTotalWeight.setText("总重量：" + sum + "kg");
+                                       tvWeight.setText(sum+"");
                                        //ToastUtil.toast("扫描成功");
                                    } else {
                                        ToastUtil.toast(baseBean.getMessage());
