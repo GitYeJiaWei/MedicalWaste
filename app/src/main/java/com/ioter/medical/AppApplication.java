@@ -61,6 +61,7 @@ public class AppApplication extends Application
     protected void attachBaseContext(Context base)
     {
         super.attachBaseContext(base);
+        //设置AppCaughtException为系统默认的UncaughtException处理器
         Thread.setDefaultUncaughtExceptionHandler(new AppCaughtException());// 注册全局异常捕获
     }
 

@@ -7,8 +7,10 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Looper;
 
 import com.ioter.medical.AppApplication;
+import com.ioter.medical.common.util.ToastUtil;
 import com.ioter.medical.common.util.VariableConstant;
 
 import java.io.File;
@@ -27,24 +29,30 @@ import java.util.TimeZone;
  */
 public class AppCaughtException implements UncaughtExceptionHandler
 {
-    private UncaughtExceptionHandler mDefaultUncaughtExceptionHandler;// 系统的异常捕获对象
+    private UncaughtExceptionHandler mDefaultUncaughtExceptionHandler;// 系统默认的异常捕获对象
 
     public AppCaughtException()
     {
+        // 获取系统默认的UncaughtException处理器
         mDefaultUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
     }
 
     /**
-     * ComponentName，顾名思义，就是组件名称，通过调用Intent中的setComponent方法，我们可以打开另外一个应用中的Activity或者服务
+     * 当UncaughtException发生时会转入该函数来处理
+     *
+     * ComponentName，顾名思义，就是组件名称，通过调用Intent中的setComponent方法，
+     * 我们可以打开另外一个应用中的Activity或者服务
      * @param thread
      * @param ex
      */
     @Override
     public void uncaughtException(Thread thread, Throwable ex)
     {
+        //把错误日志写到本地
         savaInfoToSD(AppApplication.getApplication(), ex);
-        if (ex == null && mDefaultUncaughtExceptionHandler != null)
+        if (!handleException(thread, ex) && mDefaultUncaughtExceptionHandler != null)
         {
+            // 如果用户没有处理则让系统默认的异常处理器来处理
             mDefaultUncaughtExceptionHandler.uncaughtException(thread, ex);
         } else
         {
@@ -55,9 +63,34 @@ public class AppCaughtException implements UncaughtExceptionHandler
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             AppApplication.getApplication().startActivity(intent);
 
+            //退出程序
             android.os.Process.killProcess(android.os.Process.myPid());
-            ActivityCollecter.finishAll();
+            System.exit(1);
         }
+    }
+
+    /**
+     * 自定义错误处理,收集错误信息 发送错误报告等操作均在此完成.
+     *
+     * @param ex
+     * @return true:如果处理了该异常信息;否则返回false.
+     */
+    private boolean handleException(Thread thread, Throwable ex) {
+        if (ex == null) {
+            return false;
+        }
+        // 使用Toast来显示异常信息
+        new Thread() {
+            @Override
+            public void run() {
+                Looper.prepare();
+                ToastUtil.toast("喵,很抱歉,程序出现异常,即将退出!");
+                Looper.loop();
+            }
+        }.start();
+        // 把异常信息和设备信息上传到服务器
+        //subMitThreadAndDeviceInfo(AppApplication.getApplication(), thread, ex);
+        return true;
     }
 
     /**

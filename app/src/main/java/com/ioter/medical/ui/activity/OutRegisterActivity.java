@@ -316,9 +316,26 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
             case R.id.btn_cancle:
                 if (!ScreenUtils.Utils.isFastClick()) return;
 
+                setResult(RESULT_OK);
                 finish();
                 break;
         }
+    }
+
+    private void clearData(){
+        tvWeight.setText("");
+        tvTotalWeight.setText("总重量：AAAkg");
+        DustbinEpcs.clear();
+        epclist.clear();
+        outRegisterAdapter.updateDatas(epclist);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        setResult(RESULT_OK);
+        finish();
     }
 
     @Override
@@ -330,8 +347,10 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
         }
         if (baseBean.getCode() == 0) {
             ToastUtil.toast("提交成功");
-            setResult(RESULT_OK);
-            finish();
+            clearData();
+
+            //setResult(RESULT_OK);
+            //finish();
         } else {
             ToastUtil.toast(baseBean.getMessage());
         }

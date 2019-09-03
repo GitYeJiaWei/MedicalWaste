@@ -355,6 +355,10 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
         }
     }
 
+    private void clearData(){
+        tvWeight.setText("");
+    }
+
     private void createDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("提交成功：");
@@ -375,9 +379,10 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 btnCommit.setEnabled(true);
-                setResult(RESULT_OK);
+                //setResult(RESULT_OK);
                 dialog.dismiss();
-                finish();
+                //finish();
+                clearData();
             }
         });
         AlertDialog dialog = builder.create();
@@ -396,9 +401,10 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
             try {
                 PrintTestPage();//打印信息
 
-                setResult(RESULT_OK);
+                //setResult(RESULT_OK);
                 dialog.dismiss();
-                finish();
+                clearData();
+                //finish();
             } catch (Exception e) {
                 ToastUtil.toast(e.getMessage());
             }
@@ -451,17 +457,20 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
             if (resultCode == RESULT_OK) {
                 try {
                     PrintTestPage();//打印信息
+                    clearData();
 
-                    setResult(RESULT_OK);
-                    finish();
+                    //setResult(RESULT_OK);
+                    //finish();
                 } catch (Exception e) {
                     ToastUtil.toast(e.getMessage());
                 }
             }
             if (resultCode == RESULT_CANCELED) {
                 try {
-                    setResult(RESULT_OK);
-                    finish();
+                    ToastUtil.toast("连接打印机失败!");
+                    //clearData();
+                    //setResult(RESULT_OK);
+                    //finish();
                 } catch (Exception e) {
                     ToastUtil.toast(e.getMessage());
                 }
