@@ -3,7 +3,6 @@ package com.ioter.medical.ui.fragment;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
@@ -92,12 +91,10 @@ public class CheckFragment extends BaseFragment {
                                        ToastUtil.toast("医废类型请求失败");
                                        return;
                                    }
-                                   if (baseBean.getCode() == 0) {
+                                   if (baseBean.getCode() == 0 && baseBean.getData() != null) {
                                        //ToastUtil.toast("医废类型查询");
-                                       if (baseBean.getData() != null) {
-                                           dataList = (List<Map<String, String>>) baseBean.getData();
-                                           initSpinner();
-                                       }
+                                       dataList = (List<Map<String, String>>) baseBean.getData();
+                                       initSpinner();
                                    } else {
                                        ToastUtil.toast(baseBean.getMessage());
                                    }

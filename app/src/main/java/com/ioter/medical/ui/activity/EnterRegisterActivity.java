@@ -350,10 +350,8 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-
         setResult(RESULT_OK);
-        finish();
+        super.onBackPressed();
     }
 
     @Override
