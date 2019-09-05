@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.ioter.medical.ui.widget.SwipeListLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sll_main"
+    android:layout_width="match_parent"
+    android:layout_height="50.2dp" >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/tv_delete"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:background="@color/md_red_500"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:text="删除" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent"
+                android:background="@color/back_base"
+                />
+
+            <TextView
+                android:id="@+id/tv_num"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/dark_grey"
+                android:text="单号"
+                />
+
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent"
+                android:background="@color/back_base"
+                />
+
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textColor="@color/dark_grey"
+                android:gravity="center"
+                android:text="收集时间"/>
+
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent"
+                android:background="@color/back_base"
+                />
+
+            <TextView
+                android:id="@+id/tv_room"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:textColor="@color/dark_grey"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="所属科室"/>
+
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent"
+                android:background="@color/back_base"
+                />
+
+            <TextView
+                android:id="@+id/tv_user"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:textColor="@color/dark_grey"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="移交人员"/>
+
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent"
+                android:background="@color/back_base"
+                />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.2dp"
+            android:background="@color/back_base"
+            />
+    </LinearLayout>
+
+
+
+</com.ioter.medical.ui.widget.SwipeListLayout>

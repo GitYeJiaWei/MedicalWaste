@@ -155,8 +155,10 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
     public void init() {
         title.setText("医废登记");
 
+        dataList = new ArrayList<>();
         //医废类型查询
         initWasteTypes();
+
 
         tvName.setText(ACache.get(AppApplication.getApplication()).getAsString(LoginActivity.REAL_NAME));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -168,7 +170,7 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
     }
 
     private void initWasteTypes() {
-        dataList = new ArrayList<>();
+        dataList.clear();
 
         ApiService apIservice = toretrofit().create(ApiService.class);
         Observable<BaseBean<Object>> qqDataCall = apIservice.wastetypes();
@@ -357,6 +359,7 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
 
     private void clearData(){
         tvWeight.setText("");
+        initWasteTypes();
     }
 
     private void createDialog() {

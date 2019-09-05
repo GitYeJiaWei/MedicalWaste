@@ -66,7 +66,7 @@ public class OutMessageActivity extends BaseActivity {
         Intent intent = getIntent();
         String id = intent.getStringExtra("id");
 
-        outRegisterAdapter = new OutRegisterAdapter(this, "outRegister");
+        outRegisterAdapter = new OutRegisterAdapter(this, "outMessage");
         listLease.setAdapter(outRegisterAdapter);
 
         Map<String, String> map = new HashMap<>();

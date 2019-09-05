@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -28,6 +29,7 @@ import com.ioter.medical.di.module.EnterRegisterModule;
 import com.ioter.medical.presenter.EnterRegisterPresenter;
 import com.ioter.medical.presenter.contract.EnterRegisterContract;
 import com.ioter.medical.ui.adapter.MedicalCollectAdapter;
+import com.ioter.medical.ui.widget.SwipeListLayout;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -35,7 +37,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -76,8 +80,9 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
     private HashMap<String, String> mapEpc = new HashMap<>();
     private Map<String, String> map = new HashMap<>();
     private MedicalCollectAdapter medicalCollectAdapter;
-    private ArrayList<EPC> epclist = new ArrayList<>();
+    public ArrayList<EPC> epclist = new ArrayList<>();
     private ArrayList<String> WasteIds = new ArrayList<>();
+    private static Set<SwipeListLayout> sets = new HashSet();
 
     @Override
     public int setLayout() {
@@ -103,7 +108,86 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
         medicalCollectAdapter = new MedicalCollectAdapter(this, "enterRegister");
         listLease.setAdapter(medicalCollectAdapter);
 
+        listLease.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                switch (scrollState) {
+                    //当listview开始滑动时，若有item的状态为Open，则Close，然后移除
+                    // OnScrollListener.SCROLL_STATE_FLING; //屏幕处于甩动状态
+                    // OnScrollListener.SCROLL_STATE_IDLE; //停止滑动状态
+                    // OnScrollListener.SCROLL_STATE_TOUCH_SCROLL;// 手指接触状态
+                    case SCROLL_STATE_TOUCH_SCROLL:
+                        if (sets.size() > 0) {
+                            for (SwipeListLayout s : sets) {
+                                s.setStatus(SwipeListLayout.Status.Close, true);
+                                sets.remove(s);
+                            }
+                        }
+                        break;
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            }
+        });
+
+        medicalCollectAdapter.setCallBackDelete(new MedicalCollectAdapter.CallBackDelete() {
+            @Override
+            public void onDeleteItem(EPC epc) {
+                mapEpc.remove(epc.getId());
+
+                epclist.remove(epc);
+                medicalCollectAdapter.updateDatas(epclist);
+                double sum = 0;
+                for (int i = 0; i < epclist.size(); i++) {
+                    BigDecimal bd1 = new BigDecimal(Double.toString(epclist.get(i).getWeight()));
+                    BigDecimal bd2 = new BigDecimal(Double.toString(sum));
+                    sum = bd1.add(bd2).doubleValue();
+                }
+                WasteIds.remove(epc.getId());
+                tvTotalWeight.setText("总重量：" + sum + "kg");
+                tvWeight.setText(sum+"");
+            }
+        });
     }
+
+    public static class MyOnSlipStatusListener implements SwipeListLayout.OnSwipeStatusListener {
+
+        private SwipeListLayout slipListLayout;
+
+        public MyOnSlipStatusListener(SwipeListLayout slipListLayout) {
+            this.slipListLayout = slipListLayout;
+        }
+
+        @Override
+        public void onStatusChanged(SwipeListLayout.Status status) {
+            if (status == SwipeListLayout.Status.Open) {
+                //若有其他的item的状态为Open，则Close，然后移除
+                if (sets.size() > 0) {
+                    for (SwipeListLayout s : sets) {
+                        s.setStatus(SwipeListLayout.Status.Close, true);
+                        sets.remove(s);
+                    }
+                }
+                sets.add(slipListLayout);
+            } else {
+                if (sets.contains(slipListLayout))
+                    sets.remove(slipListLayout);
+            }
+        }
+
+        @Override
+        public void onStartCloseAnimation() {
+
+        }
+
+        @Override
+        public void onStartOpenAnimation() {
+
+        }
+    }
+
 
     //获取EPC群读数据
     @Override

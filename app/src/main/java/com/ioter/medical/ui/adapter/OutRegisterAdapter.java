@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import com.ioter.medical.R;
 import com.ioter.medical.bean.EPC;
+import com.ioter.medical.ui.activity.OutRegisterActivity;
+import com.ioter.medical.ui.widget.SwipeListLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,11 @@ public class OutRegisterAdapter extends BaseAdapter {
     private String size;
     //视图容器
     private LayoutInflater layoutInflater;
+    CallBackDelete callBackDelete;
+
+    public void setCallBackDelete(CallBackDelete callBackDelete1){
+        callBackDelete = callBackDelete1;
+    }
 
     public OutRegisterAdapter(Context _context, String size) {
         this.context = _context;
@@ -66,11 +73,31 @@ public class OutRegisterAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         OutRegisterAdapter.ListItemView listItemView = null;
         if (convertView == null) {
-            //获取list_item布局文件的视图
-            convertView = layoutInflater.inflate(R.layout.out_register_item, null);
+            if (size.equals("outRegister")) {
+                //获取list_item布局文件的视图
+                convertView = layoutInflater.inflate(R.layout.out_register_item1, null);
+
+                final SwipeListLayout sll_main = (SwipeListLayout) convertView
+                        .findViewById(R.id.sll_main);
+                TextView tv_delete = (TextView) convertView.findViewById(R.id.tv_delete);
+                sll_main.setOnSwipeStatusListener(new OutRegisterActivity.MyOnSlipStatusListener(
+                        sll_main));
+
+                tv_delete.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        sll_main.setStatus(SwipeListLayout.Status.Close, true);
+
+                        callBackDelete.onDeleteItem(mymodelList.get(position));
+                    }
+                });
+            } else if (size.equals("outMessage")) {
+                convertView = layoutInflater.inflate(R.layout.out_register_item, null);
+            }
             //获取控件对象
             listItemView = new OutRegisterAdapter.ListItemView();
             listItemView.num = (TextView) convertView.findViewById(R.id.tv_num);
@@ -97,5 +124,9 @@ public class OutRegisterAdapter extends BaseAdapter {
      */
     public final class ListItemView {
         TextView num, weight, type;
+    }
+
+    public interface CallBackDelete{
+        void onDeleteItem(EPC epc);
     }
 }

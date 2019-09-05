@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.ioter.medical.R;
 import com.ioter.medical.bean.EPC;
 import com.ioter.medical.ui.activity.CollectMessageActivity;
+import com.ioter.medical.ui.activity.EnterRegisterActivity;
+import com.ioter.medical.ui.widget.SwipeListLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,11 @@ public class MedicalCollectAdapter extends BaseAdapter {
     private String size;
     //视图容器
     private LayoutInflater layoutInflater;
+    CallBackDelete callBackDelete;
+
+    public void setCallBackDelete(CallBackDelete callBackDelete1){
+        callBackDelete = callBackDelete1;
+    }
 
     public MedicalCollectAdapter(Context _context, String size) {
         this.context = _context;
@@ -68,17 +75,39 @@ public class MedicalCollectAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         MedicalCollectAdapter.ListItemView listItemView = null;
         if (convertView == null) {
             //获取list_item布局文件的视图
-            convertView = layoutInflater.inflate(R.layout.list_item_return, null);
+            if (size.equals("enterRegister")){
+                convertView = layoutInflater.inflate(R.layout.list_item_register, null);
+                final SwipeListLayout sll_main = (SwipeListLayout) convertView
+                        .findViewById(R.id.sll_main);
+                TextView tv_delete = (TextView) convertView.findViewById(R.id.tv_delete);
+                sll_main.setOnSwipeStatusListener(new EnterRegisterActivity.MyOnSlipStatusListener(
+                        sll_main));
+
+                tv_delete.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        sll_main.setStatus(SwipeListLayout.Status.Close, true);
+                        //mymodelList.remove(position);
+
+                        callBackDelete.onDeleteItem(mymodelList.get(position));
+                    }
+                });
+            }else {
+                convertView = layoutInflater.inflate(R.layout.list_item_return, null);
+            }
             //获取控件对象
             listItemView = new MedicalCollectAdapter.ListItemView();
             listItemView.num = (TextView) convertView.findViewById(R.id.tv_num);
             listItemView.time = (TextView) convertView.findViewById(R.id.tv_time);
             listItemView.room = (TextView) convertView.findViewById(R.id.tv_room);
             listItemView.user = (TextView) convertView.findViewById(R.id.tv_user);
+
+
             //设置控件集到convertView
             convertView.setTag(listItemView);
         } else {
@@ -116,5 +145,9 @@ public class MedicalCollectAdapter extends BaseAdapter {
      */
     public final class ListItemView {
         TextView num, time, room, user;
+    }
+
+    public interface CallBackDelete{
+        void onDeleteItem(EPC epc);
     }
 }

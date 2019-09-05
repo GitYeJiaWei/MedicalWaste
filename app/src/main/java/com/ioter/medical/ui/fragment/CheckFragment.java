@@ -128,7 +128,6 @@ public class CheckFragment extends BaseFragment {
             list.add(dataList.get(i).get("Name"));
         }
 
-
         /*
          * 第二个参数是显示的布局
          * 第三个参数是在布局显示的位置id
