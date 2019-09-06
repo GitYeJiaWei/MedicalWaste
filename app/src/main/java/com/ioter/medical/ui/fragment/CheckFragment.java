@@ -43,8 +43,6 @@ import io.reactivex.schedulers.Schedulers;
  * 医废查询
  */
 public class CheckFragment extends BaseFragment {
-    @BindView(R.id.sp_kuqu)
-    Spinner spKuqu;
     @BindView(R.id.tv_startTime)
     TextView tvStartTime;
     @BindView(R.id.tv_endTime)
@@ -58,6 +56,7 @@ public class CheckFragment extends BaseFragment {
     private int mYear, mMonth, mDay;
     private Dialog dataPickerDialog = null;
     private int mStatus = 0;
+    private Spinner spKuqu ;
 
     public static CheckFragment newInstance() {
         return new CheckFragment();
@@ -75,6 +74,7 @@ public class CheckFragment extends BaseFragment {
     @Override
     public void init(View view) {
         initDate();
+        spKuqu = view.findViewById(R.id.sp_kuqu);
 
         ApiService apIservice = toretrofit().create(ApiService.class);
         Observable<BaseBean<Object>> qqDataCall = apIservice.wastetypes();
@@ -134,7 +134,7 @@ public class CheckFragment extends BaseFragment {
          * 第三个参数是在布局显示的位置id
          * 第四个参数是将要显示的数据
          */
-        ArrayAdapter adapter2 = new ArrayAdapter(getActivity(), R.layout.item, R.id.text_item, list);
+        ArrayAdapter adapter2 = new ArrayAdapter(AppApplication.getApplication(), R.layout.item, R.id.text_item, list);
         spKuqu.setAdapter(adapter2);
 
         if (TextUtils.isEmpty(selected)) {
