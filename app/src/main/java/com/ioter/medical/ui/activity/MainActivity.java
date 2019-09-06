@@ -1,6 +1,7 @@
 package com.ioter.medical.ui.activity;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +23,8 @@ import android.text.method.LinkMovementMethod;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -38,12 +41,14 @@ import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
 import com.ioter.medical.bean.BaseBean;
 import com.ioter.medical.bean.FeeRule;
+import com.ioter.medical.bean.Remind;
 import com.ioter.medical.common.ActivityCollecter;
 import com.ioter.medical.common.download.LoadingService;
 import com.ioter.medical.common.download.Utils;
 import com.ioter.medical.common.util.ACache;
 import com.ioter.medical.common.util.NetUtils;
 import com.ioter.medical.common.util.ToastUtil;
+import com.ioter.medical.data.http.ApiService;
 import com.ioter.medical.di.component.AppComponent;
 import com.ioter.medical.di.component.DaggerRuleListComponent;
 import com.ioter.medical.di.module.RuleListModule;
@@ -64,6 +69,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import print.Print;
 
 /**
@@ -95,12 +105,12 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
     private Toolbar toolbar;
     private TextView title;
     private boolean isLoading;
-
     private String path;
 
     public static RFIDWithUHF mReader; //RFID扫描
 
     public static Barcode2DWithSoft barcode2DWithSoft = null;//二维扫码
+    private boolean isread = true;
 
     @Override
     public int setLayout() {
@@ -129,6 +139,22 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
         new InitBarCodeTask().execute();
         initUHF();
         mReader.setPower(Integer.valueOf(key1));
+
+        //消息轮询
+        AppApplication.getExecutorService().execute(new Runnable() {
+            @Override
+            public void run() {
+                while(isread){
+                    try {
+                        Thread.sleep(10000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    read();
+                }
+            }
+        });
+
     }
 
     private int cycleCount = 3;//循环3次初始化
@@ -248,6 +274,26 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
             }
         });
 
+        //设置移除图片  如果不设置会默认使用系统灰色的图标
+        //toolbar.setOverflowIcon(getResources().getDrawable(R.drawable.icon_action));
+        //填充menu
+        toolbar.inflateMenu(R.menu.toolbar_menu);
+        //设置点击事件
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.action_share:
+                        item.setIcon(R.mipmap.unremind);
+                        startActivity(new Intent(MainActivity.this,RemindActivity.class));
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            }
+        });
+
         //为抽屉头部 R.layout.layout_header 指定一个父布局抽屉 mDrawerList
         headerView = LayoutInflater.from(this).inflate(R.layout.layout_header, mDrawerList, false);
         mDrawerList.addHeaderView(headerView);
@@ -331,6 +377,12 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu,menu);
+        return true;
+    }
+
+    @Override
     public void feeRuleResult(BaseBean<FeeRule> baseBean1) {
         if (baseBean1 == null) {
             ToastUtil.toast("获取数据失败");
@@ -381,6 +433,43 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
             }
         });
         //getVersionInfoFromServer();
+    }
+
+    private void read(){
+        ApiService apIservice = toretrofit().create(ApiService.class);
+        Observable<BaseBean<Remind>> qqDataCall = apIservice.GetNewMessage();
+        qqDataCall.subscribeOn(Schedulers.io())//请求数据的事件发生在io线程
+                .observeOn(AndroidSchedulers.mainThread())//请求完成后在主线程更新UI
+                .subscribe(new Observer<BaseBean<Remind>>() {
+
+                               @Override
+                               public void onSubscribe(Disposable d) {
+                               }
+
+                               @Override
+                               public void onNext(BaseBean<Remind> baseBean) {
+                                   if (baseBean == null) {
+                                       ToastUtil.toast("读取失败");
+                                       return;
+                                   }
+                                   if (baseBean.getCode() == 0 && baseBean.getData() != null) {
+                                       ToastUtil.toast("有新消息了!");
+                                   } else {
+                                       ToastUtil.toast(baseBean.getMessage());
+                                   }
+                               }
+
+                               @Override
+                               public void onError(Throwable e) {
+                                   ToastUtil.toast(e.getMessage());
+                               }
+
+                               @Override
+                               public void onComplete() {
+
+                               }//订阅
+                           }
+                );
     }
 
     //获取回调的数据
@@ -513,6 +602,9 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (isread){
+            isread = false;
+        }
         if (mReader != null) {
             mReader.free();
         }

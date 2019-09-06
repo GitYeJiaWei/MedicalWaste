@@ -76,7 +76,6 @@ public class CheckMessageActivity extends BaseActivity<MedCollectPresenter> impl
     private String WasteTypeId = null;
     private String Begin = null;
     private String End = null;
-    private String id = null;
 
     @Override
     public int setLayout() {
@@ -201,7 +200,6 @@ public class CheckMessageActivity extends BaseActivity<MedCollectPresenter> impl
                                    if (baseBean.getCode() == 0 && baseBean.getData() != null) {
                                        final WasteViewsBean wb = baseBean.getData();
 
-                                       id = wb.getId();
                                        AppApplication.getExecutorService().execute(new Runnable() {
                                            @Override
                                            public void run() {

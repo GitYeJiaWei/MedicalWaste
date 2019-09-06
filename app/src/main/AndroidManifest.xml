@@ -32,7 +32,8 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.activity.CollectMessageActivity"></activity>
+        <activity android:name=".ui.activity.RemindActivity"></activity>
+        <activity android:name=".ui.activity.CollectMessageActivity" />
         <activity
             android:name=".ui.activity.LoginActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -74,14 +75,16 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
-        <!--android:windowSoftInputMode="adjustPan" 这个方法有一个前提就是你不需要在键盘弹出时让你的布局自适应屏幕
-        （即在键盘弹出时view不会调用onSizeChanged方法），并且可能会导致键盘遮挡屏幕上的内容-->
+        <!--
+android:windowSoftInputMode="adjustPan" 这个方法有一个前提就是你不需要在键盘弹出时让你的布局自适应屏幕
+        （即在键盘弹出时view不会调用onSizeChanged方法），并且可能会导致键盘遮挡屏幕上的内容
+        -->
         <activity
             android:name=".ui.activity.MedicalRegisterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.activity.MedicalEnterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -91,8 +94,8 @@
             android:name=".ui.activity.EnterRegisterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.activity.MedicalOutActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -102,8 +105,8 @@
             android:name=".ui.activity.OutRegisterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.activity.OutMessageActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"

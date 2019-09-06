@@ -56,12 +56,12 @@ public class AppCaughtException implements UncaughtExceptionHandler
             mDefaultUncaughtExceptionHandler.uncaughtException(thread, ex);
         } else
         {
-            Intent intent = new Intent();
+            /*Intent intent = new Intent();
             //第一个参数是要启动应用的包名称，第二个参数是你要启动的Activity或者Service的全称（包名+类名）
             intent.setComponent(
                     new ComponentName(VariableConstant.APP_PACKAGE_MAIN, "com.ioter.medical.ui.activity.LoginActivity"));
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            AppApplication.getApplication().startActivity(intent);
+            AppApplication.getApplication().startActivity(intent);*/
 
             //退出程序
             android.os.Process.killProcess(android.os.Process.myPid());

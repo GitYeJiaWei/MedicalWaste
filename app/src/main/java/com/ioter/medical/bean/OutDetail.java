@@ -2,7 +2,7 @@ package com.ioter.medical.bean;
 
 import java.util.List;
 
-public class OutDetail {
+public class OutDetail extends BaseEntity{
 
     /**
      * Id : sample string 1

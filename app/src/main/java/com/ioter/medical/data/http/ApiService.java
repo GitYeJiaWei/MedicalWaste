@@ -4,6 +4,7 @@ import com.ioter.medical.bean.BaseBean;
 import com.ioter.medical.bean.Detail;
 import com.ioter.medical.bean.FeeRule;
 import com.ioter.medical.bean.OutDetail;
+import com.ioter.medical.bean.Remind;
 import com.ioter.medical.bean.StockIn;
 import com.ioter.medical.bean.StockOut;
 import com.ioter.medical.bean.WasteViewsBean;
@@ -21,8 +22,8 @@ import retrofit2.http.QueryMap;
 public interface ApiService
 {
 
-
-    String BASE_URL = "http://192.168.66.3:8118/";
+    String BASE_URL = "http://mall.ioter-e.com:8118/";
+    //String BASE_URL = "http://192.168.66.3:8118/";
 
     //token为方法名，基类中不能加入方法名
     @FormUrlEncoded
@@ -95,4 +96,17 @@ public interface ApiService
     //医废出库详情
     @GET("api/StockOut/Detail")
     Observable<BaseBean<OutDetail>> stockoutdetail(@QueryMap Map<String,String> params);
+
+    //获取消息列表
+    @FormUrlEncoded
+    @POST("api/Message/GetAllMessages")
+    Observable<BaseBean<List<Remind>>> getallmessage(@FieldMap Map<String,Integer> params);
+
+    //接收新消息
+    @GET("api/Message/GetNewMessage")
+    Observable<BaseBean<Remind>> GetNewMessage();
+
+    //标记消息为已读
+    @GET("api/Message/SetRead")
+    Observable<BaseBean> SetRead(@QueryMap Map<String,String> params);
 }
