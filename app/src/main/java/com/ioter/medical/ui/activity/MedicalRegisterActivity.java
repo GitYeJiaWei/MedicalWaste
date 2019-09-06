@@ -419,15 +419,15 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
             //进入页模式。
             Print.SelectPageMode();
             //设置打印区域。
-            Print.SetPageModePrintArea(0, 0, 600, 280);
+            Print.SetPageModePrintArea(0, 0, 600, 310);
             //设置打印方向
             Print.SetPageModePrintDirection(0);
             //设置 X,Y 的坐标。
-            Print.SetPageModeAbsolutePosition(50, 5);
+            Print.SetPageModeAbsolutePosition(50, 80);
             //打印二维码（你也可以打印文字和条码）。
             Print.PrintText("***医院  医废交接单***", 0, 2, 0);
             //设置打印区域。
-            Print.SetPageModePrintArea(0, 90, 200, 280);
+            Print.SetPageModePrintArea(0, 135, 200, 175);
             //设置打印方向
             Print.SetPageModePrintDirection(0);
             //设置 X,Y 的坐标。
@@ -435,7 +435,7 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
             //打印二维码（你也可以打印文字和条码）。
             Print.PrintQRCode("{iotEPC:" + wasteViewsBean.getId() + "}", 3, 48, 1);
             //设置打印区域。
-            Print.SetPageModePrintArea(80, 50, 300, 280);
+            Print.SetPageModePrintArea(80, 95, 300, 215);
             //设置打印方向
             Print.SetPageModePrintDirection(0);
             //设置 X,Y 的坐标。
@@ -448,6 +448,8 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
             Print.PrintText("收集时间:" + wasteViewsBean.getCollectionTime().substring(0,16), 0, 2, 0);
             //打印。
             Print.PrintDataInPageMode();
+            //标签空隙校准
+            Print.GotoNextLabel();
         } catch (Exception e) {
             ToastUtil.toast(e.getMessage());
         }

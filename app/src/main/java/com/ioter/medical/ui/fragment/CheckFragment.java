@@ -75,6 +75,7 @@ public class CheckFragment extends BaseFragment {
     @Override
     public void init(View view) {
         initDate();
+
         ApiService apIservice = toretrofit().create(ApiService.class);
         Observable<BaseBean<Object>> qqDataCall = apIservice.wastetypes();
         qqDataCall.subscribeOn(Schedulers.io())//请求数据的事件发生在io线程
@@ -133,7 +134,7 @@ public class CheckFragment extends BaseFragment {
          * 第三个参数是在布局显示的位置id
          * 第四个参数是将要显示的数据
          */
-        ArrayAdapter adapter2 = new ArrayAdapter(AppApplication.getApplication(), R.layout.item, R.id.text_item, list);
+        ArrayAdapter adapter2 = new ArrayAdapter(getActivity(), R.layout.item, R.id.text_item, list);
         spKuqu.setAdapter(adapter2);
 
         if (TextUtils.isEmpty(selected)) {
@@ -170,7 +171,7 @@ public class CheckFragment extends BaseFragment {
         if (barcode.contains("iotEPC")) {
             Code1 code1 = AppApplication.getGson().fromJson(barcode, Code1.class);
             String bar = code1.getIotEPC();
-            Intent intent = new Intent(AppApplication.getApplication(), CheckMessageActivity.class);
+            Intent intent = new Intent(getActivity(), CheckMessageActivity.class);
             intent.putExtra("id", bar);
             startActivity(intent);
         }
@@ -216,7 +217,7 @@ public class CheckFragment extends BaseFragment {
                         }
                     }
                 }
-                Intent intent = new Intent(AppApplication.getApplication(), CheckMessageActivity.class);
+                Intent intent = new Intent(getActivity(), CheckMessageActivity.class);
                 intent.putExtra("WasteTypeId", WasteTypeId);
                 intent.putExtra("Begin", tvStartTime.getText().toString());
                 intent.putExtra("End", tvEndTime.getText().toString());

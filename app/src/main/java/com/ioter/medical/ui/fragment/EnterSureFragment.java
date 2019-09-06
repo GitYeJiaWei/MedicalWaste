@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 
-import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
 import com.ioter.medical.bean.BaseBean;
 import com.ioter.medical.bean.StockIn;
@@ -69,7 +68,7 @@ public class EnterSureFragment extends BaseFragment<MedEnterPresenter> implement
         map.put("Rows", number);
         mPresenter.medEnter(map);
 
-        medicalEnterAdapter = new MedicalEnterAdapter(AppApplication.getApplication(), "enterCheck");
+        medicalEnterAdapter = new MedicalEnterAdapter(getActivity(), "enterCheck");
         listLease.setAdapter(medicalEnterAdapter);
 
         listLease.setOnLoadListener(new AutoListView.OnLoadListener() {
@@ -96,7 +95,7 @@ public class EnterSureFragment extends BaseFragment<MedEnterPresenter> implement
                 if (epclist.size()==0){
                     return;
                 }
-                Intent intent = new Intent(AppApplication.getApplication(), EnterMessageActivity.class);
+                Intent intent = new Intent(getActivity(), EnterMessageActivity.class);
                 intent.putExtra("id", epclist.get(position).getId());
                 intent.putExtra("state", "EnterSure");
 

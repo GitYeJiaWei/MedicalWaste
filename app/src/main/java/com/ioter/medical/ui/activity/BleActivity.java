@@ -214,18 +214,20 @@ public class BleActivity extends BaseActivity {
 
     public void PrintTestPage() {
         try {
+            //Print.WriteData(new byte[]{0x12,0x21});//标签学习校准的命令
+
             //进入页模式。
             Print.SelectPageMode();
             //设置打印区域。
-            Print.SetPageModePrintArea(0, 0, 600, 280);
+            Print.SetPageModePrintArea(0, 0, 600, 310);
             //设置打印方向
             Print.SetPageModePrintDirection(0);
             //设置 X,Y 的坐标。
-            Print.SetPageModeAbsolutePosition(50, 5);
+            Print.SetPageModeAbsolutePosition(50, 80);
             //打印二维码（你也可以打印文字和条码）。
             Print.PrintText("***医院  医废交接单***", 0, 2, 0);
             //设置打印区域。
-            Print.SetPageModePrintArea(0, 90, 200, 280);
+            Print.SetPageModePrintArea(0, 135, 200, 175);
             //设置打印方向
             Print.SetPageModePrintDirection(0);
             //设置 X,Y 的坐标。
@@ -233,7 +235,7 @@ public class BleActivity extends BaseActivity {
             //打印二维码（你也可以打印文字和条码）。
             Print.PrintQRCode("{iotEPC:" + 123456789 + "}", 3, 48, 1);
             //设置打印区域。
-            Print.SetPageModePrintArea(80, 50, 300, 280);
+            Print.SetPageModePrintArea(80, 95, 300, 215);
             //设置打印方向
             Print.SetPageModePrintDirection(0);
             //设置 X,Y 的坐标。
@@ -246,6 +248,8 @@ public class BleActivity extends BaseActivity {
             Print.PrintText("收集时间:"+"2019-08-01 18:00:00".substring(0,16), 0, 2, 0);
             //打印。
             int a = Print.PrintDataInPageMode();
+            //标签空隙校准
+            Print.GotoNextLabel();
             if (a== -1){
                 ToastUtil.toast("发送失败!");
                 return;
