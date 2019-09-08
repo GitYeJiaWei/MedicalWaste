@@ -43,7 +43,7 @@ public class RemindActivity extends BaseActivity<RemindPresenter> implements Rem
     AutoListView listLease;
     //每一页加载多少数据
     private int number = 10;
-    private ArrayList<Remind> epclist = new ArrayList<>();
+    private List<Remind> epclist = new ArrayList<>();
     private RemindMessageAdapter remindMessageAdapter;
 
     @Override
@@ -120,6 +120,10 @@ public class RemindActivity extends BaseActivity<RemindPresenter> implements Rem
                                    }
                                    if (baseBean.getCode() == 0 && baseBean.getData() != null) {
                                        ToastUtil.toast("读取成功!");
+                                       Map<String, Integer> map = new HashMap<>();
+                                       /*map.put("Page", nextpage);
+                                       map.put("Rows", number);
+                                       mPresenter.medOut(map);*/
                                    } else {
                                        ToastUtil.toast(baseBean.getMessage());
                                    }
@@ -144,6 +148,7 @@ public class RemindActivity extends BaseActivity<RemindPresenter> implements Rem
         if (baseBean != null) {
             if (baseBean.getCode() == 0 && baseBean.getData() != null) {
                 //通知listview改变UI中的数据
+                epclist = baseBean.getData();
                 remindMessageAdapter.updateDatas(epclist);
                 listLease.onLoadComplete();
                 listLease.setResultSize(baseBean.getData().size());

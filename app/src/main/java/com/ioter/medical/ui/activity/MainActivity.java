@@ -111,6 +111,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
 
     public static Barcode2DWithSoft barcode2DWithSoft = null;//二维扫码
     private boolean isread = true;
+    private boolean mIsEditStatus = false;
 
     @Override
     public int setLayout() {
@@ -252,6 +253,10 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
         //设置toolbar为Action对象
         toolbar.setNavigationIcon(R.mipmap.button_daohang);
 
+        //重新绘制menu
+        mIsEditStatus = false;
+        invalidateOptionsMenu();
+
         //点击左边返回按钮监听事件
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -282,14 +287,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.action_share:
-                        item.setIcon(R.mipmap.unremind);
-                        startActivity(new Intent(MainActivity.this,RemindActivity.class));
-                        break;
-                    default:
-                        break;
-                }
+                startActivity(new Intent(MainActivity.this,RemindActivity.class));
                 return false;
             }
         });
@@ -379,7 +377,19 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_menu,menu);
-        return true;
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if (mIsEditStatus) {
+            menu.findItem(R.id.action_message).setVisible(true);
+            menu.findItem(R.id.action_unmessage).setVisible(false);
+        } else {
+            menu.findItem(R.id.action_message).setVisible(false);
+            menu.findItem(R.id.action_unmessage).setVisible(true);
+        }
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -452,8 +462,15 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
                                        ToastUtil.toast("读取失败");
                                        return;
                                    }
-                                   if (baseBean.getCode() == 0 && baseBean.getData() != null) {
-                                       ToastUtil.toast("有新消息了!");
+                                   if (baseBean.getCode() == 0) {
+                                       if (baseBean.getData() != null){
+                                           ToastUtil.toast("有新消息了!");
+                                           mIsEditStatus = true;
+                                           invalidateOptionsMenu(); //重新绘制menu
+                                       }else {
+                                           mIsEditStatus = false;
+                                           invalidateOptionsMenu(); //重新绘制menu
+                                       }
                                    } else {
                                        ToastUtil.toast(baseBean.getMessage());
                                    }

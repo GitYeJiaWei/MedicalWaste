@@ -10,10 +10,17 @@
         android:icon="@mipmap/check"
         app:showAsAction="ifRoom"/>-->
     <item
-        android:id="@+id/action_share"
+        android:id="@+id/action_message"
         android:orderInCategory="100"
         android:title="测试2"
         android:icon="@mipmap/remind"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_unmessage"
+        android:orderInCategory="100"
+        android:title="测试2"
+        android:icon="@mipmap/unremind"
         app:showAsAction="ifRoom"/>
     <!--<item
         android:id="@+id/action_search"
