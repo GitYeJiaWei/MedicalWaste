@@ -11,12 +11,16 @@
 
         <ImageView
             android:id="@+id/img_remind"
+            android:layout_margin="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/readmind"/>
 
         <TextView
             android:id="@+id/tv_title"
+            android:layout_margin="5dp"
+            android:textSize="24sp"
+            android:textColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="12468555555555555555"
@@ -28,7 +32,7 @@
         android:id="@+id/tv_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
+        android:layout_marginLeft="20dp"
         android:text="1654681354641546541354
         4754634444444444444444444444444444444444
         44444444444444555555555555555555555555555555"

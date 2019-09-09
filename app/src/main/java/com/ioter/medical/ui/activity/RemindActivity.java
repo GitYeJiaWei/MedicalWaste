@@ -88,6 +88,8 @@ public class RemindActivity extends BaseActivity<RemindPresenter> implements Rem
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 read(epclist.get(position).getId());
+                epclist.get(position).setStatus(1);
+                remindMessageAdapter.updateDatas(epclist);
             }
         });
     }
@@ -118,12 +120,8 @@ public class RemindActivity extends BaseActivity<RemindPresenter> implements Rem
                                        ToastUtil.toast("读取失败");
                                        return;
                                    }
-                                   if (baseBean.getCode() == 0 && baseBean.getData() != null) {
-                                       ToastUtil.toast("读取成功!");
-                                       Map<String, Integer> map = new HashMap<>();
-                                       /*map.put("Page", nextpage);
-                                       map.put("Rows", number);
-                                       mPresenter.medOut(map);*/
+                                   if (baseBean.getCode() == 0) {
+                                       //ToastUtil.toast("读取成功!");
                                    } else {
                                        ToastUtil.toast(baseBean.getMessage());
                                    }

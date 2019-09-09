@@ -1,7 +1,6 @@
 package com.ioter.medical.ui.activity;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -145,13 +144,13 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
         AppApplication.getExecutorService().execute(new Runnable() {
             @Override
             public void run() {
-                while(isread){
+                while (isread) {
+                    read();
                     try {
                         Thread.sleep(10000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    read();
                 }
             }
         });
@@ -249,13 +248,12 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
 
         //Toolbar导航栏和文字title
         toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        setTitle("");
+
         title = findViewById(R.id.title);
         //设置toolbar为Action对象
         toolbar.setNavigationIcon(R.mipmap.button_daohang);
-
-        //重新绘制menu
-        mIsEditStatus = false;
-        invalidateOptionsMenu();
 
         //点击左边返回按钮监听事件
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -287,10 +285,15 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                startActivity(new Intent(MainActivity.this,RemindActivity.class));
+                startActivity(new Intent(MainActivity.this, RemindActivity.class));
+                mIsEditStatus = false;
+                invalidateOptionsMenu(); //重新绘制menu
                 return false;
             }
         });
+
+        mIsEditStatus = false;
+        invalidateOptionsMenu(); //重新绘制menu
 
         //为抽屉头部 R.layout.layout_header 指定一个父布局抽屉 mDrawerList
         headerView = LayoutInflater.from(this).inflate(R.layout.layout_header, mDrawerList, false);
@@ -374,20 +377,22 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
 
     }
 
+    //整个生命周期只调用一次
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_menu,menu);
-        return super.onPrepareOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        return true;
     }
 
+    // 动态设置Action menu的状态
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         if (mIsEditStatus) {
             menu.findItem(R.id.action_message).setVisible(true);
-            menu.findItem(R.id.action_unmessage).setVisible(false);
+            menu.findItem(R.id.action_un_message).setVisible(false);
         } else {
             menu.findItem(R.id.action_message).setVisible(false);
-            menu.findItem(R.id.action_unmessage).setVisible(true);
+            menu.findItem(R.id.action_un_message).setVisible(true);
         }
         return super.onPrepareOptionsMenu(menu);
     }
@@ -445,7 +450,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
         //getVersionInfoFromServer();
     }
 
-    private void read(){
+    private void read() {
         ApiService apIservice = toretrofit().create(ApiService.class);
         Observable<BaseBean<Remind>> qqDataCall = apIservice.GetNewMessage();
         qqDataCall.subscribeOn(Schedulers.io())//请求数据的事件发生在io线程
@@ -466,9 +471,6 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
                                        if (baseBean.getData() != null){
                                            ToastUtil.toast("有新消息了!");
                                            mIsEditStatus = true;
-                                           invalidateOptionsMenu(); //重新绘制menu
-                                       }else {
-                                           mIsEditStatus = false;
                                            invalidateOptionsMenu(); //重新绘制menu
                                        }
                                    } else {
@@ -619,7 +621,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (isread){
+        if (isread) {
             isread = false;
         }
         if (mReader != null) {
