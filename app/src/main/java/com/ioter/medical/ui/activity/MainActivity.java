@@ -1,17 +1,21 @@
 package com.ioter.medical.ui.activity;
 
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Rect;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -27,7 +31,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -125,10 +128,10 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
 
     @Override
     public void init() {
+        mPresenter.feeRule();
         //注册广播
         startScreenBroadcastReceiver();
 
-        mPresenter.feeRule();
         initview();
         selectItem(0);
         String key1 = ACache.get(AppApplication.getApplication()).getAsString("key1");
@@ -227,7 +230,6 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
         }
     }
 
-
     //网络检测
     @Override
     protected void handleNetWorkTips(boolean has) {
@@ -267,12 +269,6 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
                     } else {
                         mDrawerLayout.openDrawer(mleftLin);
                     }
-                } else {
-                    if (isSoftShowing()) {
-                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
-                    }
-                    //this.onBackPressed();
                 }
             }
         });
@@ -407,47 +403,51 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
             ACache.get(AppApplication.getApplication()).put("feeRule", baseBean1);
 
             mAdapter.notifyDataSetChanged();
+            //在tablayout中填入vpager
+            tablayout = findViewById(R.id.tablayout);
+            tablayout.setupWithViewPager(vpager);
+            //获取当前tab数量
+            int tabCount = tablayout.getTabCount();
+            //遍历循环tab数量,加载自定义的布局
+            for (int i = 0; i < tabCount; i++) {
+                //获取每个tab
+                TabLayout.Tab tab = tablayout.getTabAt(i);
+                View view = View.inflate(this, R.layout.tab_view, null);
+                final ImageView iv = view.findViewById(R.id.iv);
+                TextView tv = view.findViewById(R.id.tv);
+                tv.setText(titleList.get(i));
+                iv.setBackgroundResource(picList.get(i));
+                if (i == 0)
+                    iv.setFocusable(true);
+                //给tab设置view
+                tab.setCustomView(view);
+            }
+
+            //tab得选中监听
+            tablayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    tab.getCustomView().findViewById(R.id.iv).setFocusable(true);
+                }
+
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
+                    tab.getCustomView().findViewById(R.id.iv).setFocusable(false);
+                }
+
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
+                }
+            });
+
+            //获取版本更新
+            if (baseBean1.getData().getAutoUpdateInfo() != null && baseBean1.getData().getAutoUpdateInfo().getVersion() != null) {
+                getVersionInfoFromServer(baseBean1);
+            }
+        }else {
+            ToastUtil.toast(baseBean1.getMessage());
+            finish();
         }
-
-        //在tablayout中填入vpager
-        tablayout = findViewById(R.id.tablayout);
-        tablayout.setupWithViewPager(vpager);
-        //获取当前tab数量
-        int tabCount = tablayout.getTabCount();
-        //遍历循环tab数量,加载自定义的布局
-        for (int i = 0; i < tabCount; i++) {
-            //获取每个tab
-            TabLayout.Tab tab = tablayout.getTabAt(i);
-            View view = View.inflate(this, R.layout.tab_view, null);
-            final ImageView iv = view.findViewById(R.id.iv);
-            TextView tv = view.findViewById(R.id.tv);
-            tv.setText(titleList.get(i));
-            iv.setBackgroundResource(picList.get(i));
-            if (i == 0)
-                iv.setFocusable(true);
-            //给tab设置view
-            tab.setCustomView(view);
-
-        }
-
-        //tab得选中监听
-        tablayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                tab.getCustomView().findViewById(R.id.iv).setFocusable(true);
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                tab.getCustomView().findViewById(R.id.iv).setFocusable(false);
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-        //getVersionInfoFromServer();
     }
 
     private void read() {
@@ -468,8 +468,9 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
                                        return;
                                    }
                                    if (baseBean.getCode() == 0) {
-                                       if (baseBean.getData() != null){
+                                       if (baseBean.getData() != null) {
                                            ToastUtil.toast("有新消息了!");
+                                           initNotifcation(baseBean.getData().getTitle());
                                            mIsEditStatus = true;
                                            invalidateOptionsMenu(); //重新绘制menu
                                        }
@@ -489,6 +490,33 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
                                }//订阅
                            }
                 );
+    }
+
+    /**
+     * 顶部通知栏
+     *
+     * @param title
+     */
+    private void initNotifcation(String title) {
+        Intent intent = new Intent(this, RemindActivity.class);
+        PendingIntent pi = PendingIntent.getActivity(this, 0, intent, 0);
+
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        Notification notification = new NotificationCompat.Builder(AppApplication.getApplication())
+                .setContentTitle("医废消息提醒")
+                .setContentText(title)
+                .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+                .setContentIntent(pi)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setAutoCancel(true)
+                .setDefaults(Notification.DEFAULT_SOUND)//获取默认铃声
+                //.setSound(Uri.fromFile(new File("android.resource://" + getPackageName() + "/" + R.raw.barcodebeep)))
+                .build();
+
+        manager.notify(1, notification);
     }
 
     //获取回调的数据
@@ -552,27 +580,8 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
         if (fragment == null) {
             return;
         }
-        replaceFragment(position, fragment);
-    }
-
-    public void replaceFragment(int position, Fragment fragment) {
-        /*FragmentManager fragmentManager = getSupportFragmentManager();
-        if (position == 0) {
-            //addToBackStack()对应的是popBackStack()
-            //popBackStack(String name, int flag)：name为addToBackStack(String name)的参数，
-            // 通过name能找到回退栈的特定元素，flag可以为0或者FragmentManager.POP_BACK_STACK_INCLUSIVE，
-            // 0表示只弹出该元素以上的所有元素，POP_BACK_STACK_INCLUSIVE表示弹出包含该元素及以上的所有元素。
-            // 这里说的弹出所有元素包含回退这些事务
-            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            fragmentManager.beginTransaction().replace(R.id.vpager, fragment, TAG_CONTENT_FRAGMENT).commit();
-        } else {
-            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            fragmentManager.beginTransaction().replace(R.id.vpager, fragment, TAG_CONTENT_FRAGMENT).addToBackStack(null).commit();
-        }*/
-
         mDrawerList.setItemChecked(position, true);//高亮选中项
         title.setText(mOptionTitles[position]);
-
         mDrawerLayout.closeDrawer(mleftLin);
     }
 
@@ -640,31 +649,21 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
         }
     }
 
-
-    private boolean isSoftShowing() {
-        //获取当前屏幕内容的高度
-        int screenHeight = getWindow().getDecorView().getHeight();
-        // 获取View可见区域的bottom
-        Rect rect = new Rect();
-        getWindow().getDecorView().getWindowVisibleDisplayFrame(rect);
-        return screenHeight - rect.bottom != 0;
-    }
-
     /**
      * 从服务器获取版本最新的版本信息
      */
-    private void getVersionInfoFromServer() {
+    private void getVersionInfoFromServer(BaseBean<FeeRule> baseBean) {
         path = getExternalCacheDir() + "/1.1.1.jpg";
         //模拟从服务器获取信息
         SharedPreferences sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
-        sharedPreferences.edit().putString("url", "").commit();
+        sharedPreferences.edit().putString("url", baseBean.getData().getAutoUpdateInfo().getFilePath()).commit();
         sharedPreferences.edit().putString("path", path).commit();
         //getExternalCacheDir获取到的路径 为系统为app分配的内存 卸载app后 该目录下的资源也会删除
         //比较版本信息
         try {
-            int result = Utils.compareVersion(Utils.getVersionName(this), "");
+            int result = Utils.compareVersion(Utils.getVersionName(this), baseBean.getData().getAutoUpdateInfo().getVersion());
             if (result == -1) {//不是最新版本
-                showDialog();
+                showDialog(baseBean);
             } else {
                 //Toast.makeText(MainActivity.this, "已经是最新版本", Toast.LENGTH_SHORT).show();
             }
@@ -676,7 +675,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
     /**
      * 跟新版本的信息的Dialog
      */
-    private void showDialog() {
+    private void showDialog(BaseBean<FeeRule> baseBean) {
         final Dialog dialog = new Dialog(MainActivity.this);
         LayoutInflater inflater = (LayoutInflater) MainActivity.this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -688,12 +687,12 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
         left = view.findViewById(R.id.left);
         right = view.findViewById(R.id.right);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            content.setText(Html.fromHtml("", Html.FROM_HTML_MODE_LEGACY));
+            content.setText(Html.fromHtml(baseBean.getData().getAutoUpdateInfo().getUpdateInfo(), Html.FROM_HTML_MODE_LEGACY));
         } else {
-            content.setText("");
+            content.setText(baseBean.getData().getAutoUpdateInfo().getUpdateInfo());
         }
         content.setMovementMethod(LinkMovementMethod.getInstance());
-        version.setText("版本号：" + "");
+        version.setText("版本号：" + baseBean.getData().getAutoUpdateInfo().getVersion());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         left.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -706,7 +705,6 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
             public void onClick(View view) {
                 dialog.dismiss();
                 downloadNewVersionFromServer();
-
             }
         });
 
@@ -751,7 +749,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
         }
     }
 
-    private ScreenBroadcastReceiver mScreenReceiver;
+    private ScreenBroadcastReceiver mScreenReceiver;//接受屏幕状态的广播
 
     /**
      * 定义广播接收者 接受屏幕状态

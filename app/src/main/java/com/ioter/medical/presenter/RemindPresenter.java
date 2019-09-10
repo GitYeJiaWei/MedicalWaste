@@ -24,7 +24,7 @@ public class RemindPresenter extends BasePresenter<RemindContract.IRemindModel,R
         super(iRemindModel, remindView);
     }
 
-    public void medOut(Map<String,Integer> map){
+    public void remind(Map<String,Integer> map){
         if (!NetUtils.isConnected(mContext)){
             ToastUtil.toast(R.string.error_network_unreachable);
             return;

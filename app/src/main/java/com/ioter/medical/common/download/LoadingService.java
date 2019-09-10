@@ -12,7 +12,9 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
+import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
+import com.ioter.medical.common.util.ACache;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -71,10 +73,13 @@ public class LoadingService extends IntentService {
 
 
     private void updateApk(){
+        String ip = ACache.get(AppApplication.getApplication()).getAsString("ip");
+        String host = ACache.get(AppApplication.getApplication()).getAsString("host");
+
         url = sharedPreferences.getString("url","").replaceAll("\\\\","/");
         path = sharedPreferences.getString("path","");
 
-        httpUtils.download(url,
+        httpUtils.download("http://" + ip + ":"+host+"/"+url,
                 path , new RequestCallBack<File>() {
                     @Override
                     public void onLoading(final long total, final long current,

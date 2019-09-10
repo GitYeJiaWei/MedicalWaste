@@ -108,11 +108,4 @@ public class UserActivity extends BaseActivity<SettingPresenter> implements Sett
     public void showError(String msg) {
         btnSave.setEnabled(true);
     }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
-    }
 }

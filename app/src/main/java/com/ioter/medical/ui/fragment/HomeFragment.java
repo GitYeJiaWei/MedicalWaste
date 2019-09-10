@@ -104,7 +104,9 @@ public class HomeFragment extends BaseFragment {
             View v = layoutInflater.inflate(R.layout.gridview_item,null);
             ImageView iv = (ImageView) v.findViewById(R.id.img);
             TextView tv = (TextView) v.findViewById(R.id.text);
-            Glide.with(AppApplication.getApplication()).load("http://192.168.66.3:8118/"+dataList.get(position).get("ImgUrl").toString())
+            String ip = ACache.get(AppApplication.getApplication()).getAsString("ip");
+            String host = ACache.get(AppApplication.getApplication()).getAsString("host");
+            Glide.with(AppApplication.getApplication()).load("http://" + ip + ":"+host+"/"+dataList.get(position).get("ImgUrl").toString())
                     .placeholder(R.mipmap.error)
                     .error(R.mipmap.error)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)//关闭Glide的硬盘缓存机制

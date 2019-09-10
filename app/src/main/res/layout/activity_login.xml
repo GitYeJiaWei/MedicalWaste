@@ -79,7 +79,7 @@
                 android:textCursorDrawable="@null"
                 android:background="@null"
                 android:textSize="18sp"
-                android:text="admin"/>
+                android:text=""/>
         </RelativeLayout>
 
 
@@ -105,7 +105,7 @@
                 android:inputType="textPassword"
                 android:textCursorDrawable="@null"
                 android:background="@null"
-                android:text="123"/>
+                android:text=""/>
         </RelativeLayout>
 
         <RelativeLayout

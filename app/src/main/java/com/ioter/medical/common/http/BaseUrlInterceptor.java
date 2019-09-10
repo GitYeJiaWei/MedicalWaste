@@ -27,9 +27,11 @@ public class BaseUrlInterceptor implements Interceptor {
         if (ip == null) {
             //ip = "192.168.66.3";
             ip = "mall.ioter-e.com";
+            ACache.get(AppApplication.getApplication()).put("ip", ip);
         }
         if (host == null){
             host = "8118";
+            ACache.get(AppApplication.getApplication()).put("host", host);
         }
 
         //获取原始的originalRequest

@@ -63,7 +63,7 @@ public class RemindActivity extends BaseActivity<RemindPresenter> implements Rem
         Map<String, Integer> map = new HashMap<>();
         map.put("Page", nextpage);
         map.put("Rows", number);
-        mPresenter.medOut(map);
+        mPresenter.remind(map);
 
         remindMessageAdapter = new RemindMessageAdapter(RemindActivity.this, "remind");
         listLease.setAdapter(remindMessageAdapter);
@@ -76,7 +76,7 @@ public class RemindActivity extends BaseActivity<RemindPresenter> implements Rem
                 Map<String, Integer> map = new HashMap<>();
                 map.put("Page", nextpage);
                 map.put("Rows", number);
-                mPresenter.medOut(map);
+                mPresenter.remind(map);
             }
 
             @Override
@@ -146,7 +146,10 @@ public class RemindActivity extends BaseActivity<RemindPresenter> implements Rem
         if (baseBean != null) {
             if (baseBean.getCode() == 0 && baseBean.getData() != null) {
                 //通知listview改变UI中的数据
-                epclist = baseBean.getData();
+                for (int i = 0; i < baseBean.getData().size(); i++) {
+                    epclist.add(baseBean.getData().get(i));
+                }
+
                 remindMessageAdapter.updateDatas(epclist);
                 listLease.onLoadComplete();
                 listLease.setResultSize(baseBean.getData().size());
