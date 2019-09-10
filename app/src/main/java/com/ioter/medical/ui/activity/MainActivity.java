@@ -444,7 +444,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
             if (baseBean1.getData().getAutoUpdateInfo() != null && baseBean1.getData().getAutoUpdateInfo().getVersion() != null) {
                 getVersionInfoFromServer(baseBean1);
             }
-        }else {
+        } else {
             ToastUtil.toast(baseBean1.getMessage());
             finish();
         }

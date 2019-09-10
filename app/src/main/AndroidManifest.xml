@@ -76,7 +76,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <!--
-android:windowSoftInputMode="adjustPan" 这个方法有一个前提就是你不需要在键盘弹出时让你的布局自适应屏幕
+            android:windowSoftInputMode="adjustPan" 这个方法有一个前提就是你不需要在键盘弹出时让你的布局自适应屏幕
         （即在键盘弹出时view不会调用onSizeChanged方法），并且可能会导致键盘遮挡屏幕上的内容
         -->
         <activity

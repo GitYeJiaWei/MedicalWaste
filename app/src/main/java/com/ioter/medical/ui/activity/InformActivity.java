@@ -1,6 +1,5 @@
 package com.ioter.medical.ui.activity;
 
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.widget.Button;
@@ -15,7 +14,6 @@ import com.ioter.medical.common.util.ToastUtil;
 import com.ioter.medical.di.component.AppComponent;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class InformActivity extends BaseActivity {
@@ -47,12 +45,6 @@ public class InformActivity extends BaseActivity {
 
         String ip = ACache.get(AppApplication.getApplication()).getAsString("ip");
         String host = ACache.get(AppApplication.getApplication()).getAsString("host");
-        if (ip == null) {
-            ip = "192.168.66.3";
-        }
-        if (host == null) {
-            host = "8118";
-        }
         etIp.setText(ip);
         etHost.setText(host);
     }
