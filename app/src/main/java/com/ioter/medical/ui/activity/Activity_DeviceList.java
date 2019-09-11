@@ -265,6 +265,7 @@ public class Activity_DeviceList extends Activity {
                         if(!strAddressList.contains(device.getAddress()))
                         {
                             Bundle b = intent.getExtras();
+                            //RSSI的值作为对远程蓝牙设备信号值，正常为负值; 值越大信号越强
                             String object =  String.valueOf(b.get("android.bluetooth.device.extra.RSSI"));
                             int valueOf = Integer.valueOf(object);
                             float power=(float) ((Math.abs(valueOf)-59)/(10*2.0));
