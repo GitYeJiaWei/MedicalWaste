@@ -680,11 +680,10 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
         LayoutInflater inflater = (LayoutInflater) MainActivity.this
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         TextView version, content;
-        Button left, right;
+        Button right;
         View view = inflater.inflate(R.layout.version_update, null, false);
         version = view.findViewById(R.id.version);
         content = view.findViewById(R.id.content);
-        left = view.findViewById(R.id.left);
         right = view.findViewById(R.id.right);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             content.setText(Html.fromHtml(baseBean.getData().getAutoUpdateInfo().getUpdateInfo(), Html.FROM_HTML_MODE_LEGACY));
@@ -694,12 +693,6 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
         content.setMovementMethod(LinkMovementMethod.getInstance());
         version.setText("版本号：" + baseBean.getData().getAutoUpdateInfo().getVersion());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        left.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
         right.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
