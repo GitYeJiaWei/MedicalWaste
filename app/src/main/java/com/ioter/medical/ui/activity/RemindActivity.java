@@ -59,7 +59,7 @@ public class RemindActivity extends BaseActivity<RemindPresenter> implements Rem
 
     @Override
     public void init() {
-        title.setText("消息提醒");
+        title.setText("我的消息");
         Map<String, Integer> map = new HashMap<>();
         map.put("Page", nextpage);
         map.put("Rows", number);

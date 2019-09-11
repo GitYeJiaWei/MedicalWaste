@@ -97,6 +97,42 @@
         />
 
     <RelativeLayout
+        android:id="@+id/lin_remind"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_margin="5dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/img_remind"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@mipmap/iconmessage"/>
+
+        <TextView
+            android:layout_toRightOf="@+id/img_remind"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_marginLeft="10dp"
+            android:text="@string/settting_remind"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:src="@mipmap/open"
+            />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/md_grey_300"
+        />
+
+    <RelativeLayout
         android:id="@+id/lin_ble"
         android:layout_width="match_parent"
         android:layout_height="35dp"

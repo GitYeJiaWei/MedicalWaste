@@ -67,14 +67,15 @@
     <string name="settting_inform">通讯设置</string>
     <string name="settting_item">其它设置</string>
     <string name="settting_user">账号设置</string>
+    <string name="settting_remind">我的消息</string>
     <string name="setting_ble">蓝牙设置</string>
     <string name="settting_help">功率设置</string>
     <string name="settting_scan">我的二维码</string>
     <string name="settting_inform_ip">IP地址：</string>
     <string name="settting_inform_port">端口号：</string>
     <string name="save">保存</string>
-    <string name="setting_user_name">用户名：</string>
-    <string name="setting_user_pass">初始密码：</string>
+    <string name="setting_user_name">登录账号：</string>
+    <string name="setting_user_pass">当前密码：</string>
     <string name="setting_user_pass1">新密码：</string>
     <string name="setting_user_pass2">密码确认：</string>
     <string name="lease_num">租赁卡编号：</string>
@@ -87,7 +88,7 @@
     <string name="lease_money">合计：</string>
     <string name="lease_commit">出库提交</string>
     <string name="lease_print">打印</string>
-    <string name="return_next">注 销 退 出</string>
+    <string name="return_next">退 出 登 录</string>
     <string name="return_num">退还卡编号：</string>
     <string name="return_name">退还人姓名：</string>
     <string name="return_money">破损总扣费：</string>

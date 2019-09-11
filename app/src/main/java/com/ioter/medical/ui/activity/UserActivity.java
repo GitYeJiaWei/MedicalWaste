@@ -71,7 +71,7 @@ public class UserActivity extends BaseActivity<SettingPresenter> implements Sett
         String newpassword = edtPass1.getText().toString();
         String twopassword = edtPass2.getText().toString();
         if (TextUtils.isEmpty(password)) {
-            ToastUtil.toast("请输入初始密码");
+            ToastUtil.toast("请输入当前密码");
             return;
         }
         if (TextUtils.isEmpty(newpassword)) {

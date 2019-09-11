@@ -1,7 +1,10 @@
 package com.ioter.medical.ui.fragment;
 
 import android.content.Intent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
@@ -11,11 +14,14 @@ import com.ioter.medical.di.component.AppComponent;
 import com.ioter.medical.ui.activity.BleActivity;
 import com.ioter.medical.ui.activity.InformActivity;
 import com.ioter.medical.ui.activity.PowerActivity;
+import com.ioter.medical.ui.activity.RemindActivity;
 import com.ioter.medical.ui.activity.ScanActivity;
 import com.ioter.medical.ui.activity.UserActivity;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 
 /**
@@ -34,6 +40,8 @@ public class SettingFragment extends BaseFragment {
     Button btnLease;
     @BindView(R.id.lin_scan)
     RelativeLayout linScan;
+    @BindView(R.id.lin_remind)
+    RelativeLayout linRemind;
 
     public static SettingFragment newInstance() {
         return new SettingFragment();
@@ -60,7 +68,7 @@ public class SettingFragment extends BaseFragment {
     }
 
 
-    @OnClick({R.id.lin_scan, R.id.lin_inform, R.id.lin_user, R.id.lin_message, R.id.lin_ble, R.id.btn_lease})
+    @OnClick({R.id.lin_scan, R.id.lin_inform, R.id.lin_user, R.id.lin_message, R.id.lin_ble, R.id.btn_lease, R.id.lin_remind})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.lin_inform:
@@ -87,7 +95,10 @@ public class SettingFragment extends BaseFragment {
                 if (!ScreenUtils.Utils.isFastClick()) return;
                 startActivity(new Intent(getActivity(), ScanActivity.class));
                 break;
+            case R.id.lin_remind:
+                if (!ScreenUtils.Utils.isFastClick()) return;
+                startActivity(new Intent(getActivity(), RemindActivity.class));
+                break;
         }
     }
-
 }
