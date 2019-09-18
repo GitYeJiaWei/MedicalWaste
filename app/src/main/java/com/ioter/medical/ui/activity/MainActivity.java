@@ -587,6 +587,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        //获取当前的fragment
         Fragment fragment = (BaseFragment) mAdapter.instantiateItem(vpager, vpager.getCurrentItem());
         if (keyCode == 139 || keyCode == 280) {
             if (event.getRepeatCount() == 0) {

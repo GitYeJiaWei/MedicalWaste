@@ -32,12 +32,19 @@ public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
         return POSITION_NONE;
     }
 
+    /**
+     * 当前item的Fragment
+     * @param position
+     * @return
+     */
     @Override
     public Fragment getItem(int position) {
         return fragmentList.get(position);
     }
 
-    //getCount():获得viewpager中有多少个view
+    /**
+     * 获得viewpager中有多少个view
+     */
     @Override
     public int getCount() {
         return fragmentList.size();
@@ -71,6 +78,11 @@ public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
         super.destroyItem(container, position, object);
     }
 
+    /**
+     * 返回Tab的信息
+     * @param position
+     * @return
+     */
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {

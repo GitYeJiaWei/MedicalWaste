@@ -1,8 +1,6 @@
 package com.ioter.medical.common;
 
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -11,7 +9,6 @@ import android.os.Looper;
 
 import com.ioter.medical.AppApplication;
 import com.ioter.medical.common.util.ToastUtil;
-import com.ioter.medical.common.util.VariableConstant;
 
 import java.io.File;
 import java.io.FileOutputStream;
