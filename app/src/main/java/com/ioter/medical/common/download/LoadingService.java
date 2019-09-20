@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
 import com.ioter.medical.common.util.ACache;
+import com.ioter.medical.data.http.ApiService;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;

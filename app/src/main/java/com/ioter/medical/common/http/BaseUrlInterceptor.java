@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.ioter.medical.AppApplication;
 import com.ioter.medical.common.util.ACache;
+import com.ioter.medical.data.http.ApiService;
 
 import java.io.IOException;
 
@@ -25,12 +26,11 @@ public class BaseUrlInterceptor implements Interceptor {
         String host = ACache.get(AppApplication.getApplication()).getAsString("host");
         String token = ACache.get(AppApplication.getApplication()).getAsString("token");
         if (ip == null) {
-            //ip = "192.168.66.3";
-            ip = "mall.ioter-e.com";
+            ip = ApiService.ip;
             ACache.get(AppApplication.getApplication()).put("ip", ip);
         }
         if (host == null){
-            host = "8118";
+            host = ApiService.host;
             ACache.get(AppApplication.getApplication()).put("host", host);
         }
 

@@ -84,12 +84,11 @@ import print.Print;
 public class MainActivity extends BaseActivity<RuleListPresenter>
         implements RuleListContract.FeeRuleView, HomeFragment.CallBackValue, CountFragment.CallBackTag {
     private String[] mOptionTitles;
-    private int[] mBitMaps;
+
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private LinearLayout mleftLin;
-    private TextView mVersionCode;
-    private View headerView;
+
     private View mNetWorkTips;
     private ViewPager vpager;
     private MyFragmentPagerAdapter mAdapter;
@@ -100,11 +99,9 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
     private CountFragment myFragment2 = null;
     private CheckFragment myFragment3 = null;
     private SettingFragment myFragment4 = null;
-    private List<Fragment> fragments;
     private List<String> titleList;
     private List<Integer> picList;
-    private TabLayout tablayout;
-    private Toolbar toolbar;
+
     private TextView title;
     private boolean isLoading;
     private String path;
@@ -193,7 +190,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
         }
     }
 
-    public class InitBarCodeTask extends AsyncTask<String, Integer, Boolean> {
+    public static class InitBarCodeTask extends AsyncTask<String, Integer, Boolean> {
         @Override
         protected Boolean doInBackground(String... params) {
 
@@ -202,7 +199,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
             }
             boolean reuslt = false;
             if (barcode2DWithSoft != null) {
-                reuslt = barcode2DWithSoft.open(MainActivity.this);
+                reuslt = barcode2DWithSoft.open(AppApplication.getApplication());
             }
             return reuslt;
         }
@@ -220,7 +217,6 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
                 barcode2DWithSoft.setParameter(22, 0);
                 barcode2DWithSoft.setParameter(23, 55);
 
-            } else {
             }
         }
 
@@ -245,11 +241,11 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
         mDrawerLayout = findViewById(R.id.drawer_layout);//整个布局
         mDrawerList = findViewById(R.id.left_drawer);    //抽屉的list
         mleftLin = findViewById(R.id.left_lin);          //抽屉layout
-        mVersionCode = findViewById(R.id.tv_versionCode);//抽屉下方版本号
+        TextView mVersionCode = findViewById(R.id.tv_versionCode);//抽屉下方版本号
 
 
         //Toolbar导航栏和文字title
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setTitle("");
 
@@ -273,7 +269,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
             }
         });
 
-        //设置移除图片  如果不设置会默认使用系统灰色的图标
+        //设置溢出图片  如果不设置会默认使用系统竖三点的图标
         //toolbar.setOverflowIcon(getResources().getDrawable(R.drawable.icon_action));
         //填充menu
         toolbar.inflateMenu(R.menu.toolbar_menu);
@@ -292,7 +288,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
         invalidateOptionsMenu(); //重新绘制menu
 
         //为抽屉头部 R.layout.layout_header 指定一个父布局抽屉 mDrawerList
-        headerView = LayoutInflater.from(this).inflate(R.layout.layout_header, mDrawerList, false);
+        View headerView = LayoutInflater.from(this).inflate(R.layout.layout_header, mDrawerList, false);
         mDrawerList.addHeaderView(headerView);
         TextView mTxt_username = headerView.findViewById(R.id.txt_username);
         mTxt_username.setText(ACache.get(AppApplication.getApplication()).getAsString(LoginActivity.REAL_NAME));
@@ -302,7 +298,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());//抽屉的item点击
 
         try {
-            mVersionCode.setText("当前版本号：" + Utils.getVersionName(this));
+            mVersionCode.setText(String.format("%s%s", this.getResources().getString(R.string.current_version), Utils.getVersionName(this)));
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -321,7 +317,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
         myFragment2 = new CountFragment();
         myFragment3 = new CheckFragment();
         myFragment4 = new SettingFragment();
-        fragments = new ArrayList<>();
+        List<Fragment> fragments = new ArrayList<>();
         fragments.add(myFragment1);
         fragments.add(myFragment2);
         fragments.add(myFragment3);
@@ -334,7 +330,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
         titleList.add(mOptionTitles[1]);
         titleList.add(mOptionTitles[2]);
         titleList.add(mOptionTitles[5]);
-        mBitMaps = new int[]{R.drawable.map_first, R.drawable.map_second,
+        int[] mBitMaps = new int[]{R.drawable.map_first, R.drawable.map_second,
                 R.drawable.map_third, R.drawable.map_forth};
         picList = new ArrayList<>();
         picList.add(mBitMaps[0]);
@@ -398,56 +394,64 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
         if (baseBean1 == null) {
             ToastUtil.toast("获取数据失败");
             finish();
-        }
-        if (baseBean1.getCode() == 0 && baseBean1.getData() != null) {
-            ACache.get(AppApplication.getApplication()).put("feeRule", baseBean1);
-
-            mAdapter.notifyDataSetChanged();
-            //在tablayout中填入vpager
-            tablayout = findViewById(R.id.tablayout);
-            tablayout.setupWithViewPager(vpager);
-            //获取当前tab数量
-            int tabCount = tablayout.getTabCount();
-            //遍历循环tab数量,加载自定义的布局
-            for (int i = 0; i < tabCount; i++) {
-                //获取每个tab
-                TabLayout.Tab tab = tablayout.getTabAt(i);
-                View view = View.inflate(this, R.layout.tab_view, null);
-                final ImageView iv = view.findViewById(R.id.iv);
-                TextView tv = view.findViewById(R.id.tv);
-                tv.setText(titleList.get(i));
-                iv.setBackgroundResource(picList.get(i));
-                if (i == 0)
-                    iv.setFocusable(true);
-                //给tab设置view
-                tab.setCustomView(view);
-            }
-
-            //tab得选中监听
-            tablayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-                @Override
-                public void onTabSelected(TabLayout.Tab tab) {
-                    tab.getCustomView().findViewById(R.id.iv).setFocusable(true);
-                }
-
-                @Override
-                public void onTabUnselected(TabLayout.Tab tab) {
-                    tab.getCustomView().findViewById(R.id.iv).setFocusable(false);
-                }
-
-                @Override
-                public void onTabReselected(TabLayout.Tab tab) {
-                }
-            });
-
-            //获取版本更新
-            if (baseBean1.getData().getAutoUpdateInfo() != null && baseBean1.getData().getAutoUpdateInfo().getVersion() != null) {
-                getVersionInfoFromServer(baseBean1);
-            }
         } else {
-            ToastUtil.toast(baseBean1.getMessage());
-            finish();
+            if (baseBean1.getCode() == 0 && baseBean1.getData() != null) {
+                ACache.get(AppApplication.getApplication()).put("feeRule", baseBean1);
+
+                mAdapter.notifyDataSetChanged();
+                //在tablayout中填入vpager
+                TabLayout tablayout = findViewById(R.id.tablayout);
+                tablayout.setupWithViewPager(vpager);
+                //获取当前tab数量
+                int tabCount = tablayout.getTabCount();
+                //遍历循环tab数量,加载自定义的布局
+                for (int i = 0; i < tabCount; i++) {
+                    //获取每个tab
+                    TabLayout.Tab tab = tablayout.getTabAt(i);
+                    View view = View.inflate(this, R.layout.tab_view, null);
+                    final ImageView iv = view.findViewById(R.id.iv);
+                    TextView tv = view.findViewById(R.id.tv);
+                    tv.setText(titleList.get(i));
+                    iv.setBackgroundResource(picList.get(i));
+                    if (i == 0)
+                        iv.setFocusable(true);
+                    //给tab设置view
+                    if (tab != null) {
+                        tab.setCustomView(view);
+                    }
+                }
+
+                //tab得选中监听
+                tablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                    @Override
+                    public void onTabSelected(TabLayout.Tab tab) {
+                        if (tab.getCustomView() != null) {
+                            tab.getCustomView().findViewById(R.id.iv).setFocusable(true);
+                        }
+                    }
+
+                    @Override
+                    public void onTabUnselected(TabLayout.Tab tab) {
+                        if (tab.getCustomView() != null) {
+                            tab.getCustomView().findViewById(R.id.iv).setFocusable(false);
+                        }
+                    }
+
+                    @Override
+                    public void onTabReselected(TabLayout.Tab tab) {
+                    }
+                });
+
+                //获取版本更新
+                if (baseBean1.getData().getAutoUpdateInfo() != null && baseBean1.getData().getAutoUpdateInfo().getVersion() != null) {
+                    getVersionInfoFromServer(baseBean1);
+                }
+            } else {
+                ToastUtil.toast(baseBean1.getMessage());
+                finish();
+            }
         }
+
     }
 
     private void read() {
@@ -470,7 +474,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
                                    if (baseBean.getCode() == 0) {
                                        if (baseBean.getData() != null) {
                                            ToastUtil.toast("有新消息了!");
-                                           initNotifcation(baseBean.getData().getTitle());
+                                           initNotification(baseBean.getData().getTitle());
                                            mIsEditStatus = true;
                                            invalidateOptionsMenu(); //重新绘制menu
                                        }
@@ -494,16 +498,14 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
 
     /**
      * 顶部通知栏
-     *
-     * @param title
      */
-    private void initNotifcation(String title) {
+    private void initNotification(String title) {
         Intent intent = new Intent(this, RemindActivity.class);
         PendingIntent pi = PendingIntent.getActivity(this, 0, intent, 0);
 
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        Notification notification = new NotificationCompat.Builder(AppApplication.getApplication())
+        Notification notification = new NotificationCompat.Builder(AppApplication.getApplication(), "")
                 .setContentTitle("医废消息提醒")
                 .setContentText(title)
                 .setWhen(System.currentTimeMillis())
@@ -516,24 +518,33 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
                 //.setSound(Uri.fromFile(new File("android.resource://" + getPackageName() + "/" + R.raw.barcodebeep)))
                 .build();
 
-        manager.notify(1, notification);
+        if (manager != null) {
+            manager.notify(1, notification);
+        }
     }
 
     //获取回调的数据
     @Override
     public void SendMessageValue(String strValue) {
-        if (strValue.equals("MedicalCollectActivity")) {
-            startActivity(new Intent(this, MedicalCollectActivity.class));
-        } else if (strValue.equals("MedicalEnterActivity")) {
-            startActivity(new Intent(this, MedicalEnterActivity.class));
-        } else if (strValue.equals("SettingFragment")) {
-            vpager.setCurrentItem(3);
-        } else if (strValue.equals("CheckFragment")) {
-            vpager.setCurrentItem(2);
-        } else if (strValue.equals("EnterCheckActivity")) {
-            startActivity(new Intent(this, EnterCheckActivity.class));
-        } else if (strValue.equals("MedicalOutActivity")) {
-            startActivity(new Intent(this, MedicalOutActivity.class));
+        switch (strValue) {
+            case "MedicalCollectActivity":
+                startActivity(new Intent(this, MedicalCollectActivity.class));
+                break;
+            case "MedicalEnterActivity":
+                startActivity(new Intent(this, MedicalEnterActivity.class));
+                break;
+            case "SettingFragment":
+                vpager.setCurrentItem(3);
+                break;
+            case "CheckFragment":
+                vpager.setCurrentItem(2);
+                break;
+            case "EnterCheckActivity":
+                startActivity(new Intent(this, EnterCheckActivity.class));
+                break;
+            case "MedicalOutActivity":
+                startActivity(new Intent(this, MedicalOutActivity.class));
+                break;
         }
     }
 
@@ -614,9 +625,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
     @Override
     public void showBarCode(String barCodeText) {
         Fragment fragment = (BaseFragment) mAdapter.instantiateItem(vpager, vpager.getCurrentItem());
-        if (fragment != null) {
-            ((BaseFragment) fragment).showBarCode(barCodeText);
-        }
+        ((BaseFragment) fragment).showBarCode(barCodeText);
     }
 
     public void exit() {
@@ -657,8 +666,8 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
         path = getExternalCacheDir() + "/1.1.1.jpg";
         //模拟从服务器获取信息
         SharedPreferences sharedPreferences = getSharedPreferences("data", MODE_PRIVATE);
-        sharedPreferences.edit().putString("url", baseBean.getData().getAutoUpdateInfo().getFilePath()).commit();
-        sharedPreferences.edit().putString("path", path).commit();
+        sharedPreferences.edit().putString("url", baseBean.getData().getAutoUpdateInfo().getFilePath()).apply();
+        sharedPreferences.edit().putString("path", path).apply();
         //getExternalCacheDir获取到的路径 为系统为app分配的内存 卸载app后 该目录下的资源也会删除
         //比较版本信息
         try {
@@ -682,37 +691,50 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         TextView version, content;
         Button right;
-        View view = inflater.inflate(R.layout.version_update, null, false);
-        version = view.findViewById(R.id.version);
-        content = view.findViewById(R.id.content);
-        right = view.findViewById(R.id.right);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            content.setText(Html.fromHtml(baseBean.getData().getAutoUpdateInfo().getUpdateInfo(), Html.FROM_HTML_MODE_LEGACY));
-        } else {
-            content.setText(baseBean.getData().getAutoUpdateInfo().getUpdateInfo());
+        View view = null;
+        if (inflater != null) {
+            view = inflater.inflate(R.layout.version_update, null, false);
         }
-        content.setMovementMethod(LinkMovementMethod.getInstance());
-        version.setText("版本号：" + baseBean.getData().getAutoUpdateInfo().getVersion());
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        right.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-                downloadNewVersionFromServer();
-            }
-        });
+        if (view != null) {
+            version = view.findViewById(R.id.version);
+            content = view.findViewById(R.id.content);
+            right = view.findViewById(R.id.right);
 
-        dialog.setContentView(view);
-        dialog.setCancelable(false);
-        Window dialogWindow = dialog.getWindow();
-        dialogWindow.setGravity(Gravity.CENTER);
-        //dialogWindow.setWindowAnimations(R.style.ActionSheetDialogAnimation);
-        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
-        WindowManager wm = (WindowManager)
-                getSystemService(Context.WINDOW_SERVICE);
-        lp.width = wm.getDefaultDisplay().getWidth() / 10 * 9;
-        dialogWindow.setAttributes(lp);
-        dialog.show();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                content.setText(Html.fromHtml(baseBean.getData().getAutoUpdateInfo().getUpdateInfo(), Html.FROM_HTML_MODE_LEGACY));
+            } else {
+                content.setText(baseBean.getData().getAutoUpdateInfo().getUpdateInfo());
+            }
+            content.setMovementMethod(LinkMovementMethod.getInstance());
+            version.setText(String.format("版本号：%s", baseBean.getData().getAutoUpdateInfo().getVersion()));
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            right.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                    downloadNewVersionFromServer();
+                }
+            });
+
+            dialog.setContentView(view);
+            dialog.setCancelable(false);
+            Window dialogWindow = dialog.getWindow();
+            if (dialogWindow != null) {
+                dialogWindow.setGravity(Gravity.CENTER);
+            }
+            //dialogWindow.setWindowAnimations(R.style.ActionSheetDialogAnimation);
+            WindowManager.LayoutParams lp = null;
+            if (dialogWindow != null) {
+                lp = dialogWindow.getAttributes();
+            }
+            WindowManager wm = (WindowManager)
+                    getSystemService(Context.WINDOW_SERVICE);
+            if (wm != null) {
+                lp.width = wm.getDefaultDisplay().getWidth() / 10 * 9;
+            }
+            dialogWindow.setAttributes(lp);
+            dialog.show();
+        }
     }
 
     /**
@@ -726,7 +748,6 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
         LoadingService.startUploadImg(this);
     }
 
-    private MyReceive myReceive;//接受升级的广播
 
     /**
      * 定义广播接收者 接受下载状态
@@ -743,7 +764,6 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
         }
     }
 
-    private ScreenBroadcastReceiver mScreenReceiver;//接受屏幕状态的广播
 
     /**
      * 定义广播接收者 接受屏幕状态
@@ -769,14 +789,18 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
      * 注册广播
      */
     private void startScreenBroadcastReceiver() {
-        mScreenReceiver = new ScreenBroadcastReceiver();
+        ScreenBroadcastReceiver mScreenReceiver = new ScreenBroadcastReceiver();
+        //接受屏幕状态的广播
+
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_SCREEN_ON);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         filter.addAction(Intent.ACTION_USER_PRESENT);
         registerReceiver(mScreenReceiver, filter);//注册屏幕开关的广播
 
-        myReceive = new MyReceive();
+        MyReceive myReceive = new MyReceive();
+        //接受升级的广播
+
         IntentFilter filter1 = new IntentFilter();
         filter1.addAction("android.intent.action.loading_over");
         filter1.addAction("android.intent.action.loading");

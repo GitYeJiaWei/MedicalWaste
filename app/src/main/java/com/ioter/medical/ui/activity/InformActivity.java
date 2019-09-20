@@ -11,6 +11,7 @@ import com.ioter.medical.R;
 import com.ioter.medical.common.ScreenUtils;
 import com.ioter.medical.common.util.ACache;
 import com.ioter.medical.common.util.ToastUtil;
+import com.ioter.medical.data.http.ApiService;
 import com.ioter.medical.di.component.AppComponent;
 
 import butterknife.BindView;
@@ -45,6 +46,12 @@ public class InformActivity extends BaseActivity {
 
         String ip = ACache.get(AppApplication.getApplication()).getAsString("ip");
         String host = ACache.get(AppApplication.getApplication()).getAsString("host");
+        if (ip == null) {
+            ip = ApiService.ip;
+        }
+        if (host == null){
+            host = ApiService.host;
+        }
         etIp.setText(ip);
         etHost.setText(host);
     }
@@ -62,6 +69,7 @@ public class InformActivity extends BaseActivity {
             ACache.get(AppApplication.getApplication()).put("ip", ip);
             ACache.get(AppApplication.getApplication()).put("host", host);
             ToastUtil.toast("保存成功");
+            finish();
         }
 
     }
