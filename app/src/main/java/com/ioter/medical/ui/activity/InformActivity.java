@@ -68,6 +68,7 @@ public class InformActivity extends BaseActivity {
         } else {
             ACache.get(AppApplication.getApplication()).put("ip", ip);
             ACache.get(AppApplication.getApplication()).put("host", host);
+            ACache.get(AppApplication.getApplication()).put("BASE_URL", "http://" + ip + ":"+host+"/");
             ToastUtil.toast("保存成功");
             finish();
         }

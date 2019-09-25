@@ -25,6 +25,8 @@ public class BaseUrlInterceptor implements Interceptor {
         String ip = ACache.get(AppApplication.getApplication()).getAsString("ip");
         String host = ACache.get(AppApplication.getApplication()).getAsString("host");
         String token = ACache.get(AppApplication.getApplication()).getAsString("token");
+        String BASE_URL = ACache.get(AppApplication.getApplication()).getAsString("BASE_URL");
+
         if (ip == null) {
             ip = ApiService.ip;
             ACache.get(AppApplication.getApplication()).put("ip", ip);
@@ -32,6 +34,10 @@ public class BaseUrlInterceptor implements Interceptor {
         if (host == null){
             host = ApiService.host;
             ACache.get(AppApplication.getApplication()).put("host", host);
+        }
+        if (BASE_URL == null){
+            BASE_URL = ApiService.BASE_URL;
+            ACache.get(AppApplication.getApplication()).put("BASE_URL", BASE_URL);
         }
 
         //获取原始的originalRequest

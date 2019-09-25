@@ -3,7 +3,9 @@ package com.ioter.medical.di.module;
 import android.app.Application;
 
 import com.google.gson.Gson;
+import com.ioter.medical.AppApplication;
 import com.ioter.medical.common.http.BaseUrlInterceptor;
+import com.ioter.medical.common.util.ACache;
 import com.ioter.medical.data.http.ApiService;
 
 import java.util.concurrent.TimeUnit;
@@ -65,10 +67,13 @@ public class HttpModule
     @Singleton
     public Retrofit provideRetrofit(OkHttpClient okHttpClient)
     {
-
+        String BASE_URL = ACache.get(AppApplication.getApplication()).getAsString("BASE_URL");
+        if (BASE_URL == null){
+            BASE_URL = ApiService.BASE_URL;
+        }
 
         Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl(ApiService.BASE_URL)
+                .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(okHttpClient);

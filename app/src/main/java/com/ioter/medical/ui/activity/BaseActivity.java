@@ -21,6 +21,7 @@ import com.ioter.medical.bean.Code;
 import com.ioter.medical.common.ActivityCollecter;
 import com.ioter.medical.common.ScreenUtils;
 import com.ioter.medical.common.http.BaseUrlInterceptor;
+import com.ioter.medical.common.util.ACache;
 import com.ioter.medical.common.util.NetUtils;
 import com.ioter.medical.common.util.SoundManage;
 import com.ioter.medical.common.util.ToastUtil;
@@ -151,10 +152,14 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         //添加拦截器，自动追加参数
         builder.addInterceptor(new BaseUrlInterceptor());
+        String BASE_URL = ACache.get(AppApplication.getApplication()).getAsString("BASE_URL");
+        if (BASE_URL == null){
+            BASE_URL = ApiService.BASE_URL;
+        }
 
         Retrofit retrofit = new Retrofit.Builder()
                 //设置基础的URL
-                .baseUrl(ApiService.BASE_URL)
+                .baseUrl(BASE_URL)
                 //设置内容格式,这种对应的数据返回值是Gson类型，需要导包
                 .addConverterFactory(GsonConverterFactory.create())
                 //设置支持RxJava，应用observable观察者，需要导包

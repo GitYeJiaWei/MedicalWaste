@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.ioter.medical.AppApplication;
 import com.ioter.medical.common.CustomProgressDialog;
 import com.ioter.medical.common.http.BaseUrlInterceptor;
+import com.ioter.medical.common.util.ACache;
 import com.ioter.medical.data.http.ApiService;
 import com.ioter.medical.di.component.AppComponent;
 import com.ioter.medical.presenter.BasePresenter;
@@ -69,10 +70,13 @@ public abstract class BaseFragment<T extends BasePresenter> extends BackPressedF
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         //添加拦截器，自动追加参数
         builder.addInterceptor(new BaseUrlInterceptor());
-
+        String BASE_URL = ACache.get(AppApplication.getApplication()).getAsString("BASE_URL");
+        if (BASE_URL == null){
+            BASE_URL = ApiService.BASE_URL;
+        }
         Retrofit retrofit = new Retrofit.Builder()
                 //设置基础的URL
-                .baseUrl(ApiService.BASE_URL)
+                .baseUrl(BASE_URL)
                 //设置内容格式,这种对应的数据返回值是Gson类型，需要导包
                 .addConverterFactory(GsonConverterFactory.create())
                 //设置支持RxJava，应用observable观察者，需要导包
