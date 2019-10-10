@@ -10,14 +10,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.ioter.medical.AppApplication;
 import com.ioter.medical.bean.BaseEpc;
-import com.ioter.medical.bean.Code;
 import com.ioter.medical.common.ActivityCollecter;
 import com.ioter.medical.common.ScreenUtils;
 import com.ioter.medical.common.http.BaseUrlInterceptor;
@@ -36,8 +32,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.Map;
-
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
@@ -51,8 +45,7 @@ import static com.ioter.medical.ui.activity.MainActivity.barcode2DWithSoft;
 import static com.ioter.medical.ui.activity.MainActivity.mReader;
 
 
-public abstract class BaseActivity<T extends BasePresenter> extends AppCompatActivity implements BaseView
-{
+public abstract class BaseActivity<T extends BasePresenter> extends AppCompatActivity implements BaseView {
 
     private Unbinder mUnbinder;
 
@@ -71,8 +64,7 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
     public T mPresenter;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState)
-    {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         //当该window对用户可见时，让设备屏幕处于高亮（bright）状态
@@ -90,8 +82,7 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
     }
 
     @Override
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
         IsFlushList = true;
         initSound();
@@ -100,16 +91,14 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
     }
 
     @Override
-    protected void onDestroy()
-    {
+    protected void onDestroy() {
+        handler.removeCallbacksAndMessages(null);
         super.onDestroy();
 
-        if (mUnbinder!=null&&mUnbinder != Unbinder.EMPTY)
-        {
+        if (mUnbinder != null && mUnbinder != Unbinder.EMPTY) {
             mUnbinder.unbind();
         }
-        if (waitDialog != null)
-        {
+        if (waitDialog != null) {
             waitDialog = null;
         }
 
@@ -134,9 +123,9 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
                 final String barCode = new String(bytes, 0, length);
                 if (barCode != null && barCode.length() > 0) {
                     SoundManage.PlaySound(BaseActivity.this, SoundManage.SoundType.SUCCESS);
-                    if (barCode.contains("iotId") || barCode.contains("iotEPC")){
+                    if (barCode.contains("iotId") || barCode.contains("iotEPC")) {
                         showBarCode(barCode);
-                    }else {
+                    } else {
                         ToastUtil.toast("二维码不符合");
                     }
                 }
@@ -144,7 +133,7 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
         }
     };
 
-    public void showBarCode(String barcode){
+    public void showBarCode(String barcode) {
 
     }
 
@@ -153,7 +142,7 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
         //添加拦截器，自动追加参数
         builder.addInterceptor(new BaseUrlInterceptor());
         String BASE_URL = ACache.get(AppApplication.getApplication()).getAsString("BASE_URL");
-        if (BASE_URL == null){
+        if (BASE_URL == null) {
             BASE_URL = ApiService.BASE_URL;
         }
 
@@ -169,31 +158,25 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
         return retrofit;
     }
 
-    private Handler handler = new Handler()
-    {
+    private Handler handler = new Handler() {
         @Override
-        public void handleMessage(Message msg)
-        {
+        public void handleMessage(Message msg) {
             BaseEpc baseEpc = (BaseEpc) msg.obj;
-            if(baseEpc!=null)
-            {
+            if (baseEpc != null) {
                 handleUi(baseEpc);
             }
         }
     };
 
     //处理ui
-    public void handleUi(BaseEpc baseEpc)
-    {
-        synchronized (beep_Lock)
-        {
+    public void handleUi(BaseEpc baseEpc) {
+        synchronized (beep_Lock) {
             beep_Lock.notify();
         }
     }
 
     //配置读写器参数
-    protected  void initSound()
-    {
+    protected void initSound() {
         // 蜂鸣器发声
         AppApplication.getExecutorService().submit(new Runnable() {
             @Override
@@ -214,11 +197,9 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         IsFlushList = false;
-        synchronized (beep_Lock)
-        {
+        synchronized (beep_Lock) {
             beep_Lock.notifyAll();
         }
         super.onPause();
@@ -241,8 +222,7 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
 
     protected boolean loopFlag = false;
 
-    class TagThread extends Thread
-    {
+    class TagThread extends Thread {
 
         private int mBetween = 80;
 
@@ -262,7 +242,7 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
                 if (res != null) {
 
                     strTid = res[0];
-                    if (!strTid.equals("0000000000000000")&&!strTid.equals("000000000000000000000000")) {
+                    if (!strTid.equals("0000000000000000") && !strTid.equals("000000000000000000000000")) {
                         strResult = "TID:" + strTid + "\n";
                     } else {
                         strResult = "";
@@ -271,11 +251,9 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
                     BaseEpc baseEpc = new BaseEpc();
                     baseEpc._EPC = mReader.convertUiiToEPC(res[1]);
                     baseEpc._TID = strResult;
-                    try
-                    {
+                    try {
                         baseEpc.rssi = (new Double(Double.valueOf(res[2]))).intValue();
-                    }catch (Exception e)
-                    {
+                    } catch (Exception e) {
 
                     }
                     msg.obj = baseEpc;
@@ -299,10 +277,8 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
 
 
     @Override
-    public void showLoading()
-    {
-        if (waitDialog == null)
-        {
+    public void showLoading() {
+        if (waitDialog == null) {
             waitDialog = new ProgressDialog(this);
         }
         waitDialog.setMessage("加载中...");
@@ -310,49 +286,40 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
     }
 
     @Override
-    public void showError(String msg)
-    {
-        if (waitDialog != null)
-        {
+    public void showError(String msg) {
+        if (waitDialog != null) {
             waitDialog.setMessage(msg);
             waitDialog.show();
         }
     }
 
     @Override
-    public void dismissLoading()
-    {
-        if (waitDialog != null && waitDialog.isShowing())
-        {
+    public void dismissLoading() {
+        if (waitDialog != null && waitDialog.isShowing()) {
             waitDialog.dismiss();
         }
     }
 
     //检查网络
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onNetworkChangeEvent(NetworkChangeEvent event)
-    {
+    public void onNetworkChangeEvent(NetworkChangeEvent event) {
         hasNetWork(event.isConnected);
     }
 
-    private void hasNetWork(boolean has)
-    {
-        if (isCheckNetWork())
-        {
+    private void hasNetWork(boolean has) {
+        if (isCheckNetWork()) {
             handleNetWorkTips(has);
         }
     }
 
-    protected void handleNetWorkTips(boolean has)
-    {
+    protected void handleNetWorkTips(boolean has) {
     }
-    public void setCheckNetWork(boolean checkNetWork)
-    {
+
+    public void setCheckNetWork(boolean checkNetWork) {
         mCheckNetWork = checkNetWork;
     }
 
-    public boolean isCheckNetWork()
-    {
+    public boolean isCheckNetWork() {
         return mCheckNetWork;
     }
 

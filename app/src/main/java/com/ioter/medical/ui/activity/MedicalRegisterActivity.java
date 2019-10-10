@@ -203,6 +203,7 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
 
                                            SimpleAdapter adapter = new SimpleAdapter(getApplication(), dataList, R.layout.gridview2_item, from, to);
                                            gridview.setAdapter(adapter);
+                                           WasteTypeId = null;
                                            gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                                @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
                                                @Override
