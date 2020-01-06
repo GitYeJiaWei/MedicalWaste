@@ -124,7 +124,7 @@ public class EnterMessageActivity extends BaseActivity<EnterMessagePresenter> im
                     EPC epc = new EPC();
                     epc.setId(detail.getWasteViews().get(i).getId());
                     epc.setDepartmentName(detail.getWasteViews().get(i).getDepartmentName());
-                    epc.setWasteType(detail.getWasteViews().get(i).getWasteType());
+                    epc.setWasteType(detail.getWasteViews().get(i).getWasteTypeName());
                     epc.setWeight(detail.getWasteViews().get(i).getWeight());
                     epclist.add(epc);
                 }

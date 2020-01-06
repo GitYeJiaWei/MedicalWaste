@@ -79,10 +79,8 @@ public class CheckMessageAdapter extends BaseAdapter {
             listItemView.tv_type = (TextView) convertView.findViewById(R.id.tv_type);
             listItemView.tv_room = (TextView) convertView.findViewById(R.id.tv_room);
             listItemView.tv_weight = (TextView) convertView.findViewById(R.id.tv_weight);
-            listItemView.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
             listItemView.tv_startTime = (TextView) convertView.findViewById(R.id.tv_startTime);
             listItemView.tv_endTime = (TextView) convertView.findViewById(R.id.tv_endTime);
-            listItemView.tv_user = (TextView) convertView.findViewById(R.id.tv_user);
             listItemView.img_qr = (ImageView) convertView.findViewById(R.id.img_qr);
             listItemView.img_sure = (ImageView) convertView.findViewById(R.id.img_sure);
             //设置控件集到convertView
@@ -92,35 +90,37 @@ public class CheckMessageAdapter extends BaseAdapter {
         }
 
         final WasteViewsBean m1 = (WasteViewsBean) this.getItem(position);
-        listItemView.tv_type.setText(m1.getWasteType());
+        listItemView.tv_type.setText(m1.getWasteTypeName());
         listItemView.tv_room.setText(m1.getDepartmentName());
         listItemView.tv_weight.setText("重量：" + m1.getWeight() + "kg");
-        listItemView.tv_name.setText(m1.getHandOverUserName());
-        listItemView.tv_startTime.setText(m1.getCollectionTime());
-        listItemView.tv_endTime.setText(m1.getStockInTime());
-        listItemView.tv_user.setText(m1.getCollectUserName());
+        listItemView.tv_startTime.setText(m1.getHandOverTime());
+        listItemView.tv_endTime.setText(m1.getReceivedTime());
 
         final ListItemView finalListItemView = listItemView;
         AppApplication.getExecutorService().execute(new Runnable() {
             @Override
             public void run() {
-                context.Create2QR2("{iotEPC:"+m1.getId()+"}", finalListItemView.img_qr);
+                context.Create2QR2(m1.getId(), finalListItemView.img_qr);
             }
         });
 
 
-        if (m1.getStatus().equals("待确认")) {
-            listItemView.img_sure.setBackgroundResource(R.mipmap.sure_wait);
-        }else if (m1.getStatus().equals("已确认")) {
-            listItemView.img_sure.setBackgroundResource(R.mipmap.sure_set);
+        if (m1.getStatus().equals("待投递")) {
+            listItemView.img_sure.setBackgroundResource(R.mipmap.mip_01);
+        }else if (m1.getStatus().equals("已投递")) {
+            listItemView.img_sure.setBackgroundResource(R.mipmap.mip_02);
+        }else if (m1.getStatus().equals("待收运")) {
+            listItemView.img_sure.setBackgroundResource(R.mipmap.mip_03);
         }else if (m1.getStatus().equals("待入库")) {
-            listItemView.img_sure.setBackgroundResource(R.mipmap.in_wait);
-        }else if (m1.getStatus().equals("已入库")) {
-            listItemView.img_sure.setBackgroundResource(R.mipmap.in_set);
+            listItemView.img_sure.setBackgroundResource(R.mipmap.mip_04);
+        }else if (m1.getStatus().equals("待入库确认")) {
+            listItemView.img_sure.setBackgroundResource(R.mipmap.mip_05);
         }else if (m1.getStatus().equals("待出库")) {
-            listItemView.img_sure.setBackgroundResource(R.mipmap.out_wait);
+            listItemView.img_sure.setBackgroundResource(R.mipmap.mip_06);
+        } else if (m1.getStatus().equals("待出库确认")) {
+            listItemView.img_sure.setBackgroundResource(R.mipmap.mip_07);
         }else if (m1.getStatus().equals("已出库")) {
-            listItemView.img_sure.setBackgroundResource(R.mipmap.out_set);
+            listItemView.img_sure.setBackgroundResource(R.mipmap.mip_08);
         }
 
         convertView.setOnClickListener(new View.OnClickListener() {
@@ -134,7 +134,7 @@ public class CheckMessageAdapter extends BaseAdapter {
                 AppApplication.getExecutorService().execute(new Runnable() {
                     @Override
                     public void run() {
-                        context.Create2QR2("{iotEPC:"+m1.getId()+"}", imageView);
+                        context.Create2QR2(m1.getId(), imageView);
                     }
                 });
                 dialog.show();
@@ -148,8 +148,7 @@ public class CheckMessageAdapter extends BaseAdapter {
      * 自定义控件集合
      */
     public final class ListItemView {
-        TextView tv_type, tv_room, tv_weight,tv_name,tv_startTime,tv_endTime,
-                tv_user;
+        TextView tv_type, tv_room, tv_weight,tv_startTime,tv_endTime;
         ImageView img_qr,img_sure;
     }
 }

@@ -623,9 +623,10 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
     }
 
     @Override
-    public void showBarCode(String barCodeText) {
+    public void showBarCode(String barCode) {
+        super.showBarCode(barCode);
         Fragment fragment = (BaseFragment) mAdapter.instantiateItem(vpager, vpager.getCurrentItem());
-        ((BaseFragment) fragment).showBarCode(barCodeText);
+        ((BaseFragment) fragment).showBarCode(barCode);
     }
 
     public void exit() {
@@ -799,7 +800,7 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
         registerReceiver(mScreenReceiver, filter);//注册屏幕开关的广播
 
         MyReceive myReceive = new MyReceive();
-        //接受升级的广播
+        //接受软件升级的广播
 
         IntentFilter filter1 = new IntentFilter();
         filter1.addAction("android.intent.action.loading_over");

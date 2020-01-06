@@ -101,33 +101,16 @@
                     android:layout_weight="2.2"
                     android:orientation="vertical">
 
+
                     <LinearLayout
                         android:layout_marginTop="5dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        >
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="移交人员："/>
-
-                        <TextView
-                            android:id="@+id/tv_name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=""/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="收集时间："/>
+                            android:text="登记时间："/>
 
                         <TextView
                             android:id="@+id/tv_startTime"
@@ -139,13 +122,14 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:layout_marginTop="5dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="入库时间："/>
+                            android:text="投递时间："/>
 
                         <TextView
                             android:id="@+id/tv_endTime"
@@ -156,22 +140,7 @@
 
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="回收人员："/>
-
-                        <TextView
-                            android:id="@+id/tv_user"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=""/>
-
-                    </LinearLayout>
                 </LinearLayout>
 
                 <RelativeLayout

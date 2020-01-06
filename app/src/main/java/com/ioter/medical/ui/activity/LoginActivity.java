@@ -47,6 +47,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
     public static final String USER_NAME = "username";
     public static final String PASS_WORD = "password";
     public static final String USER_ID = "userid";
+    public static final String USER_CARD = "card";
     public static final String TOKEN = "token";
 
     @Override
@@ -121,6 +122,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
             ACache.get(AppApplication.getApplication()).put(USER_NAME, txtMobi.getText().toString());
             ACache.get(AppApplication.getApplication()).put(PASS_WORD, txtPassword.getText().toString());
             ACache.get(AppApplication.getApplication()).put(USER_ID, baseMap.get("Id").toString());
+            ACache.get(AppApplication.getApplication()).put(USER_CARD, baseMap.get("CardCode").toString());
             ACache.get(AppApplication.getApplication()).put(TOKEN, baseMap.get("access_token").toString());
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);

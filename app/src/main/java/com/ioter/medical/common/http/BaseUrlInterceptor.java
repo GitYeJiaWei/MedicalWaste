@@ -22,19 +22,19 @@ import okhttp3.Response;
 public class BaseUrlInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
-        String ip = ACache.get(AppApplication.getApplication()).getAsString("ip");
-        String host = ACache.get(AppApplication.getApplication()).getAsString("host");
+        /*String ip = ACache.get(AppApplication.getApplication()).getAsString("ip");
+        String host = ACache.get(AppApplication.getApplication()).getAsString("host");*/
         String token = ACache.get(AppApplication.getApplication()).getAsString("token");
         String BASE_URL = ACache.get(AppApplication.getApplication()).getAsString("BASE_URL");
 
-        if (ip == null) {
+        /*if (ip == null) {
             ip = ApiService.ip;
             ACache.get(AppApplication.getApplication()).put("ip", ip);
         }
         if (host == null){
             host = ApiService.host;
             ACache.get(AppApplication.getApplication()).put("host", host);
-        }
+        }*/
         if (BASE_URL == null){
             BASE_URL = ApiService.BASE_URL;
             ACache.get(AppApplication.getApplication()).put("BASE_URL", BASE_URL);
@@ -58,7 +58,7 @@ public class BaseUrlInterceptor implements Interceptor {
 
 
         //根据头信息中配置的value,来匹配新的base_url地址
-        String base_url = "http://" + ip + ":"+host+"/";
+        String base_url = BASE_URL;
         HttpUrl baseURL = HttpUrl.parse(base_url);
         //重建新的HttpUrl，需要重新设置的url部分
         HttpUrl newHttpUrl = oldUrl.newBuilder()

@@ -23,7 +23,6 @@ import android.widget.TextView;
 import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
 import com.ioter.medical.bean.BaseBean;
-import com.ioter.medical.bean.Code;
 import com.ioter.medical.bean.WasteViewsBean;
 import com.ioter.medical.common.ScreenUtils;
 import com.ioter.medical.common.util.ACache;
@@ -254,21 +253,13 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
     @Override
     public void showBarCode(String barcode) {
         super.showBarCode(barcode);
-        String bar = null;
-        if (barcode.contains("iotId")) {
-            Code code = AppApplication.getGson().fromJson(barcode, Code.class);
-            bar = code.getIotId();
-        } else {
-            ToastUtil.toast("垃圾袋二维码");
+        if (!barcode.startsWith("BB")) {
+            ToastUtil.toast("请扫描员工二维码");
             return;
         }
 
-        if (bar == null) {
-            ToastUtil.toast("扫描失败，请重新扫描");
-            return;
-        }
         final Map<String, String> map = new HashMap<>();
-        map.put("id", bar);
+        map.put("cardCode", barcode);
 
         ApiService apIservice = toretrofit().create(ApiService.class);
         Observable<BaseBean<Object>> qqDataCall = apIservice.getuser(map);
@@ -442,11 +433,9 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
             //设置 X,Y 的坐标。
             Print.SetPageModeAbsolutePosition(0, 0);
             //打印二维码（你也可以打印文字和条码）。
-            Print.PrintText(wasteViewsBean.getWasteType() + " 重量:" + wasteViewsBean.getWeight() + "kg", 0, 2, 0);
+            Print.PrintText(wasteViewsBean.getWasteTypeName() + " 重量:" + wasteViewsBean.getWeight() + "kg", 0, 2, 0);
             Print.PrintText("科室:" + wasteViewsBean.getDepartmentName(), 0, 2, 0);
-            Print.PrintText("移交人员:" + wasteViewsBean.getHandOverUserName(), 0, 2, 0);
-            Print.PrintText("回收人员:" + wasteViewsBean.getCollectUserName(), 0, 2, 0);
-            Print.PrintText("收集时间:" + wasteViewsBean.getCollectionTime().substring(0,16), 0, 2, 0);
+            Print.PrintText("收集时间:" + wasteViewsBean.getReceivedTime().substring(0,16), 0, 2, 0);
             //打印。
             Print.PrintDataInPageMode();
             //标签空隙校准

@@ -47,14 +47,10 @@ public class CheckMessageActivity extends BaseActivity<MedCollectPresenter> impl
     TextView tvType;
     @BindView(R.id.tv_room)
     TextView tvRoom;
-    @BindView(R.id.tv_name)
-    TextView tvName;
     @BindView(R.id.tv_startTime)
     TextView tvStartTime;
     @BindView(R.id.tv_endTime)
     TextView tvEndTime;
-    @BindView(R.id.tv_user)
-    TextView tvUser;
     @BindView(R.id.tv_weight)
     TextView tvWeight;
     @BindView(R.id.img_sure)
@@ -163,7 +159,7 @@ public class CheckMessageActivity extends BaseActivity<MedCollectPresenter> impl
                 AppApplication.getExecutorService().execute(new Runnable() {
                     @Override
                     public void run() {
-                        Create2QR2("{iotEPC:" + id + "}", imageView);
+                        Create2QR2(id, imageView);
                     }
                 });
                 alertDialog.show();
@@ -203,29 +199,29 @@ public class CheckMessageActivity extends BaseActivity<MedCollectPresenter> impl
                                        AppApplication.getExecutorService().execute(new Runnable() {
                                            @Override
                                            public void run() {
-                                               Create2QR2("{iotEPC:" + wb.getId() + "}", imgQr);
+                                               Create2QR2(wb.getId(), imgQr);
                                            }
                                        });
 
-                                       tvType.setText(wb.getWasteType());
+                                       tvType.setText(wb.getWasteTypeName());
                                        tvRoom.setText(wb.getDepartmentName());
-                                       tvName.setText(wb.getHandOverUserName());
-                                       tvStartTime.setText(wb.getCollectionTime());
-                                       tvEndTime.setText(wb.getStockInTime());
-                                       tvUser.setText(wb.getCollectUserName());
                                        tvWeight.setText("重量：" + wb.getWeight() + "kg");
-                                       if (wb.getStatus().equals("待确认")) {
-                                           imgSure.setBackgroundResource(R.mipmap.sure_wait);
-                                       } else if (wb.getStatus().equals("已确认")) {
-                                           imgSure.setBackgroundResource(R.mipmap.sure_set);
-                                       } else if (wb.getStatus().equals("待入库")) {
-                                           imgSure.setBackgroundResource(R.mipmap.in_wait);
-                                       } else if (wb.getStatus().equals("已入库")) {
-                                           imgSure.setBackgroundResource(R.mipmap.in_set);
-                                       } else if (wb.getStatus().equals("待出库")) {
-                                           imgSure.setBackgroundResource(R.mipmap.out_wait);
-                                       } else if (wb.getStatus().equals("已出库")) {
-                                           imgSure.setBackgroundResource(R.mipmap.out_set);
+                                       if (wb.getStatus().equals("待投递")) {
+                                           imgSure.setBackgroundResource(R.mipmap.mip_01);
+                                       }else if (wb.getStatus().equals("已投递")) {
+                                           imgSure.setBackgroundResource(R.mipmap.mip_02);
+                                       }else if (wb.getStatus().equals("待收运")) {
+                                           imgSure.setBackgroundResource(R.mipmap.mip_03);
+                                       }else if (wb.getStatus().equals("待入库")) {
+                                           imgSure.setBackgroundResource(R.mipmap.mip_04);
+                                       }else if (wb.getStatus().equals("待入库确认")) {
+                                           imgSure.setBackgroundResource(R.mipmap.mip_05);
+                                       }else if (wb.getStatus().equals("待出库")) {
+                                           imgSure.setBackgroundResource(R.mipmap.mip_06);
+                                       } else if (wb.getStatus().equals("待出库确认")) {
+                                           imgSure.setBackgroundResource(R.mipmap.mip_07);
+                                       }else if (wb.getStatus().equals("已出库")) {
+                                           imgSure.setBackgroundResource(R.mipmap.mip_08);
                                        }
                                    } else {
                                        ToastUtil.toast(baseBean.getMessage());
@@ -258,7 +254,7 @@ public class CheckMessageActivity extends BaseActivity<MedCollectPresenter> impl
             mScreenWidth = dm.widthPixels;
 
             bitmap = BitmapUtil.createQRImage(uri, mScreenWidth,
-                    BitmapFactory.decodeResource(getResources(), R.mipmap.me));//自己写的方法
+                    BitmapFactory.decodeResource(getResources(), 1));//自己写的方法
 
             if (bitmap != null) {
                 runOnUiThread(new Runnable() {
@@ -282,18 +278,12 @@ public class CheckMessageActivity extends BaseActivity<MedCollectPresenter> impl
                     for (int i = 0; i < list.size(); i++) {
                         WasteViewsBean epc = new WasteViewsBean();
                         epc.setId(list.get(i).get("Id") + "");
-                        epc.setWasteType(list.get(i).get("WasteType") + "");
+                        epc.setWasteTypeName(list.get(i).get("WasteTypeName") + "");
                         epc.setWeight((double) list.get(i).get("Weight"));
                         epc.setStatus(list.get(i).get("Status") + "");
-                        epc.setCollectionTime(list.get(i).get("CollectionTime") + "");
-                        epc.setDepartmentName(list.get(i).get("DepartmentName") + "");
-                        epc.setHandOverUserName(list.get(i).get("HandOverUserName") + "");
-                        epc.setCollectUserName(list.get(i).get("CollectUserName") + "");
-                        if (list.get(i).get("StockInTime") != null) {
-                            epc.setStockInTime(list.get(i).get("StockInTime") + "");
-                        } else {
-                            epc.setStockInTime("");
-                        }
+                        epc.setHandOverTime(list.get(i).get("HandOverTime")+"");
+                        epc.setReceivedTime(list.get(i).get("ReceivedTime")+"");
+                        epc.setDepartmentName(list.get(i).get("DepartmentName")+"");
                         epclist.add(epc);
                     }
                     //通知listview改变UI中的数据

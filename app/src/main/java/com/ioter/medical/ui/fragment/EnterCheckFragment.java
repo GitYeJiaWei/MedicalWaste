@@ -35,7 +35,7 @@ public class EnterCheckFragment extends BaseFragment<MedEnterPresenter> implemen
     int nextpage = 1;
     //每一页加载多少数据
     private int number = 10;
-    private int Status = 2;
+    private int Status = 1;
     private boolean isPrepared = false;
 
     public static EnterCheckFragment newInstance() {

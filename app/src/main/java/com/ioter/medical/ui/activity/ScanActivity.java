@@ -15,7 +15,7 @@ import com.ioter.medical.di.component.AppComponent;
 
 import butterknife.BindView;
 
-import static com.ioter.medical.ui.activity.LoginActivity.USER_ID;
+import static com.ioter.medical.ui.activity.LoginActivity.USER_CARD;
 
 public class ScanActivity extends BaseActivity {
 
@@ -39,11 +39,11 @@ public class ScanActivity extends BaseActivity {
     public void init() {
         title.setText("我的二维码");
 
-        final String id = ACache.get(AppApplication.getApplication()).getAsString(USER_ID);
+        final String id = ACache.get(AppApplication.getApplication()).getAsString(USER_CARD);
         AppApplication.getExecutorService().execute(new Runnable() {
             @Override
             public void run() {
-                Create2QR2("{iotId:" + id + "}", imgScan);
+                Create2QR2(id, imgScan);
             }
         });
     }
@@ -59,7 +59,7 @@ public class ScanActivity extends BaseActivity {
             mScreenWidth = dm.widthPixels;
 
             bitmap = BitmapUtil.createQRImage(uri, mScreenWidth,
-                    BitmapFactory.decodeResource(getResources(), R.mipmap.me));//自己写的方法
+                    BitmapFactory.decodeResource(getResources(), 1));//自己写的方法
 
             if (bitmap != null) {
                 runOnUiThread(new Runnable() {

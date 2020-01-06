@@ -15,7 +15,6 @@ import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
 import com.ioter.medical.bean.BaseBean;
 import com.ioter.medical.bean.BaseEpc;
-import com.ioter.medical.bean.Code;
 import com.ioter.medical.bean.EPC;
 import com.ioter.medical.common.ScreenUtils;
 import com.ioter.medical.common.util.ACache;
@@ -303,10 +302,8 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
     @Override
     public void showBarCode(String barcode) {
         super.showBarCode(barcode);
-        if (barcode.contains("iotId")) {
-            Code code = AppApplication.getGson().fromJson(barcode, Code.class);
-            String bar = code.getIotId();
-            getId(bar);
+        if (barcode.startsWith("BB")) {
+            getId(barcode);
         }
         if (barcode.contains("iotEPC")) {
             ToastUtil.toast("请扫描交接人二维码");
@@ -315,7 +312,7 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
 
     private void getId(String bar) {
         final Map<String, String> map = new HashMap<>();
-        map.put("id", bar);
+        map.put("cardCode", bar);
 
         ApiService apIservice = toretrofit().create(ApiService.class);
         Observable<BaseBean<Object>> qqDataCall = apIservice.getuser(map);

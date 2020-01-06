@@ -35,7 +35,7 @@ public class EnterSureFragment extends BaseFragment<MedEnterPresenter> implement
     int nextpage = 1;
     //每一页加载多少数据
     private int number = 10;
-    private int Status = 3;
+    private int Status = 2;
     private boolean isPrepared = false;
 
     public static EnterSureFragment newInstance() {

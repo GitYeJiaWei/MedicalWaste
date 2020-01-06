@@ -22,9 +22,10 @@ import retrofit2.http.QueryMap;
 public interface ApiService
 {
 
-    String BASE_URL = "http://mall.ioter-e.com:8118/";
-    String ip = "mall.ioter-e.com";
-    String host = "8118";
+    String BASE_URL = "http://yf.jz315.net/";
+    //String BASE_URL = "http://mall.ioter-e.com:8118/";
+    //String ip = "mall.ioter-e.com";
+    //String host = "8118";
     //String BASE_URL = "http://192.168.66.3:8118/";
 
     //token为方法名，基类中不能加入方法名
@@ -76,6 +77,7 @@ public interface ApiService
     //医废入库详情
     @GET("api/StockIn/Detail")
     Observable<BaseBean<Detail>> stockindetail(@QueryMap Map<String,Object> params);
+
 
     //入库确认
     @GET("api/StockIn/Confirm")

@@ -170,12 +170,12 @@ public class CollectMessageActivity extends BaseActivity {
                                    }
                                    if (baseBean.getCode() == 0 && baseBean.getData() != null) {
                                        wasteViewsBean = baseBean.getData();
-                                       tvName.setText(wasteViewsBean.getCollectUserName());
-                                       tvTime.setText(wasteViewsBean.getCollectionTime());
-                                       tvUser.setText(wasteViewsBean.getHandOverUserName());
+                                       tvName.setText("");
+                                       tvTime.setText(wasteViewsBean.getReceivedTime());
+                                       tvUser.setText("");
                                        tvRoom.setText(wasteViewsBean.getDepartmentName());
                                        tvWeight.setText(wasteViewsBean.getWeight() + "");
-                                       tvType.setText(wasteViewsBean.getWasteType());
+                                       tvType.setText(wasteViewsBean.getWasteTypeName());
                                    } else {
                                        ToastUtil.toast(baseBean.getMessage());
                                    }
@@ -288,11 +288,11 @@ public class CollectMessageActivity extends BaseActivity {
             //设置 X,Y 的坐标。
             Print.SetPageModeAbsolutePosition(0, 0);
             //打印二维码（你也可以打印文字和条码）。
-            Print.PrintText(wasteViewsBean.getWasteType() + " 重量:" + wasteViewsBean.getWeight() + "kg", 0, 2, 0);
+            Print.PrintText(wasteViewsBean.getWasteTypeName() + " 重量:" + wasteViewsBean.getWeight() + "kg", 0, 2, 0);
             Print.PrintText("科室:" + wasteViewsBean.getDepartmentName(), 0, 2, 0);
-            Print.PrintText("移交人员:" + wasteViewsBean.getHandOverUserName(), 0, 2, 0);
-            Print.PrintText("回收人员:" + wasteViewsBean.getCollectUserName(), 0, 2, 0);
-            Print.PrintText("收集时间:" + wasteViewsBean.getCollectionTime().substring(0,16), 0, 2, 0);
+            Print.PrintText("移交人员:" + "", 0, 2, 0);
+            Print.PrintText("回收人员:" + "", 0, 2, 0);
+            Print.PrintText("收集时间:" + wasteViewsBean.getReceivedTime().substring(0,16), 0, 2, 0);
             //打印。
             Print.PrintDataInPageMode();
             //标签空隙校准

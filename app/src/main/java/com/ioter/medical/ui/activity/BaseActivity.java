@@ -123,8 +123,8 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
                 final String barCode = new String(bytes, 0, length);
                 if (barCode != null && barCode.length() > 0) {
                     SoundManage.PlaySound(BaseActivity.this, SoundManage.SoundType.SUCCESS);
-                    if (barCode.contains("iotId") || barCode.contains("iotEPC")) {
-                        showBarCode(barCode);
+                    if (barCode.toUpperCase().startsWith("AA") || barCode.toUpperCase().startsWith("BB")) {
+                        showBarCode(barCode.toUpperCase());
                     } else {
                         ToastUtil.toast("二维码不符合");
                     }

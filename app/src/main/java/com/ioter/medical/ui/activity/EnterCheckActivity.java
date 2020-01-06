@@ -65,8 +65,10 @@ public class EnterCheckActivity extends BaseActivity {
         public Fragment getItem(int position) {
             Fragment fragment = null;
             if (position == 0) {
+                //待确认
                 fragment = EnterCheckFragment.newInstance();
             } else {
+                //已确认
                 fragment = EnterSureFragment.newInstance();
             }
             return fragment;

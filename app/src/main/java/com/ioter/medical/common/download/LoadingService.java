@@ -74,13 +74,15 @@ public class LoadingService extends IntentService {
 
 
     private void updateApk(){
-        String ip = ACache.get(AppApplication.getApplication()).getAsString("ip");
-        String host = ACache.get(AppApplication.getApplication()).getAsString("host");
+       /* String ip = ACache.get(AppApplication.getApplication()).getAsString("ip");
+        String host = ACache.get(AppApplication.getApplication()).getAsString("host");*/
 
         url = sharedPreferences.getString("url","").replaceAll("\\\\","/");
         path = sharedPreferences.getString("path","");
+        String BASE_URL = ACache.get(AppApplication.getApplication()).getAsString("BASE_URL");
 
-        httpUtils.download("http://" + ip + ":"+host+"/"+url,
+        //httpUtils.download("http://" + ip + ":"+host+"/"+url,
+        httpUtils.download(BASE_URL+url,
                 path , new RequestCallBack<File>() {
                     @Override
                     public void onLoading(final long total, final long current,

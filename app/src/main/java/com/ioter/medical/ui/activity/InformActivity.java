@@ -44,16 +44,11 @@ public class InformActivity extends BaseActivity {
     public void init() {
         title.setText("通讯设置");
 
-        String ip = ACache.get(AppApplication.getApplication()).getAsString("ip");
-        String host = ACache.get(AppApplication.getApplication()).getAsString("host");
+        String ip = ACache.get(AppApplication.getApplication()).getAsString("BASE_URL");
         if (ip == null) {
-            ip = ApiService.ip;
-        }
-        if (host == null){
-            host = ApiService.host;
+            ip = ApiService.BASE_URL;
         }
         etIp.setText(ip);
-        etHost.setText(host);
     }
 
 
@@ -62,13 +57,10 @@ public class InformActivity extends BaseActivity {
         if (!ScreenUtils.Utils.isFastClick()) return;
 
         String ip = etIp.getText().toString();
-        String host = etHost.getText().toString();
-        if (TextUtils.isEmpty(ip) || TextUtils.isEmpty(host)) {
+        if (TextUtils.isEmpty(ip)) {
             ToastUtil.toast("IP地址或端口号不能为空");
         } else {
-            ACache.get(AppApplication.getApplication()).put("ip", ip);
-            ACache.get(AppApplication.getApplication()).put("host", host);
-            ACache.get(AppApplication.getApplication()).put("BASE_URL", "http://" + ip + ":"+host+"/");
+            ACache.get(AppApplication.getApplication()).put("BASE_URL", ip);
             ToastUtil.toast("保存成功");
             finish();
         }

@@ -15,8 +15,6 @@ import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
 import com.ioter.medical.bean.BaseBean;
 import com.ioter.medical.bean.BaseEpc;
-import com.ioter.medical.bean.Code;
-import com.ioter.medical.bean.Code1;
 import com.ioter.medical.bean.EPC;
 import com.ioter.medical.bean.WasteViewsBean;
 import com.ioter.medical.common.ScreenUtils;
@@ -242,25 +240,21 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
     @Override
     public void showBarCode(String barcode) {
         super.showBarCode(barcode);
-        if (barcode.contains("iotId")) {
-            Code code = AppApplication.getGson().fromJson(barcode, Code.class);
-            String bar = code.getIotId();
-            getId(bar);
+        if (barcode.startsWith("BB")) {
+            getId(barcode);
         }
-        if (barcode.contains("iotEPC")) {
-            Code1 code1 = AppApplication.getGson().fromJson(barcode, Code1.class);
-            String bar = code1.getIotEPC();
-            if (mapEpc.containsKey(bar)) {
+        if (barcode.startsWith("AA")) {
+            if (mapEpc.containsKey(barcode)) {
                 ToastUtil.toast("重复的医废二维码");
                 return;
             }
-            getEPC(bar);
+            getEPC(barcode);
         }
     }
 
     private void getId(String bar) {
         final Map<String, String> map = new HashMap<>();
-        map.put("id", bar);
+        map.put("cardCode", bar);
 
         ApiService apIservice = toretrofit().create(ApiService.class);
         Observable<BaseBean<Object>> qqDataCall = apIservice.getuser(map);
@@ -338,7 +332,7 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
                                        EPC epc = new EPC();
                                        epc.setId(baseBean.getData().getId());
                                        epc.setDepartmentName(baseBean.getData().getDepartmentName());
-                                       epc.setWasteType(baseBean.getData().getWasteType());
+                                       epc.setWasteType(baseBean.getData().getWasteTypeName());
                                        epc.setWeight(baseBean.getData().getWeight());
                                        Collections.reverse(epclist);
                                        epclist.add(epc);

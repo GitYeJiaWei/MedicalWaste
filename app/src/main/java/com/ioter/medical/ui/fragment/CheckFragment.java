@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
 import com.ioter.medical.bean.BaseBean;
-import com.ioter.medical.bean.Code1;
 import com.ioter.medical.common.ScreenUtils;
 import com.ioter.medical.common.util.ToastUtil;
 import com.ioter.medical.data.http.ApiService;
@@ -165,14 +164,12 @@ public class CheckFragment extends BaseFragment {
 
     @Override
     public void showBarCode(String barcode) {
-        if (barcode.contains("iotId")) {
+        if (barcode.startsWith("BB")) {
             ToastUtil.toast("请扫描医废二维码");
         }
-        if (barcode.contains("iotEPC")) {
-            Code1 code1 = AppApplication.getGson().fromJson(barcode, Code1.class);
-            String bar = code1.getIotEPC();
+        if (barcode.startsWith("AA")) {
             Intent intent = new Intent(getActivity(), CheckMessageActivity.class);
-            intent.putExtra("id", bar);
+            intent.putExtra("id", barcode);
             startActivity(intent);
         }
     }
