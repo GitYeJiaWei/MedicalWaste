@@ -52,14 +52,12 @@ public class HttpModule
                 .addInterceptor(new BaseUrlInterceptor())
                 //添加应用拦截器
                 // 连接超时时间设置
-                .connectTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(10, TimeUnit.SECONDS)
                 // 读取超时时间设置
                 //.readTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
 
                 .build();
-
-
     }
 
 

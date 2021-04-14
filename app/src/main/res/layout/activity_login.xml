@@ -24,7 +24,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/top"/>
+            android:src="@mipmap/top1"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,9 +39,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:gravity="center"
                 android:layout_marginLeft="10dp"
-                android:text="艾欧特医疗废物管理系统"
+                android:hint="艾欧特医疗废物管理系统"
+                android:text="宝沃美医疗废物管理系统"
                 android:textColor="@color/white"
                 android:textSize="26dp" />
 
@@ -64,7 +65,6 @@
             android:layout_marginRight="15dp"
             android:background="@color/white"
             >
-
 
             <EditText
                 android:id="@+id/txt_mobi"
