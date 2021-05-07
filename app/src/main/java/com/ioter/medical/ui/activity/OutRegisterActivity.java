@@ -6,11 +6,9 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 
+import android_serialport_api.SerialPortUtil;
 import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
 import com.ioter.medical.bean.BaseBean;
@@ -46,9 +44,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.ioter.medical.ui.activity.MainActivity.mReader;
-
-
 public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> implements OutRegisterContract.OutRegisterView {
 
     @BindView(R.id.tv_name)
@@ -56,9 +51,9 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
     @BindView(R.id.tv_time)
     TextView tvTime;
     @BindView(R.id.tv_user)
-    TextView tvUser;
-    @BindView(R.id.tv_weight)
-    TextView tvWeight;
+    EditText tvUser;
+    @BindView(R.id.tv_rfid)
+    EditText tvRfid;
     @BindView(R.id.tv_totalWeight)
     TextView tvTotalWeight;
     @BindView(R.id.list_lease)
@@ -71,6 +66,12 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
     TextView title;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.btn_user)
+    Button btnUser;
+    @BindView(R.id.btn_weight)
+    Button btnWeight;
+    @BindView(R.id.btn_rfid)
+    Button btnRfid;
     private String HandOverUserId = null;
     private HashMap<String, String> map = new HashMap<>();
     private HashMap<String, String> mapEpc = new HashMap<>();
@@ -78,6 +79,11 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
     private ArrayList<EPC> epclist = new ArrayList<>();
     private ArrayList<String> DustbinEpcs = new ArrayList<>();
     private static Set<SwipeListLayout> sets = new HashSet();
+    static EditText tvWeight;
+
+    public static void refreshTextView(double data) {
+        tvWeight.setText(data + "");
+    }
 
     @Override
     public int setLayout() {
@@ -93,6 +99,8 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
     @Override
     public void init() {
         title.setText("出库登记");
+        tvWeight = findViewById(R.id.tv_weight);
+        SerialPortUtil.openSrialPort(3);
 
         tvName.setText(ACache.get(AppApplication.getApplication()).getAsString(LoginActivity.REAL_NAME));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -184,13 +192,11 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
     }
 
     //获取EPC群读数据
-    @Override
-    public void handleUi(final BaseEpc baseEpc) {
-        super.handleUi(baseEpc);
-        if (mapEpc.containsKey(baseEpc._EPC)) {
+    public void handleUi(final String epc) {
+        if (mapEpc.containsKey(epc)) {
             return;
         }
-        map.put("dustbinepc", baseEpc._EPC);
+        map.put("dustbinepc", epc);
 
         ApiService apIservice = toretrofit().create(ApiService.class);
         Observable<BaseBean<Object>> qqDataCall = apIservice.getdustbininfo(map);
@@ -210,7 +216,7 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
 
                                @Override
                                public void onNext(BaseBean<Object> baseBean) {
-                                   mapEpc.put(baseEpc._EPC, baseEpc._EPC);
+                                   mapEpc.put(epc, epc);
                                    if (baseBean == null) {
                                        return;
                                    }
@@ -246,62 +252,21 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
 
                                @Override
                                public void onError(Throwable e) {
+                                   tvRfid.setText("");
                                    mypDialog.cancel();
                                    ToastUtil.toast(e.getMessage());
                                }
 
                                @Override
                                public void onComplete() {
+                                   tvRfid.setText("");
                                    mypDialog.cancel();
                                }//订阅
                            }
                 );
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == 280) {
-            if (event.getRepeatCount() == 0) {
-                ScanBarcode();
-            }
-        }
-        if (keyCode == 139) {
-            if (event.getRepeatCount() == 0) {
-                readTag("扫描");
-            }
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (keyCode == 139) {
-            if (event.getRepeatCount() == 0) {
-                readTag("停止");
-            }
-        }
-        return super.onKeyUp(keyCode, event);
-    }
-
-    private void readTag(String state) {
-        if (state.equals("扫描")) {
-            if (mReader.startInventoryTag((byte) 0, (byte) 0)) {
-                loopFlag = true;
-                new TagThread(10).start();
-            } else {
-                mReader.stopInventory();
-                loopFlag = false;
-                ToastUtil.toast("扫描失败");
-            }
-        } else {
-            mReader.stopInventory();
-            loopFlag = false;
-        }
-    }
-
-    @Override
     public void showBarCode(String barcode) {
-        super.showBarCode(barcode);
         if (barcode.startsWith("BB")) {
             getId(barcode);
         }
@@ -361,7 +326,7 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
     }
 
 
-    @OnClick({R.id.btn_commit, R.id.btn_cancle})
+    @OnClick({R.id.btn_commit, R.id.btn_cancle,R.id.btn_user,R.id.btn_weight,R.id.btn_rfid})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_commit:
@@ -399,6 +364,23 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
                 setResult(RESULT_OK);
                 finish();
                 break;
+            case R.id.btn_weight:
+                //读取稳定重量
+                byte[] params = new byte[]{0x11, 0x41, 0x3F, 0x11, 0x0D};
+                SerialPortUtil.sendSerialPort(params);
+                break;
+            case R.id.btn_user:
+                String user = tvUser.getText().toString().trim();
+                if (user.toUpperCase().startsWith("AA") || user.toUpperCase().startsWith("BB")) {
+                    showBarCode(user.toUpperCase());
+                } else {
+                    ToastUtil.toast("二维码不符合");
+                }
+                break;
+            case R.id.btn_rfid:
+                String rfid = tvRfid.getText().toString().trim();
+                handleUi(rfid);
+                break;
         }
     }
 
@@ -414,6 +396,12 @@ public class OutRegisterActivity extends BaseActivity<OutRegisterPresenter> impl
     public void onBackPressed() {
         setResult(RESULT_OK);
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onDestroy() {
+        SerialPortUtil.closeSerialPort();
+        super.onDestroy();
     }
 
     @Override

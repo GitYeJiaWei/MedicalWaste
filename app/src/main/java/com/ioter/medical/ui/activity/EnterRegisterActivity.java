@@ -4,17 +4,14 @@ import android.app.ProgressDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
-
+import android.widget.*;
+import android_serialport_api.SerialPortUtil;
+import butterknife.BindView;
+import butterknife.OnClick;
 import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
 import com.ioter.medical.bean.BaseBean;
-import com.ioter.medical.bean.BaseEpc;
 import com.ioter.medical.bean.EPC;
 import com.ioter.medical.bean.WasteViewsBean;
 import com.ioter.medical.common.ScreenUtils;
@@ -28,26 +25,15 @@ import com.ioter.medical.presenter.EnterRegisterPresenter;
 import com.ioter.medical.presenter.contract.EnterRegisterContract;
 import com.ioter.medical.ui.adapter.MedicalCollectAdapter;
 import com.ioter.medical.ui.widget.SwipeListLayout;
-
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import butterknife.BindView;
-import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.ioter.medical.ui.activity.MainActivity.mReader;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> implements EnterRegisterContract.EnterRegisterView {
@@ -57,11 +43,9 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
     @BindView(R.id.tv_time)
     TextView tvTime;
     @BindView(R.id.tv_user)
-    TextView tvUser;
+    EditText tvUser;
     @BindView(R.id.tv_room)
     TextView tvRoom;
-    @BindView(R.id.tv_weight)
-    TextView tvWeight;
     @BindView(R.id.tv_totalWeight)
     TextView tvTotalWeight;
     @BindView(R.id.list_lease)
@@ -74,6 +58,10 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
     TextView title;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.btn_user)
+    Button btnUser;
+    @BindView(R.id.btn_weight)
+    Button btnWeight;
     private String HandOverUserId = null;
     private HashMap<String, String> mapEpc = new HashMap<>();
     private Map<String, String> map = new HashMap<>();
@@ -81,6 +69,11 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
     public ArrayList<EPC> epclist = new ArrayList<>();
     private ArrayList<String> WasteIds = new ArrayList<>();
     private static Set<SwipeListLayout> sets = new HashSet();
+    static EditText tvWeight;
+
+    public static void refreshTextView(double data) {
+        tvWeight.setText(data + "");
+    }
 
     @Override
     public int setLayout() {
@@ -96,6 +89,8 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
     @Override
     public void init() {
         title.setText("入库登记");
+        tvWeight = findViewById(R.id.tv_weight);
+        SerialPortUtil.openSrialPort(2);
 
         tvName.setText(ACache.get(AppApplication.getApplication()).getAsString(LoginActivity.REAL_NAME));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -145,7 +140,7 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
                 }
                 WasteIds.remove(epc.getId());
                 tvTotalWeight.setText("总重量：" + sum + "kg");
-                tvWeight.setText(sum+"");
+                tvWeight.setText(sum + "");
             }
         });
     }
@@ -186,60 +181,7 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
         }
     }
 
-
-    //获取EPC群读数据
-    @Override
-    public void handleUi(BaseEpc baseEpc) {
-        super.handleUi(baseEpc);
-        tvRoom.setText(baseEpc._EPC);
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == 280) {
-            if (event.getRepeatCount() == 0) {
-                ScanBarcode();
-            }
-        }
-        if (keyCode == 139) {
-            if (event.getRepeatCount() == 0) {
-                readTag("扫描");
-            }
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (keyCode == 139) {
-            if (event.getRepeatCount() == 0) {
-                readTag("停止");
-            }
-        }
-        return super.onKeyUp(keyCode, event);
-    }
-
-    private void readTag(String state) {
-        if (state.equals("扫描")) {
-            if (mReader.startInventoryTag((byte) 0, (byte) 0)) {
-                loopFlag = true;
-                new TagThread(10).start();
-                Log.d(AppApplication.TAG, "uhf success");
-            } else {
-                mReader.stopInventory();
-                loopFlag = false;
-                ToastUtil.toast("扫描失败");
-                Log.d(AppApplication.TAG, "uhf failed");
-            }
-        } else {
-            mReader.stopInventory();
-            loopFlag = false;
-        }
-    }
-
-    @Override
     public void showBarCode(String barcode) {
-        super.showBarCode(barcode);
         if (barcode.startsWith("BB")) {
             getId(barcode);
         }
@@ -348,7 +290,7 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
                                        }
                                        WasteIds.add(baseBean.getData().getId());
                                        tvTotalWeight.setText("总重量：" + sum + "kg");
-                                       tvWeight.setText(sum+"");
+                                       tvWeight.setText(sum + "");
                                        //ToastUtil.toast("扫描成功");
                                    } else {
                                        ToastUtil.toast(baseBean.getMessage());
@@ -369,7 +311,7 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
                 );
     }
 
-    @OnClick({R.id.btn_commit, R.id.btn_cancle})
+    @OnClick({R.id.btn_commit, R.id.btn_cancle, R.id.btn_user, R.id.btn_weight})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_commit:
@@ -398,7 +340,6 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
                     return;
                 }
 
-
                 btnCommit.setEnabled(false);
 
                 Map<String, Object> map = new HashMap<>();
@@ -414,10 +355,23 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
                 setResult(RESULT_OK);
                 finish();
                 break;
+            case R.id.btn_user:
+                String user = tvUser.getText().toString().trim();
+                if (user.toUpperCase().startsWith("AA") || user.toUpperCase().startsWith("BB")) {
+                    showBarCode(user.toUpperCase());
+                } else {
+                    ToastUtil.toast("二维码不符合");
+                }
+                break;
+            case R.id.btn_weight:
+                //读取稳定重量
+                byte[] params = new byte[]{0x11, 0x41, 0x3F, 0x11, 0x0D};
+                SerialPortUtil.sendSerialPort(params);
+                break;
         }
     }
 
-    private void clearData(){
+    private void clearData() {
         tvWeight.setText("");
         tvRoom.setText("");
         WasteIds.clear();
@@ -433,6 +387,12 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
     }
 
     @Override
+    protected void onDestroy() {
+        SerialPortUtil.closeSerialPort();
+        super.onDestroy();
+    }
+
+    @Override
     public void EnterRegisterResult(BaseBean<Object> baseBean) {
         btnCommit.setEnabled(true);
         if (baseBean == null) {
@@ -442,9 +402,6 @@ public class EnterRegisterActivity extends BaseActivity<EnterRegisterPresenter> 
         if (baseBean.getCode() == 0) {
             ToastUtil.toast("提交成功");
             clearData();
-
-            //setResult(RESULT_OK);
-            //finish();
         } else {
             ToastUtil.toast(baseBean.getMessage());
         }

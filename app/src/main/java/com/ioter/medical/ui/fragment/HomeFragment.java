@@ -158,7 +158,6 @@ public class HomeFragment extends BaseFragment {
         //设置医废管理
         initData();
 
-
         //设置基本概况
         initData1();
         String[] from1 = {"img", "text"};
@@ -181,12 +180,6 @@ public class HomeFragment extends BaseFragment {
             }
         });
     }
-
-    @Override
-    public void showBarCode(String barCode) {
-
-    }
-
 
     //定义一个回调接口
     public interface CallBackValue {

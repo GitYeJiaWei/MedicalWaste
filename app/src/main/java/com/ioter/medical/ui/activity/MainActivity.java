@@ -4,14 +4,9 @@ import android.app.Dialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -21,30 +16,14 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.view.*;
+import android.widget.*;
 import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
 import com.ioter.medical.bean.BaseBean;
 import com.ioter.medical.bean.FeeRule;
 import com.ioter.medical.bean.Remind;
-import com.ioter.medical.common.ActivityCollecter;
 import com.ioter.medical.common.download.LoadingService;
 import com.ioter.medical.common.download.Utils;
 import com.ioter.medical.common.util.ACache;
@@ -59,24 +38,17 @@ import com.ioter.medical.presenter.contract.RuleListContract;
 import com.ioter.medical.ui.adapter.DrawerListAdapter;
 import com.ioter.medical.ui.adapter.DrawerListContent;
 import com.ioter.medical.ui.adapter.MyFragmentPagerAdapter;
-import com.ioter.medical.ui.fragment.BaseFragment;
-import com.ioter.medical.ui.fragment.CheckFragment;
-import com.ioter.medical.ui.fragment.CountFragment;
-import com.ioter.medical.ui.fragment.HomeFragment;
-import com.ioter.medical.ui.fragment.SettingFragment;
-import com.rscja.deviceapi.RFIDWithUHF;
-import com.zebra.adc.decoder.Barcode2DWithSoft;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.ioter.medical.ui.fragment.*;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import print.Print;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 主页
@@ -106,9 +78,6 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
     private boolean isLoading;
     private String path;
 
-    public static RFIDWithUHF mReader; //RFID扫描
-
-    public static Barcode2DWithSoft barcode2DWithSoft = null;//二维扫码
     private boolean isread = true;
     private boolean mIsEditStatus = false;
 
@@ -131,14 +100,6 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
 
         initview();
         selectItem(0);
-        String key1 = ACache.get(AppApplication.getApplication()).getAsString("key1");
-        if (TextUtils.isEmpty(key1)) {
-            key1 = "10";
-        }
-
-        new InitBarCodeTask().execute();
-        initUHF();
-        mReader.setPower(Integer.valueOf(key1));
 
         //消息轮询
         AppApplication.getExecutorService().execute(new Runnable() {
@@ -154,76 +115,6 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
                 }
             }
         });
-
-    }
-
-    private int cycleCount = 3;//循环3次初始化
-
-    //初始化RFID扫描
-    public void initUHF() {
-        cycleCount = 3;
-        try {
-            mReader = RFIDWithUHF.getInstance();
-        } catch (Exception ex) {
-            ToastUtil.toast(ex.getMessage());
-            return;
-        }
-
-        if (mReader != null) {
-            AppApplication.getExecutorService().execute(new Runnable() {
-                @Override
-                public void run() {
-                    if (!mReader.init()) {
-                        //ToastUtil.toast("init uhf fail,reset ...");
-                        if (cycleCount > 0) {
-                            cycleCount--;
-                            if (mReader != null) {
-                                mReader.free();
-                            }
-                            initUHF();
-                        }
-                    } else {
-                        ToastUtil.toast("初始化成功");
-                    }
-                }
-            });
-        }
-    }
-
-    public static class InitBarCodeTask extends AsyncTask<String, Integer, Boolean> {
-        @Override
-        protected Boolean doInBackground(String... params) {
-
-            if (barcode2DWithSoft == null) {
-                barcode2DWithSoft = Barcode2DWithSoft.getInstance();
-            }
-            boolean reuslt = false;
-            if (barcode2DWithSoft != null) {
-                reuslt = barcode2DWithSoft.open(AppApplication.getApplication());
-            }
-            return reuslt;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            super.onPostExecute(result);
-            if (result) {
-                barcode2DWithSoft.setParameter(324, 1);
-                barcode2DWithSoft.setParameter(300, 0); // Snapshot Aiming
-                barcode2DWithSoft.setParameter(361, 0); // Image Capture Illumination
-
-                // interleaved 2 of 5
-                barcode2DWithSoft.setParameter(6, 1);
-                barcode2DWithSoft.setParameter(22, 0);
-                barcode2DWithSoft.setParameter(23, 55);
-
-            }
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
     }
 
     //网络检测
@@ -443,15 +334,14 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
                 });
 
                 //获取版本更新
-                if (baseBean1.getData().getAutoUpdateInfo() != null && baseBean1.getData().getAutoUpdateInfo().getVersion() != null) {
+                /*if (baseBean1.getData().getAutoUpdateInfo() != null && baseBean1.getData().getAutoUpdateInfo().getVersion() != null) {
                     getVersionInfoFromServer(baseBean1);
-                }
+                }*/
             } else {
                 ToastUtil.toast(baseBean1.getMessage());
                 finish();
             }
         }
-
     }
 
     private void read() {
@@ -596,39 +486,6 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
         mDrawerLayout.closeDrawer(mleftLin);
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        //获取当前的fragment
-        Fragment fragment = (BaseFragment) mAdapter.instantiateItem(vpager, vpager.getCurrentItem());
-        if (keyCode == 139 || keyCode == 280) {
-            if (event.getRepeatCount() == 0) {
-                ((BaseFragment) fragment).myOnKeyDwon();
-            }
-        } else if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            exit();
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        Fragment fragment = (BaseFragment) mAdapter.instantiateItem(vpager, vpager.getCurrentItem());
-        if (keyCode == 139 || keyCode == 280) {
-            if (event.getRepeatCount() == 0) {
-                ((BaseFragment) fragment).myOnKeyUp();
-            }
-        }
-        return super.onKeyUp(keyCode, event);
-    }
-
-    @Override
-    public void showBarCode(String barCode) {
-        super.showBarCode(barCode);
-        Fragment fragment = (BaseFragment) mAdapter.instantiateItem(vpager, vpager.getCurrentItem());
-        ((BaseFragment) fragment).showBarCode(barCode);
-    }
-
     public void exit() {
         if ((System.currentTimeMillis() - mExitTime) > 2000) {
             Toast.makeText(MainActivity.this, "再按一次退出登录", Toast.LENGTH_SHORT).show();
@@ -643,13 +500,6 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
         super.onDestroy();
         if (isread) {
             isread = false;
-        }
-        if (mReader != null) {
-            mReader.free();
-        }
-        if (barcode2DWithSoft != null) {
-            barcode2DWithSoft.stopScan();
-            barcode2DWithSoft.close();
         }
         try {
             if (Print.IsOpened()) {
@@ -765,40 +615,10 @@ public class MainActivity extends BaseActivity<RuleListPresenter>
         }
     }
 
-
-    /**
-     * 定义广播接收者 接受屏幕状态
-     */
-    private class ScreenBroadcastReceiver extends BroadcastReceiver {
-        private String action = null;
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            action = intent.getAction();
-            if (Intent.ACTION_SCREEN_ON.equals(action)) {
-                // 开屏
-            } else if (Intent.ACTION_SCREEN_OFF.equals(action)) {
-                // 锁屏
-                ActivityCollecter.finishAll();
-            } else if (Intent.ACTION_USER_PRESENT.equals(action)) {
-                // 解锁
-            }
-        }
-    }
-
     /**
      * 注册广播
      */
     private void startScreenBroadcastReceiver() {
-        ScreenBroadcastReceiver mScreenReceiver = new ScreenBroadcastReceiver();
-        //接受屏幕状态的广播
-
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(Intent.ACTION_SCREEN_ON);
-        filter.addAction(Intent.ACTION_SCREEN_OFF);
-        filter.addAction(Intent.ACTION_USER_PRESENT);
-        registerReceiver(mScreenReceiver, filter);//注册屏幕开关的广播
-
         MyReceive myReceive = new MyReceive();
         //接受软件升级的广播
 

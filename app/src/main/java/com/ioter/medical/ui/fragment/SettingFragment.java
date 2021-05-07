@@ -54,19 +54,11 @@ public class SettingFragment extends BaseFragment {
 
     @Override
     public void setupAcitivtyComponent(AppComponent appComponent) {
-
     }
 
     @Override
     public void init(View view) {
-
     }
-
-    @Override
-    public void showBarCode(String barCode) {
-
-    }
-
 
     @OnClick({R.id.lin_scan, R.id.lin_inform, R.id.lin_user, R.id.lin_message, R.id.lin_ble, R.id.btn_lease, R.id.lin_remind})
     public void onViewClicked(View view) {

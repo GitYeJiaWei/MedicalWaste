@@ -6,12 +6,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.*;
 
 import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
@@ -50,6 +45,8 @@ public class CheckFragment extends BaseFragment {
     Button btnLease;
     @BindView(R.id.btn_scan)
     Button btnScan;
+    @BindView(R.id.tv_user)
+    EditText tvUser;
     private List<Map<String, String>> dataList;
     private String selected;
     private int mYear, mMonth, mDay;
@@ -112,12 +109,6 @@ public class CheckFragment extends BaseFragment {
                 );
     }
 
-    @Override
-    public void myOnKeyDwon() {
-        super.myOnKeyDwon();
-        ((MainActivity) mActivity).ScanBarcode();
-    }
-
     private void initSpinner() {
         /*
          * 动态添显示下来菜单的选项，可以动态添加元素
@@ -162,7 +153,6 @@ public class CheckFragment extends BaseFragment {
         mDay = calendar.get(Calendar.DAY_OF_MONTH);
     }
 
-    @Override
     public void showBarCode(String barcode) {
         if (barcode.startsWith("BB")) {
             ToastUtil.toast("请扫描医废二维码");
@@ -223,7 +213,12 @@ public class CheckFragment extends BaseFragment {
             case R.id.btn_scan:
                 if (!ScreenUtils.Utils.isFastClick()) return;
 
-                ((MainActivity) mActivity).ScanBarcode();
+                String user = tvUser.getText().toString().trim().replace("\r|\n","");
+                if (user.toUpperCase().startsWith("AA") || user.toUpperCase().startsWith("BB")) {
+                    showBarCode(user.toUpperCase());
+                } else {
+                    ToastUtil.toast("二维码不符合");
+                }
                 break;
             case R.id.tv_startTime:
                 if (!ScreenUtils.Utils.isFastClick()) return;

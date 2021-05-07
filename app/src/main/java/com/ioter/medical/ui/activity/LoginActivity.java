@@ -168,7 +168,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            //ActivityCollecter.finishAll();
+            ActivityCollecter.finishAll();
             return false;
         }
         return super.onKeyDown(keyCode, event);

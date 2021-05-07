@@ -105,11 +105,6 @@ public class EnterSureFragment extends BaseFragment<MedEnterPresenter> implement
     }
 
     @Override
-    public void showBarCode(String barCode) {
-
-    }
-
-    @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         //isVisibleTouser为true表示当前界面正在展示（fragment滑动的时候调用）

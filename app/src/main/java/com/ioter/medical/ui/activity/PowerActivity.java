@@ -15,8 +15,6 @@ import com.ioter.medical.di.component.AppComponent;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-import static com.ioter.medical.ui.activity.MainActivity.mReader;
-
 /**
  * 功率设置
  */
@@ -42,35 +40,22 @@ public class PowerActivity extends BaseActivity implements SeekBar.OnSeekBarChan
 
     @Override
     public void setupAcitivtyComponent(AppComponent appComponent) {
-
     }
 
     @Override
     public void init() {
         title.setText("功率设置");
         initview();
-
     }
 
     private void initview() {
-        String key1 = mReader.getPower() + "";
-        ACache.get(AppApplication.getApplication()).put("key1", key1);
-
-        tvShow1.setText(key1);
-        seekBar1.setProgress(Integer.valueOf(key1) - 5);
-
         seekBar1.setOnSeekBarChangeListener(this);
-
     }
 
 
     @OnClick(R.id.btn_sure)
     public void onViewClicked() {
         if (!ScreenUtils.Utils.isFastClick()) return;
-
-        String key1 = tvShow1.getText().toString();
-        ACache.get(AppApplication.getApplication()).put("key1", key1);
-        mReader.setPower(Integer.valueOf(key1));
 
         ToastUtil.toast("保存成功");
         finish();

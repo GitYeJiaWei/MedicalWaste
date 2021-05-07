@@ -37,7 +37,7 @@
             android:name=".ui.activity.LoginActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             android:theme="@style/AppTheme.Notitle.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -67,12 +67,12 @@
         <activity
             android:name=".ui.activity.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.activity.MedicalCollectActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             android:theme="@style/AppTheme" />
         <!--
             android:windowSoftInputMode="adjustPan" 这个方法有一个前提就是你不需要在键盘弹出时让你的布局自适应屏幕
@@ -81,70 +81,70 @@
         <activity
             android:name=".ui.activity.MedicalRegisterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.activity.MedicalEnterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.activity.EnterRegisterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.activity.MedicalOutActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.activity.OutRegisterActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".ui.activity.OutMessageActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.activity.UserActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.activity.PowerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.activity.InformActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.activity.EnterMessageActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.activity.EnterCheckActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.activity.CheckMessageActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.activity.ScanActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.activity.Activity_DeviceList"
@@ -152,15 +152,15 @@
         <activity
             android:name=".ui.activity.BleActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             android:theme="@style/AppTheme" />
         <activity android:name=".ui.activity.RemindActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             android:theme="@style/AppTheme"/>
         <activity android:name=".ui.activity.CollectMessageActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
+            android:screenOrientation="landscape"
             android:theme="@style/AppTheme"/>
     </application>
 

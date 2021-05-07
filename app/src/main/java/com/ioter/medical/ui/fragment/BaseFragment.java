@@ -97,16 +97,6 @@ public abstract class BaseFragment<T extends BasePresenter> extends BackPressedF
         }
     }
 
-    public void myOnKeyDwon()
-    {
-
-    }
-
-    public void myOnKeyUp()
-    {
-
-    }
-
     @Override
     public void showLoading()
     {
@@ -128,9 +118,6 @@ public abstract class BaseFragment<T extends BasePresenter> extends BackPressedF
 
 
     public abstract void init(View view);
-
-    public abstract void showBarCode(String barCode);
-
 
     @Override
     public void onBackPressed()

@@ -119,11 +119,6 @@ public class CountFragment extends BaseFragment {
         }
     }
 
-    @Override
-    public void showBarCode(String barCode) {
-
-    }
-
     @OnClick(R.id.btn_lease)
     public void onViewClicked() {
         callBack.sendTag();

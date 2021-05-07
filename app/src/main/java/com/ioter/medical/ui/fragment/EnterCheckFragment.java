@@ -121,9 +121,6 @@ public class EnterCheckFragment extends BaseFragment<MedEnterPresenter> implemen
         }
     }
 
-    @Override
-    public void showBarCode(String barCode) {
-    }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {

@@ -13,13 +13,9 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.GridView;
-import android.widget.LinearLayout;
-import android.widget.SimpleAdapter;
-import android.widget.TextView;
+import android.widget.*;
 
+import android_serialport_api.SerialPortUtil;
 import com.ioter.medical.AppApplication;
 import com.ioter.medical.R;
 import com.ioter.medical.bean.BaseBean;
@@ -57,11 +53,9 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
     @BindView(R.id.tv_time)
     TextView tvTime;
     @BindView(R.id.tv_user)
-    TextView tvUser;
+    EditText tvUser;
     @BindView(R.id.tv_room)
     TextView tvRoom;
-    @BindView(R.id.tv_weight)
-    TextView tvWeight;
     @BindView(R.id.btn_commit)
     Button btnCommit;
     @BindView(R.id.btn_cancle)
@@ -72,10 +66,19 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
     TextView title;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.btn_weight)
+    Button btnWeight;
+    @BindView(R.id.btn_user)
+    Button btnUser;
     private List<Map<String, String>> dataList;
     private String WasteTypeId = null;
     private String HandOverUserId = null;
     private WasteViewsBean wasteViewsBean;
+    static EditText tvWeight;
+
+    public static void refreshTextView(double data) {
+        tvWeight.setText(data+"");
+    }
 
     @Override
     public int setLayout() {
@@ -154,10 +157,12 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
     public void init() {
         title.setText("医废登记");
 
+        tvWeight = findViewById(R.id.tv_weight);
+        SerialPortUtil.openSrialPort(1);
+
         dataList = new ArrayList<>();
         //医废类型查询
         initWasteTypes();
-
 
         tvName.setText(ACache.get(AppApplication.getApplication()).getAsString(LoginActivity.REAL_NAME));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -240,19 +245,8 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
                 );
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == 139 || keyCode == 280) {
-            if (event.getRepeatCount() == 0) {
-                ScanBarcode();
-            }
-        }
-        return super.onKeyDown(keyCode, event);
-    }
 
-    @Override
     public void showBarCode(String barcode) {
-        super.showBarCode(barcode);
         if (!barcode.startsWith("BB")) {
             ToastUtil.toast("请扫描员工二维码");
             return;
@@ -307,7 +301,7 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
                 );
     }
 
-    @OnClick({R.id.btn_commit, R.id.btn_cancle})
+    @OnClick({R.id.btn_commit, R.id.btn_cancle,R.id.btn_weight,R.id.btn_user})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_commit:
@@ -345,6 +339,19 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
 
                 setResult(RESULT_OK);
                 finish();
+                break;
+            case R.id.btn_weight:
+                //读取稳定重量
+                byte[] params = new byte[]{0x11, 0x41, 0x3F, 0x11, 0x0D};
+                SerialPortUtil.sendSerialPort(params);
+                break;
+            case R.id.btn_user:
+                String user = tvUser.getText().toString().trim().replace("\r|\n","");
+                if (user.toUpperCase().startsWith("AA") || user.toUpperCase().startsWith("BB")) {
+                    showBarCode(user.toUpperCase());
+                } else {
+                    ToastUtil.toast("二维码不符合");
+                }
                 break;
         }
     }
@@ -471,6 +478,12 @@ public class MedicalRegisterActivity extends BaseActivity<MedRegisterPresenter> 
                 }
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        SerialPortUtil.closeSerialPort();
+        super.onDestroy();
     }
 
     @Override

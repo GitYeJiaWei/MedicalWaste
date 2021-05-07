@@ -7,11 +7,14 @@
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:background="@mipmap/back_login"
-    android:orientation="vertical">
+    android:weightSum="3"
+    android:gravity="center_horizontal"
+    android:orientation="horizontal">
 
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="2"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
@@ -24,7 +27,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/top1"/>
+            android:src="@mipmap/top"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -41,8 +44,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:layout_marginLeft="10dp"
-                android:hint="艾欧特医疗废物管理系统"
-                android:text="宝沃美医疗废物管理系统"
+                android:hint="宝沃美医疗废物管理系统"
+                android:text="艾欧特医疗废物管理系统"
                 android:textColor="@color/white"
                 android:textSize="26dp" />
 
@@ -136,7 +139,7 @@
             app:loadingText="正 在 登 录"
             app:progressColor="@color/colorAccent"
             app:text="@string/login"
-            app:textColor="@color/black" />
+            app:textColor="@color/white" />
 
 
         <TextView
